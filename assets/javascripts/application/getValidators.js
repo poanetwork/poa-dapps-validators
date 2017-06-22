@@ -1,12 +1,10 @@
-function getValidators(api, func, addr, contractAddress, disabled, cb) {
-	var funcHex = func.hexEncode();
-	
-	SHA3Encrypt(api, funcHex, function(funcEncode) {
+function getValidators(web3, func, addr, contractAddress, disabled, cb) {
+	SHA3Encrypt(web3, func, function(funcEncode) {
 		var funcEncodePart = funcEncode.substring(0,10);
 
 		var data = funcEncodePart;
 		
-		call(api, addr, contractAddress, data, function(validatorsResp) {
+		call(web3, addr, contractAddress, data, function(validatorsResp) {
 			validatorsResp = validatorsResp.substring(2, validatorsResp.length);
 			var validatorsArray = [];
 			var item = "";
@@ -32,38 +30,38 @@ function getValidators(api, func, addr, contractAddress, disabled, cb) {
 			if (disabled)
 				validatorDataCount = 7;
 			for (var i = 0; i < validatorsArray.length; i++) {
-				getValidatorFullName(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorFullName(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("fullName", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
-				getValidatorStreetName(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorStreetName(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("streetName", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
-				getValidatorState(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorState(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("state", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
-				getValidatorLicenseExpiredAt(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorLicenseExpiredAt(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("licenseExpiredAt", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
-				getValidatorZip(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorZip(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("zip", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
-				getValidatorLicenseID(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+				getValidatorLicenseID(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("licenseID", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 				});
 
 				if (disabled) {
-					getValidatorDisablingDate(api, validatorsArray[i], i, contractAddress, function(_i, resp) {
+					getValidatorDisablingDate(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 						iasync++;
 						validatorsArrayOut = getPropertyCallback("disablingDate", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
 					});
