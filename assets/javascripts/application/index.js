@@ -21,27 +21,28 @@ function getWeb3(callback) {
 
 function checkNetworkVersion(web3) {
 	var msgNotOracles = "You are not connected to Oracles network. Please, switch on Parity or MetaMask client and refresh the page.";
-	web3.version.getNetwork((err, netId) => {
+	web3.version.getNetwork(function(err, netId) {
 		console.log(netId);
 	  switch (netId) {
-	    case "1":
+	    case "1": {
 	      console.log('This is mainnet');
-	      swal("Warning", msgNotOracles, "warning");
-	      break;
-	    case "2":
+	      swal("Warning", msgNotOracles, "warning"); 
+	    } break;
+	    case "2": {
 	      console.log('This is the deprecated Morden test network.');
 	      swal("Warning", msgNotOracles, "warning");
-	      break;
-	    case "3":
+	    } break;
+	    case "3": {
 	      console.log('This is the ropsten test network.');
 	      swal("Warning", msgNotOracles, "warning");
-	      break;
-	     case "8995":
+	    }  break;
+	     case "8995": {
 	       console.log('This is Oracles from Metamask');
-	       break;
-	    default:
+	    }  break;
+	    default: {
 	      console.log('This is an unknown network.');
 	      swal("Warning", msgNotOracles, "warning");
+	  	} break;
 	  }
 	})
 }
