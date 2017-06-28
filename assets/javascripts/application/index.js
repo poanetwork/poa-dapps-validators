@@ -6,15 +6,15 @@ function startDapp(web3, isOraclesNetwork) {
 		var validators;
 	  	getConfig(function(contractAddress) {
 			getValidators(web3, "getValidators()", contractAddress, false, function(_validatorsArray) {
-					validators = _validatorsArray;
-					for(var i = 0; i < _validatorsArray.length; i++) {
-						var validator = _validatorsArray[i];
-						var validatorAddress = Object.keys(validator)[0];
-						var validatorPropsObj = validator[validatorAddress];
-						$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
-					}
+				$(".loading-container").hide();
+				validators = _validatorsArray;
+				for(var i = 0; i < _validatorsArray.length; i++) {
+					var validator = _validatorsArray[i];
+					var validatorAddress = Object.keys(validator)[0];
+					var validatorPropsObj = validator[validatorAddress];
+					$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
 				}
-			);
+			});
 		});
 
 		$(".search-input").on("keyup", function() {
