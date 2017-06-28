@@ -24,6 +24,6 @@ Path: `./assets/javascripts/config.json`
 
 2) `npm run sass`
 
-3) `npm run javascript`
+3) `npm run coffee`
 
 4) `npm start`
