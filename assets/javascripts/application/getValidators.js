@@ -1,10 +1,10 @@
-function getValidators(web3, func, addr, contractAddress, disabled, cb) {
+function getValidators(web3, func, contractAddress, disabled, cb) {
 	SHA3Encrypt(web3, func, function(funcEncode) {
 		var funcEncodePart = funcEncode.substring(0,10);
 
 		var data = funcEncodePart;
 		
-		call(web3, addr, contractAddress, data, function(validatorsResp) {
+		call(web3, null, contractAddress, data, function(validatorsResp) {
 			validatorsResp = validatorsResp.substring(2, validatorsResp.length);
 			var validatorsArray = [];
 			var item = "";
