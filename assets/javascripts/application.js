@@ -536,7 +536,10 @@ function getWeb3(callback) {
 }
 //launches main application
 function startDapp(web3, isOraclesNetwork) {
-	if (!isOraclesNetwork) return
+	if (!isOraclesNetwork) {
+		$(".loading-container").hide();
+		return;
+	}
 		
 	$(function() {
 		var validators;
