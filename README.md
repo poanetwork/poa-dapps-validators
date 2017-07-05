@@ -1,6 +1,6 @@
 # Oracles network Validators List Dapp
 
-![](./index.png)
+![](./docs/index.png)
 
 ## Configuration file
 It is configured with [Oracles network contract](https://github.com/oraclesorg/oracles-contract)
