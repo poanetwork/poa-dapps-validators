@@ -4,9 +4,9 @@
 
 * Google Chrome v 59.0.3071.115+
 
-## Oracles plugin setup
+## MetaMask plugin setup
 
-* Choose Oracles network in Oracles plugin (See [Choosing of Oralces Network from wiki](https://github.com/oraclesorg/oracles-wiki#choosing-of-oralces-network))
+* Connect to Oracles network in MetaMask plugin (See [Connect to Oracles network via MetaMask](https://github.com/oraclesorg/oracles-wiki/blob/master/MetaMask-connect.md#connect-to-oracles-network-via-metamask))
 
 ![](./docs/index.png)
 
