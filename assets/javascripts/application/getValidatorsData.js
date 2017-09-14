@@ -30,5 +30,5 @@ function getValidatorZip(web3, addr, i, contractAddr, cb) {
 
 function getValidatorLicenseID(web3, addr, i, contractAddr, cb) {
 	var func = "getValidatorLicenseID(address)";
-	getContractIntDataFromAddressKey(web3, func, addr, i, contractAddr, cb);
+	getContractStringDataFromAddressKey(web3, func, addr, i, contractAddr, cb);
 }
