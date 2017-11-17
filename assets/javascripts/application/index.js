@@ -6,19 +6,22 @@ function startDapp(web3, isOraclesNetwork) {
 	}
 		
 	$(function() {
-		var validators;
-	  	getConfig(function(contractAddress) {
-			getValidators(web3, "getValidators()", contractAddress, false, function(_validatorsArray) {
-				$(".loading-container").hide();
-				validators = _validatorsArray;
-				for(var i = 0; i < _validatorsArray.length; i++) {
-					var validator = _validatorsArray[i];
-					var validatorAddress = Object.keys(validator)[0];
-					var validatorPropsObj = validator[validatorAddress];
-					$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
-				}
-			});
-		});
+		startDappInner(web3);
+	});
+}
+
+async function startDappInner(web3) {
+	var validators;
+  	let config = await getConfig()
+  	getValidators(web3, "getValidators()", config.contractAddress, false, function(_validatorsArray) {
+	  	$(".loading-container").hide();
+		validators = _validatorsArray;
+		for(var i = 0; i < _validatorsArray.length; i++) {
+			var validator = _validatorsArray[i];
+			var validatorAddress = Object.keys(validator)[0];
+			var validatorPropsObj = validator[validatorAddress];
+			$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
+		}
 
 		$(".search-input").on("keyup", function() {
 			var searchInput = $(this).val();

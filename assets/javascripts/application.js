@@ -82,36 +82,37 @@ function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr,
   });
 }
 //check current network page is connected to. Alerts, if not Oracles network
-function checkNetworkVersion(web3, cb) {
+async function checkNetworkVersion(web3, cb) {
   var msgNotOracles = "You aren't connected to Oracles network. Please, switch on Oracles plugin and choose Oracles network. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
-  web3.version.getNetwork(function(err, netId) {
-    if (err)
-      console.log(err);
-    console.log("netId: " + netId);
-    switch (netId) {
-      case "1": {
+  let config = await getConfig()
+  web3.version.getNetwork(function(err, connectedNetworkID) {
+    if (err) console.log(err);
+    console.log("connectedNetworkID: " + connectedNetworkID);
+    connectedNetworkID = parseInt(connectedNetworkID);
+    switch (connectedNetworkID) {
+      case 1: {
         console.log('This is mainnet');
         swal("Warning", msgNotOracles, "warning"); 
-        cb(false);
+        return false;
       } break;
-      case "2": {
+      case 2: {
         console.log('This is the deprecated Morden test network.');
         swal("Warning", msgNotOracles, "warning");
-        cb(false);
+        return false;
       } break;
-      case "3": {
+      case 3: {
         console.log('This is the ropsten test network.');
         swal("Warning", msgNotOracles, "warning");
-        cb(false);
+        return false;
       }  break;
-       case "12648430": {
+       case config.networkID: {
          console.log('This is Oracles from Metamask');
-         cb(true);
+         return true;
       }  break;
       default: {
         console.log('This is an unknown network.');
         swal("Warning", msgNotOracles, "warning");
-        cb(false);
+        return false;
       } break;
     }
   })
@@ -318,11 +319,16 @@ function validateSearch(validator, searchInput) {
 	return false;
 }
 //gets config file with address of Oracles contract
-function getConfig(cb) {
-  $.getJSON("./assets/javascripts/config.json", function(config) {
-    var contractAddress = config.Ethereum[config.environment].contractAddress;
-    cb(contractAddress);
-  });
+async function getConfig(cb) {
+  	let config = await $.getJSON("./assets/javascripts/config.json")
+	let contractAddress = config.Ethereum[config.environment].contractAddress
+	let networkID = config.networkID
+	let configJSON = {
+		contractAddress,
+		networkID
+	}
+	if (cb) cb(configJSON)
+	return configJSON;
 }
 function getValidators(web3, func, contractAddress, disabled, cb) {
 	SHA3Encrypt(web3, func, function(funcEncode) {
@@ -359,37 +365,44 @@ function getValidators(web3, func, contractAddress, disabled, cb) {
 				getValidatorFullName(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("fullName", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				getValidatorStreetName(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("streetName", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				getValidatorState(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("state", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				getValidatorLicenseExpiredAt(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("licenseExpiredAt", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				getValidatorZip(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("zip", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				getValidatorLicenseID(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 					iasync++;
 					validatorsArrayOut = getPropertyCallback("licenseID", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+					if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 				});
 
 				if (disabled) {
 					getValidatorDisablingDate(web3, validatorsArray[i], i, contractAddress, function(_i, resp) {
 						iasync++;
 						validatorsArrayOut = getPropertyCallback("disablingDate", resp, _i, iasync, validatorsArray, validatorDataCount, validatorsArrayOut, cb);
+						if (iasync == validatorsArray.length * validatorDataCount) {console.log(validatorsArrayOut); cb(validatorsArrayOut)};
 					});
 				}
 			}
@@ -407,12 +420,7 @@ function getPropertyCallback(prop, resp, _i, iasync, validatorsArray, validatorD
 		validatorsArrayOut[_i][validatorsArray[_i]][prop] = resp;
 	}
 
-	if (iasync == validatorsArray.length*validatorDataCount) {
-		cb(validatorsArrayOut);
-		return false;
-	} else {
-		return validatorsArrayOut;
-	}
+	return validatorsArrayOut;
 }
 function getValidatorFullName(web3, addr, i, contractAddr, cb) {
 	var func = "getValidatorFullName(address)";
@@ -533,9 +541,8 @@ function getWeb3(callback) {
     // new instance
     myWeb3.eth.defaultAccount = window.web3.eth.defaultAccount;
 
-    checkNetworkVersion(myWeb3, function(isOraclesNetwork) {
-      callback(myWeb3, isOraclesNetwork);
-    });
+    let isOraclesNetwork = checkNetworkVersion(myWeb3)
+    callback(myWeb3, isOraclesNetwork);
   }
 }
 //launches main application
@@ -546,19 +553,24 @@ function startDapp(web3, isOraclesNetwork) {
 	}
 		
 	$(function() {
-		var validators;
-	  	getConfig(function(contractAddress) {
-			getValidators(web3, "getValidators()", contractAddress, false, function(_validatorsArray) {
-				$(".loading-container").hide();
-				validators = _validatorsArray;
-				for(var i = 0; i < _validatorsArray.length; i++) {
-					var validator = _validatorsArray[i];
-					var validatorAddress = Object.keys(validator)[0];
-					var validatorPropsObj = validator[validatorAddress];
-					$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
-				}
-			});
-		});
+		startDappInner(web3);
+	});
+}
+
+async function startDappInner(web3) {
+	var validators;
+  	let config = await getConfig()
+  	getValidators(web3, "getValidators()", config.contractAddress, false, function(_validatorsArray) {
+	  	//let _validatorsArray = await getValidators(web3, "getValidators()", config.contractAddress, false)
+		console.log("#3")
+		$(".loading-container").hide();
+		validators = _validatorsArray;
+		for(var i = 0; i < _validatorsArray.length; i++) {
+			var validator = _validatorsArray[i];
+			var validatorAddress = Object.keys(validator)[0];
+			var validatorPropsObj = validator[validatorAddress];
+			$(".validators").append(getValidatorView(validatorAddress, validatorPropsObj));
+		}
 
 		$(".search-input").on("keyup", function() {
 			var searchInput = $(this).val();
