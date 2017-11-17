@@ -10,7 +10,7 @@ function getValidators(web3, func, contractAddress, disabled, cb) {
 		var item = "";
 		for (var i = 0; i < validatorsResp.length; i++) {
 			item+=validatorsResp[i];
-			if ((i + 1)%64 == 0) {
+			if ((i + 1) % 64 == 0) {
 				item = item.substr(item.length - 40, 40);
 				validatorsArray.push(item);
 				item = "";

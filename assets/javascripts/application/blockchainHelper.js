@@ -15,17 +15,6 @@ function estimateGas(web3, acc, contractAddr, data, cb) {
   });
 }
 
-function sendTx(web3, acc, contractAddr, data, estimatedGas, cb) {
-  web3.eth.sendTransaction({
-    from: acc,
-    data: data,
-    to: contractAddr,
-    gas: estimatedGas
-  }, function(err, txHash) {
-    cb(txHash, err);
-  });
-}
-
 function call(web3, acc, contractAddr, data, cb) {
   let props;
   if (acc) props = { from: acc, data: data, to: contractAddr };
