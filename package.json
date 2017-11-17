@@ -22,7 +22,7 @@
     "sass": "gulp sass",
     "coffee": "gulp javascript",
     "watch": "gulp watch",
-    "start": "gulp javascript && http-server -a localhost -p 8320"
+    "start": "gulp javascript && http-server -a localhost -p 8000"
   },
   "repository": {
     "type": "git",
