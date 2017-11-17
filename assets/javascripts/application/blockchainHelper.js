@@ -3,18 +3,6 @@ function SHA3Encrypt(web3, str) {
   return strEncode;
 }
 
-function estimateGas(web3, acc, contractAddr, data, cb) {
-  web3.eth.estimateGas({
-      from: acc, 
-      data: data,
-      to: contractAddr
-  }, function(err, estimatedGas) {
-    console.log(err);
-    console.log(estimatedGas);
-    cb(estimatedGas);
-  });
-}
-
 function call(web3, acc, contractAddr, data, cb) {
   let props;
   if (acc) props = { from: acc, data: data, to: contractAddr };

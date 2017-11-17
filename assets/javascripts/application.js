@@ -13,18 +13,6 @@ function SHA3Encrypt(web3, str) {
   return strEncode;
 }
 
-function estimateGas(web3, acc, contractAddr, data, cb) {
-  web3.eth.estimateGas({
-      from: acc, 
-      data: data,
-      to: contractAddr
-  }, function(err, estimatedGas) {
-    console.log(err);
-    console.log(estimatedGas);
-    cb(estimatedGas);
-  });
-}
-
 function call(web3, acc, contractAddr, data, cb) {
   let props;
   if (acc) props = { from: acc, data: data, to: contractAddr };
@@ -328,7 +316,7 @@ function getValidators(web3, func, contractAddress, disabled, cb) {
 		var validatorsArray = [];
 		var item = "";
 		for (var i = 0; i < validatorsResp.length; i++) {
-			item+=validatorsResp[i];
+			item += validatorsResp[i];
 			if ((i + 1) % 64 == 0) {
 				item = item.substr(item.length - 40, 40);
 				validatorsArray.push(item);
@@ -339,8 +327,7 @@ function getValidators(web3, func, contractAddress, disabled, cb) {
 		validatorsArray.shift(); //number of elements
 
 		if (validatorsArray.length == 0) {
-			cb(validatorsArray);
-			return;
+			return cb(validatorsArray);
 		}
 
 		var validatorsArrayOut = [];
