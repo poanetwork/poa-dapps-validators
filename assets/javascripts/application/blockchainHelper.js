@@ -1,6 +1,15 @@
 function SHA3Encrypt(web3, str) {
-  var strEncode = web3.sha3(str);
+  var strEncode = web3.utils.sha3(str);
   return strEncode;
+}
+
+function attachToContract(web3, abi, addr, cb) {
+  web3.eth.defaultAccount = web3.eth.accounts[0];
+  console.log("web3.eth.defaultAccount:" + web3.eth.defaultAccount);
+  
+  var contractInstance = new web3.eth.Contract(abi, addr);
+  
+  if (cb) cb(null, contractInstance);
 }
 
 function call(web3, acc, contractAddr, data, cb) {
@@ -13,7 +22,7 @@ function call(web3, acc, contractAddr, data, cb) {
   });
 }
 
-function getContractStringDataFromAddressKey(web3, func, inputVal, i, contractAddr, cb) {
+/*function getContractStringDataFromAddressKey(web3, func, inputVal, i, contractAddr, cb) {
   const funcParamsNumber = 1;
   const standardLength = 32;
 
@@ -28,7 +37,7 @@ function getContractStringDataFromAddressKey(web3, func, inputVal, i, contractAd
   call(web3, null, contractAddr, data, function(respHex) {
     cb(i, hex2a(respHex));
   });
-}
+}*/
 
 function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr, cb) {
   const funcParamsNumber = 1;

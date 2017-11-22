@@ -31,5 +31,10 @@
   "keywords": [],
   "author": "oraclesorg",
   "license": "MIT",
-  "homepage": "https://oracles.org/"
+  "homepage": "https://oracles.org/",
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "sweetalert2": "^7.0.3",
+    "web3": "^1.0.0-beta.26"
+  }
 }

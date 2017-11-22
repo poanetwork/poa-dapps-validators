@@ -2,8 +2,7 @@
 async function checkNetworkVersion(web3, cb) {
   var msgNotOracles = "You aren't connected to Oracles network. Please, switch on Oracles plugin and choose Oracles network. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
   let config = await getConfig()
-  web3.version.getNetwork(function(err, connectedNetworkID) {
-    if (err) console.log(err);
+  web3.eth.net.getId().then(function(connectedNetworkID) {
     console.log("connectedNetworkID: " + connectedNetworkID);
     connectedNetworkID = parseInt(connectedNetworkID);
     switch (connectedNetworkID) {
