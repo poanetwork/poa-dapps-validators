@@ -6,13 +6,3 @@ function attachToContract(web3, abi, addr) {
   
   return contractInstance;
 }
-
-function call(web3, acc, contractAddr, data, cb) {
-  let props;
-  if (acc) props = { from: acc, data: data, to: contractAddr };
-  else props = { data: data, to: contractAddr };
-  
-  web3.eth.call(props, function(err, data) {
-    cb(data);
-  });
-}
