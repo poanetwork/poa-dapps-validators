@@ -37,7 +37,7 @@ function call(web3, acc, contractAddr, data, cb) {
   call(web3, null, contractAddr, data, function(respHex) {
     cb(i, hex2a(respHex));
   });
-}*/
+}
 
 function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr, cb) {
   const funcParamsNumber = 1;
@@ -54,4 +54,4 @@ function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr,
   call(web3, null, contractAddr, data, function(respHex) {
     cb(i, parseInt(respHex, 16));
   });
-}
+}*/

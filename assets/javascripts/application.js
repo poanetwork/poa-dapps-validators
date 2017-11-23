@@ -37,7 +37,7 @@ function call(web3, acc, contractAddr, data, cb) {
   call(web3, null, contractAddr, data, function(respHex) {
     cb(i, hex2a(respHex));
   });
-}*/
+}
 
 function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr, cb) {
   const funcParamsNumber = 1;
@@ -54,7 +54,7 @@ function getContractIntDataFromAddressKey(web3, func, inputVal, i, contractAddr,
   call(web3, null, contractAddr, data, function(respHex) {
     cb(i, parseInt(respHex, 16));
   });
-}
+}*/
 //check current network page is connected to. Alerts, if not Oracles network
 async function checkNetworkVersion(web3, cb) {
   var msgNotOracles = "You aren't connected to Oracles network. Please, switch on Oracles plugin and choose Oracles network. Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.";
@@ -480,8 +480,18 @@ function getValidatorZip(web3, addr, i, contractAddr, abi, cb) {
 }
 
 function getValidatorLicenseID(web3, addr, i, contractAddr, abi, cb) {
-	var func = "getValidatorLicenseID(address)";
-	getContractIntDataFromAddressKey(web3, func, addr, i, contractAddr, cb);
+	attachToContract(web3, abi, contractAddr, function(err, oraclesContract) {
+	    console.log("attach to oracles contract");
+	    if (err) {
+	      console.log(err)
+	      return cb();
+	    }
+
+	    oraclesContract.methods.getValidatorLicenseID(addr).call(function(err, licenseID) {
+	    	console.log(licenseID)
+	    	cb(i, licenseID);
+	    })
+	});
 }
 function getValidatorView(validatorAddress, validatorPropsObj) {
 	var stateCode = validatorPropsObj["state"].toString();

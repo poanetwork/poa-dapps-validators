@@ -83,6 +83,16 @@ function getValidatorZip(web3, addr, i, contractAddr, abi, cb) {
 }
 
 function getValidatorLicenseID(web3, addr, i, contractAddr, abi, cb) {
-	var func = "getValidatorLicenseID(address)";
-	getContractIntDataFromAddressKey(web3, func, addr, i, contractAddr, cb);
+	attachToContract(web3, abi, contractAddr, function(err, oraclesContract) {
+	    console.log("attach to oracles contract");
+	    if (err) {
+	      console.log(err)
+	      return cb();
+	    }
+
+	    oraclesContract.methods.getValidatorLicenseID(addr).call(function(err, licenseID) {
+	    	console.log(licenseID)
+	    	cb(i, licenseID);
+	    })
+	});
 }
