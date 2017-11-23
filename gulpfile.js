@@ -23,9 +23,7 @@ gulp.task('sass', function() {
 
 gulp.task('javascript', function() {
   return gulp.src('assets/javascripts/application/*.js')
-    .pipe(addsrc('assets/javascripts/vendor/index.js'))
     .pipe(order([
-      "assets/javascripts/vendor/index.js",
       "assets/javascripts/application/*.js"
     ], {base: '.'}))
     .pipe(include())
