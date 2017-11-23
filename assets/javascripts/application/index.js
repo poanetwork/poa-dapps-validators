@@ -13,7 +13,7 @@ function startDapp(web3, isOraclesNetwork) {
 async function startDappInner(web3) {
 	var validators;
   	let config = await getConfig()
-  	getValidators(web3, "getValidators()", config.contractAddress, config.abi, false, function(_validatorsArray) {
+  	getValidators(web3, config.contractAddress, config.abi, false, function(_validatorsArray) {
 	  	$(".loading-container").hide();
 		validators = _validatorsArray;
 		for(var i = 0; i < _validatorsArray.length; i++) {

@@ -1,98 +1,40 @@
-function getValidatorFullName(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
+function callContractMethod(web3, addr, i, contractAddr, abi, cb, method) {
+	let ValidatorsStorage = attachToContract(web3, abi, contractAddr)
+    console.log("attach to oracles contract");
+    if (!ValidatorsStorage) {
+      return cb();
+    }
 
-	    ValidatorsStorage.methods.getValidatorFullName(addr).call(function(err, fullname) {
-	    	cb(i, fullname);
-	    })
-	});
+    ValidatorsStorage.methods[method](addr).call(function(err, res) {
+    	cb(i, res);
+    })
+}
+
+
+function getValidatorFullName(web3, addr, i, contractAddr, abi, cb) {
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorFullName")
 }
 
 function getValidatorStreetName(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorStreetName(addr).call(function(err, streetname) {
-	    	cb(i, streetname);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorStreetName")
 }
 
 function getValidatorState(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorState(addr).call(function(err, state) {
-	    	cb(i, state);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorState")
 }
 
 function getValidatorLicenseExpiredAt(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorLicenseExpiredAt(addr).call(function(err, licenseExpiredAt) {
-	    	cb(i, licenseExpiredAt);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorLicenseExpiredAt")
 }
 
 function getValidatorDisablingDate(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorDisablingDate(addr).call(function(err, disablingDate) {
-	    	cb(i, disablingDate);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorDisablingDate")
 }
 
 function getValidatorZip(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorZip(addr).call(function(err, zip) {
-	    	cb(i, zip);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorZip")
 }
 
 function getValidatorLicenseID(web3, addr, i, contractAddr, abi, cb) {
-	attachToContract(web3, abi, contractAddr, function(err, ValidatorsStorage) {
-	    console.log("attach to oracles contract");
-	    if (err) {
-	      console.log(err)
-	      return cb();
-	    }
-
-	    ValidatorsStorage.methods.getValidatorLicenseID(addr).call(function(err, licenseID) {
-	    	console.log(licenseID)
-	    	cb(i, licenseID);
-	    })
-	});
+	callContractMethod(web3, addr, i, contractAddr, abi, cb, "getValidatorLicenseID")
 }
