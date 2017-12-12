@@ -8,19 +8,7 @@ import ReactDOM from 'react-dom';
 import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId } from 'react-places-autocomplete';
 import moment from 'moment';
 import Metadata from './contracts/Metadata.contract';
-
-const Loading = () => (
-  <div className="loading-container">
-    <div className="loading">
-      <div className="loading-i"></div>
-      <div className="loading-i"></div>
-      <div className="loading-i"></div>
-      <div className="loading-i"></div>
-      <div className="loading-i"></div>
-      <div className="loading-i"></div>
-    </div>
-  </div>
-)
+import Loading from './Loading';
 
 class App extends Component {
   constructor(props){
@@ -28,6 +16,9 @@ class App extends Component {
     this.checkValidation = this.checkValidation.bind(this)
     this.onClick = this.onClick.bind(this);
     this.onChangeFormField = this.onChangeFormField.bind(this);
+    this.getKeysManager = this.getKeysManager.bind(this);
+    this.getMetadataContract = this.getMetadataContract.bind(this);
+    this.getVotingKey = this.getVotingKey.bind(this);
     this.onChangeAutoComplete = ((address) => {
       const form = this.state.form;
       form.fullAddress = address;
@@ -48,30 +39,30 @@ class App extends Component {
       hasData: false
       
     }
-    this.keysManager = null;
-    this.metadataContract = null;
-    this.votingKey = null;
-    this.defaultValues = null;
 
-    getWeb3().then(async (web3Config) => {
-      this.keysManager = new KeysManager({
-        web3: web3Config.web3Instance
-      });
-      this.metadataContract = new Metadata({
-        web3: web3Config.web3Instance
-      })
-      this.votingKey = web3Config.defaultAccount;
-      const currentData = await this.metadataContract.getValidatorsData(this.votingKey);
-      const hasData = Number(currentData.postal_code) > 0 ? true : false
-      this.defaultValues = currentData;
-      this.setState({
-        form: {
-          ...currentData
-        },
-        hasData
-      });
-    })
+    this.defaultValues = null;
+    this.setMetadata.call(this);
     
+  }
+  async setMetadata(){
+    const currentData = await this.getMetadataContract().getValidatorData({votingKey: this.getVotingKey()});
+    const hasData = Number(currentData.postal_code) > 0 ? true : false
+    this.defaultValues = currentData;
+    this.setState({
+      form: {
+        ...currentData
+      },
+      hasData
+    });
+  }
+  getKeysManager(){
+    return this.props.web3Config.keysManager;
+  }
+  getMetadataContract(){
+    return this.props.web3Config.metadataContract;
+  }
+  getVotingKey(){
+    return this.props.web3Config.votingKey;
   }
   checkValidation() {
     const isAfter = moment(this.state.form.expirationDate).isAfter(moment());
@@ -127,7 +118,7 @@ class App extends Component {
     this.setState({loading:true});
     const isFormValid = this.checkValidation();
     if(isFormValid){
-      const isValid = await this.keysManager.isVotingActive(this.votingKey);
+      const isValid = await this.getKeysManager.isVotingActive(this.votingKey);
       if(Number(isValid) !== 1){
         this.setState({loading:false});
         swal("Warning!", "The key is not valid voting Key! Please make sure you have loaded correct voting key in metamask", "warning");
@@ -141,7 +132,7 @@ class App extends Component {
     }
   }
   async sendTxToContract(){
-    this.metadataContract.createMetadata({
+    this.getMetadataContract().createMetadata({
       firstName: this.state.form.firstName,
       lastName: this.state.form.lastName,
       licenseId: this.state.form.licenseId,

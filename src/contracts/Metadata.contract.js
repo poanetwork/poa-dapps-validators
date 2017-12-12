@@ -1,3 +1,4 @@
+import PoaConsensus from './PoaConsensus.contract'
 import MetadataAbi from './metadata.abi.json'
 import Web3 from 'web3';
 import moment from 'moment';
@@ -47,24 +48,42 @@ export default class Metadata {
     ).send({from: votingKey});
   }
 
-  async getValidatorsData(votingKey){
-    const miningKey = await this.getMiningByVoting(votingKey);
+  async getValidatorData({votingKey, miningKey}){
+    miningKey = miningKey || await this.getMiningByVoting(votingKey);
     let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
+    let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
+    let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
+    let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
+    let postal_code = Number(validatorData.zipcode) || ''
     return {
       firstName: toAscii(validatorData.firstName),
       lastName: toAscii(validatorData.lastName),
       fullAddress: validatorData.fullAddress,
-      createdDate: moment.unix(validatorData.createdDate).format('YYYY-MM-DD'),
-      updatedDate: moment.unix(validatorData.updatedDate).format('YYYY-MM-DD'),
-      expirationDate: moment.unix(validatorData.expirationDate).format('YYYY-MM-DD'),
+      createdDate,
+      updatedDate,
+      expirationDate,
       licenseId: toAscii(validatorData.licenseId),
       us_state: toAscii(validatorData.state),
-      postal_code: validatorData.zipcode,
+      postal_code,
     }
   }
 
   async getMiningByVoting(votingKey){
     return await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
+  }
+
+  async getAllValidatorsData(){
+    let all = [];
+    return new Promise(async(resolve, reject) => {
+      const poaInstance = new PoaConsensus({web3: this.web3_10})
+      const keys = await poaInstance.getValidators()
+      for (let key of keys) {
+        let data = await this.getValidatorData({miningKey: key})
+        data.address = key
+        all.push(data)
+      }
+      resolve(all);
+    })
   }
   
 }
