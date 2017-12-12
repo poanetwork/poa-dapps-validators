@@ -22,6 +22,7 @@ const history = createBrowserHistory()
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
+    this.rootPath = window.location.pathname;
     history.listen(this.onRouteChange.bind(this));
     this.onSetRender = this.onSetRender.bind(this)
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
@@ -89,8 +90,8 @@ class AppMainRouter extends Component {
         <div className="search">
           <div className="container">
             <div className="nav">
-            <NavLink className="nav-i nav-i_actual" exact activeClassName="nav-i_active" to="/">All</NavLink>
-            <NavLink className="nav-i nav-i_unanswered" activeClassName="nav-i_active" to="/set">Set metadata</NavLink>
+            <NavLink className="nav-i nav-i_actual" exact activeClassName="nav-i_active" to={this.rootPath}>All</NavLink>
+            <NavLink className="nav-i nav-i_unanswered" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
             <NavLink className="nav-i nav-i_expired" activeClassName="nav-i_active" to="/topics">Pending changes</NavLink>
             </div>
             <form action="" className="search-form" onSubmit={this.onSubmit}>
@@ -98,8 +99,8 @@ class AppMainRouter extends Component {
             </form>
           </div>
         </div>
-        <Route exact path="/" render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
-        <Route path="/set" render={this.onSetRender} />
+        <Route exact path={this.rootPath} render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
+        <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         </section>
       </Router>
     )
