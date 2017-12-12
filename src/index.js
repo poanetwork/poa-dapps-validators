@@ -22,7 +22,7 @@ const history = createBrowserHistory()
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
-    this.rootPath = window.location.pathname;
+    this.rootPath = '/oracles-dapps-validators'
     history.listen(this.onRouteChange.bind(this));
     this.onSetRender = this.onSetRender.bind(this)
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
@@ -81,6 +81,8 @@ class AppMainRouter extends Component {
     return this.state.votingKey ? <AllValidators web3Config={this.state} /> : '';
   }
   render(){
+    
+    console.log('v2', this.rootPath)
     const search = this.state.showSearch ? <input type="text" className="search-input"/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
@@ -90,7 +92,7 @@ class AppMainRouter extends Component {
         <div className="search">
           <div className="container">
             <div className="nav">
-            <NavLink className="nav-i nav-i_actual" exact activeClassName="nav-i_active" to={this.rootPath}>All</NavLink>
+            <NavLink className="nav-i nav-i_actual" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
             <NavLink className="nav-i nav-i_unanswered" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
             <NavLink className="nav-i nav-i_expired" activeClassName="nav-i_active" to="/topics">Pending changes</NavLink>
             </div>
@@ -99,7 +101,7 @@ class AppMainRouter extends Component {
             </form>
           </div>
         </div>
-        <Route exact path={this.rootPath} render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
+        <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         </section>
       </Router>
