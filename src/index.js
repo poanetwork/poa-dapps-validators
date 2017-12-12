@@ -60,7 +60,8 @@ class AppMainRouter extends Component {
     })
   }
   onRouteChange(){
-    if(history.location.pathname !== "/"){
+    const rootPath = this.rootPath + "/";
+    if(history.location.pathname !== rootPath){
       this.setState({showSearch: false})
     } else {
       this.setState({showSearch: true})
@@ -82,7 +83,7 @@ class AppMainRouter extends Component {
   }
   render(){
     
-    console.log('v2', this.rootPath)
+    console.log('v2.01', this.rootPath)
     const search = this.state.showSearch ? <input type="text" className="search-input"/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
