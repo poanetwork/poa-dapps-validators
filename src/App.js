@@ -50,7 +50,13 @@ class App extends Component {
     this.defaultValues = currentData;
     this.setState({
       form: {
-        ...currentData
+        fullAddress: currentData.fullAddress,
+        expirationDate: currentData.expirationDate,
+        postal_code: currentData.postal_code,
+        us_state: currentData.us_state,
+        firstName: currentData.firstName,
+        lastName: currentData.lastName,
+        licenseId: currentData.licenseId,
       },
       hasData
     });
@@ -118,15 +124,17 @@ class App extends Component {
     this.setState({loading:true});
     const isFormValid = this.checkValidation();
     if(isFormValid){
-      const isValid = await this.getKeysManager.isVotingActive(this.votingKey);
-      if(Number(isValid) !== 1){
+      const votingKey = this.getVotingKey();
+      console.log('voting', votingKey)
+      const isValid = await this.getKeysManager().isVotingActive(votingKey);
+      console.log(isValid);
+      if(isValid){
+      //   // add loading screen
+        await this.sendTxToContract()
+      } else {
         this.setState({loading:false});
         swal("Warning!", "The key is not valid voting Key! Please make sure you have loaded correct voting key in metamask", "warning");
         return;
-      }
-      if(Number(isValid) === 1){
-      //   // add loading screen
-        await this.sendTxToContract()
       }
 
     }
@@ -140,7 +148,7 @@ class App extends Component {
       state: this.state.form.us_state,
       zipcode: this.state.form.postal_code,
       expirationDate: moment(this.state.form.expirationDate).unix(),
-      votingKey: this.votingKey,
+      votingKey: this.getVotingKey(),
       hasData: this.state.hasData
     }).then((receipt) => {
       console.log(receipt);
