@@ -1,8 +1,8 @@
 {
-  "name": "finalapp",
+  "name": "oracles-dapps-validators",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rstormsf.github.io/oracles-dapps-keys-generation",
+  "homepage": "https://rstormsf.github.io/oracles-dapps-validators",
   "dependencies": {
     "clipboard": "^1.7.1",
     "gh-pages": "^1.1.0",

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import swal from 'sweetalert';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import KeysManager from './contracts/KeysManager.contract'
@@ -18,10 +19,6 @@ import AllValidators from './AllValidators'
 
 const history = createBrowserHistory()
 
-
-
-
-
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
@@ -36,6 +33,7 @@ class AppMainRouter extends Component {
       metadataContract: null,
       poaConsensus: null,
       votingKey :null,
+      loading: true,
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -48,7 +46,16 @@ class AppMainRouter extends Component {
         votingKey: web3Config.defaultAccount,
         keysManager,
         metadataContract,
+        loading: false,
       })
+    }).catch((error) => {
+      console.error(error.msg);
+      this.setState({loading: false})
+      swal({
+        icon: 'error',
+        title: 'Error',
+        content: error.node
+      });
     })
   }
   onRouteChange(){
@@ -74,7 +81,7 @@ class AppMainRouter extends Component {
   }
   render(){
     const search = this.state.showSearch ? <input type="text" className="search-input"/> : ''
-    const loading = this.state.votingKey ? '' : <Loading />
+    const loading = this.state.loading ? <Loading /> : ''
     return (
       <Router history={history}>
         <section className="content">
