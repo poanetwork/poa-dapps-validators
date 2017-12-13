@@ -19,13 +19,23 @@ import AllValidators from './AllValidators'
 
 const history = createBrowserHistory()
 
+function generateElement(msg){
+  let errorNode = document.createElement("div");
+  errorNode.innerHTML = `<div>
+    ${msg}
+  </div>`;
+  return errorNode;
+}
+
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
     this.rootPath = '/oracles-dapps-validators'
     history.listen(this.onRouteChange.bind(this));
-    this.onSetRender = this.onSetRender.bind(this)
+    this.onSetRender = this.onSetRender.bind(this);
+    this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
+    this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       showSearch: true,
@@ -50,12 +60,12 @@ class AppMainRouter extends Component {
         loading: false,
       })
     }).catch((error) => {
-      console.error(error.msg);
+      console.error(error.message);
       this.setState({loading: false})
       swal({
         icon: 'error',
         title: 'Error',
-        content: error.node
+        content: generateElement(error.message)
       });
     })
   }
@@ -78,12 +88,37 @@ class AppMainRouter extends Component {
   onSetRender() {
     return this.state.votingKey ? <App web3Config={this.state}/> :  '';
   }
+  async onConfirmPendingChange(e) {
+    e.preventDefault();
+    const miningKey = e.currentTarget.getAttribute('miningkey');
+    try{
+      let result = await this.state.metadataContract.confirmPendingChange({
+        miningKeyToConfirm: miningKey,
+        senderVotingKey: this.state.votingKey
+      });
+      console.log(result);
+    } catch(error) {
+      console.error(error.message);
+      swal({
+        icon: 'error',
+        title: 'Error',
+        content: generateElement(error.message)
+      });
+    }
+  }
+  onPendingChangesRender() {
+    return this.state.votingKey ? <AllValidators 
+      methodToCall="getAllPendingChanges"
+      web3Config={this.state}>
+        <button onClick={this.onConfirmPendingChange} className="create-keys-button right">Confirm</button>
+      </AllValidators> : '';
+  }
   onAllValidatorsRender() {
-    return this.state.votingKey ? <AllValidators web3Config={this.state} /> : '';
+    return this.state.votingKey ? <AllValidators methodToCall="getAllValidatorsData" web3Config={this.state} /> : '';
   }
   render(){
     
-    console.log('v2.01', this.rootPath)
+    console.log('v2.02', this.rootPath)
     const search = this.state.showSearch ? <input type="text" className="search-input"/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
@@ -93,9 +128,9 @@ class AppMainRouter extends Component {
         <div className="search">
           <div className="container">
             <div className="nav">
-            <NavLink className="nav-i nav-i_actual" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
-            <NavLink className="nav-i nav-i_unanswered" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
-            <NavLink className="nav-i nav-i_expired" activeClassName="nav-i_active" to="/topics">Pending changes</NavLink>
+            <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
+            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
+            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
             </div>
             <form action="" className="search-form" onSubmit={this.onSubmit}>
               {search}
@@ -104,6 +139,7 @@ class AppMainRouter extends Component {
         </div>
         <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
+        <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
         </section>
       </Router>
     )

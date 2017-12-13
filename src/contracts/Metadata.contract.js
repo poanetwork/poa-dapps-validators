@@ -17,7 +17,7 @@ var toAscii = function(hex) {
   return str;
 };
 
-const METADATA_ADDRESS = '0xcbf043db3498b5064bd62341be0c0e3fb0344b1b';
+const METADATA_ADDRESS = '0x3111c94b9243a8a99d5a867e00609900e437e2c0';
 export default class Metadata {
   constructor(){
     if(window.web3.currentProvider){
@@ -84,6 +84,46 @@ export default class Metadata {
       }
       resolve(all);
     })
+  }
+
+  async getPendingChange({votingKey, miningKey}){
+    miningKey = miningKey || await this.getMiningByVoting(votingKey);
+    let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call();
+    let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
+    let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''
+    let expirationDate = pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
+    let postal_code = Number(pendingChanges.zipcode) || ''
+    return {
+      firstName: toAscii(pendingChanges.firstName),
+      lastName: toAscii(pendingChanges.lastName),
+      fullAddress: pendingChanges.fullAddress,
+      createdDate,
+      updatedDate,
+      expirationDate,
+      licenseId: toAscii(pendingChanges.licenseId),
+      us_state: toAscii(pendingChanges.state),
+      postal_code,
+      minThreshold: pendingChanges.minThreshold
+    }
+  }
+
+  async getAllPendingChanges() {
+    let allChanges = await this.metadataInstance.getPastEvents('ChangeRequestInitiated', {fromBlock: 0});
+    let miningKeys = allChanges.map((event) => event.returnValues.miningKey)
+    let pendingChanges = []
+    for (let key of miningKeys) {
+      let pendingChange = await this.getPendingChange({miningKey: key})
+      pendingChange.address = key;
+      pendingChanges.push(pendingChange)
+    }
+    return pendingChanges
+  }
+
+  async confirmPendingChange({miningKeyToConfirm, senderVotingKey}) {
+    // you can't confirm your own
+    // you can't confirm twice
+    // 
+    return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey});
   }
   
 }

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Children} from 'react';
 import Validator from './Validator'
 
 export default class AllValidators extends Component {
@@ -11,7 +11,7 @@ export default class AllValidators extends Component {
     this.getValidatorsData.call(this);
   }
   async getValidatorsData() {
-    this.getMetadataContract().getAllValidatorsData().then((data) => {
+    this.getMetadataContract()[this.props.methodToCall]().then((data) => {
       this.setState({
         validators: data
       })
@@ -23,6 +23,9 @@ export default class AllValidators extends Component {
   render() {
     let validators = [];
     this.state.validators.forEach((validator, index) => {
+      let childrenWithProps = React.Children.map(this.props.children, (child) => {
+        return React.cloneElement(child, { miningkey: validator.address });
+      })
       validators.push(
         <Validator
           key={index}
@@ -36,7 +39,7 @@ export default class AllValidators extends Component {
           expirationDate={validator.expirationDate}
           createdDate={validator.createdDate}
           updatedDate={validator.updatedDate}
-        />)
+        >{childrenWithProps}</Validator>)
     })
     return (<div className="container">
       {validators}

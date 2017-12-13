@@ -121,7 +121,6 @@ button:focus {
   .create-keys h2 {
     margin-bottom: 20px; }
   .create-keys-button {
-    margin-top: 20px;
     display: inline-block;
     background-color: #08b3f2;
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAFVBMVEX///////////////////////////9nSIHRAAAABnRSTlMASUrk5udXTd49AAAAOUlEQVR42tXQsQEAIAgDQcAn+4+snRZxAK79KokrIcNBwgYdc0Migwxk8Qsd1TJWDf/KQWobqt+9G4coA99W7as5AAAAAElFTkSuQmCC);
@@ -355,7 +354,14 @@ button:focus {
     border-bottom: 1px solid #eee;
     padding: 25px 20px;
     font-size: 16px;
-    font-weight: bold; }
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; }
+    .validators-header .left {
+      flex: 1; }
+    .validators-header .right {
+      flex: 0; }
   .validators-body {
     overflow: hidden;
     padding: 0 20px 20px; }

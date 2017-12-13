@@ -48,6 +48,24 @@ class App extends Component {
     const currentData = await this.getMetadataContract().getValidatorData({votingKey: this.getVotingKey()});
     const hasData = Number(currentData.postal_code) > 0 ? true : false
     this.defaultValues = currentData;
+    const pendingChange = await this.getMetadataContract().getPendingChange({votingKey: this.getVotingKey()});
+    if(Number(pendingChange.minThreshold) > 0 ) {
+      var content = document.createElement("div");
+      content.innerHTML = `<div>
+        First Name: ${pendingChange.firstName} <br/>
+        Last Name: ${pendingChange.lastName} <br/>
+        Full Address: ${pendingChange.fullAddress} <br/>
+        Expiration Date: ${pendingChange.expirationDate} <br />
+        License ID: ${pendingChange.licenseId} <br/>
+        US state: ${pendingChange.us_state} <br/>
+        Zip Code: ${pendingChange.postal_code} <br/>
+      </div>`;
+      swal({
+        icon: 'warning',
+        title: 'You have pending changes!',
+        content: content
+      });
+    }
     this.setState({
       form: {
         fullAddress: currentData.fullAddress,
@@ -74,7 +92,6 @@ class App extends Component {
     const isAfter = moment(this.state.form.expirationDate).isAfter(moment());
     let keys = Object.keys(this.state.form);
     keys.forEach((key) => {
-      console.log(key, this.state[key]);
       if(!this.state.form[key]){
         this.setState({loading: false})
         swal("Warning!", `${key} cannot be empty`, "warning");

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Children} from 'react';
 
 const Validator = ({
   address,
@@ -10,11 +10,18 @@ const Validator = ({
   licenseId,
   expirationDate,
   createdDate,
-  updatedDate
+  updatedDate,
+  children
 }) => (
   <div className="validators-i">
   <div className="validators-header">
-    {address}
+    <div className="left">
+      {address}
+    </div>
+    <div className="right">
+      {children}
+    </div>
+    
   </div>
   <div className="validators-body">
     <div className="validators-notary left">
@@ -75,7 +82,7 @@ const Validator = ({
         </div>
         <div className="validators-table-tr">
           <p className="validators-table-td left">
-            Create Date
+            Miner Creation Date
           </p>
           <p className="validators-table-td right">
           {createdDate}
@@ -83,7 +90,7 @@ const Validator = ({
         </div>
         <div className="validators-table-tr">
           <p className="validators-table-td left">
-            Updated Date
+            Pending Change Requested Date
           </p>
           <p className="validators-table-td right">
           {updatedDate}
