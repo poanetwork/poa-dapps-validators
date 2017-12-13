@@ -21,8 +21,14 @@ export default class AllValidators extends Component {
     return this.props.web3Config.metadataContract;
   }
   render() {
+
+    const filtered = this.state.validators.filter((validator, index) => {
+      return Object.values(validator).some( val => 
+        String(val).toLowerCase().includes(this.props.searchTerm) 
+      );
+    })
     let validators = [];
-    this.state.validators.forEach((validator, index) => {
+    filtered.forEach((validator, index) => {
       let childrenWithProps = React.Children.map(this.props.children, (child) => {
         return React.cloneElement(child, { miningkey: validator.address });
       })

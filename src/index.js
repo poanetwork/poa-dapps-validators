@@ -37,6 +37,7 @@ class AppMainRouter extends Component {
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.onSearch = this.onSearch.bind(this);
     this.state = {
       showSearch: true,
       web3loaded: false,
@@ -45,6 +46,7 @@ class AppMainRouter extends Component {
       poaConsensus: null,
       votingKey :null,
       loading: true,
+      searchTerm: ''
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -114,12 +116,15 @@ class AppMainRouter extends Component {
       </AllValidators> : '';
   }
   onAllValidatorsRender() {
-    return this.state.votingKey ? <AllValidators methodToCall="getAllValidatorsData" web3Config={this.state} /> : '';
+    return this.state.votingKey ? <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> : '';
+  }
+  onSearch(term){
+    this.setState({searchTerm: term.target.value})
   }
   render(){
     
     console.log('v2.02', this.rootPath)
-    const search = this.state.showSearch ? <input type="text" className="search-input"/> : ''
+    const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
       <Router history={history}>
