@@ -1,0 +1,99 @@
+.create-keys-button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center
+}
+.create-keys {
+  @extend %item;
+  padding: 30px 20px;
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  h2 {
+    margin-bottom: 20px;
+  }
+  .set {
+    margin-top: 20px;
+  }
+  &-button {
+    @extend %btn;
+    display: inline-block;
+    background-color: #08b3f2;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAFVBMVEX///////////////////////////9nSIHRAAAABnRSTlMASUrk5udXTd49AAAAOUlEQVR42tXQsQEAIAgDQcAn+4+snRZxAK79KokrIcNBwgYdc0Migwxk8Qsd1TJWDf/KQWobqt+9G4coA99W7as5AAAAAElFTkSuQmCC);
+    background-size: 12px 12px;
+
+    &[disabled] {
+      background-color: #079dd4;
+    }
+  }
+
+  &-inputs {
+    display: table;
+    width: 100%;
+  }
+
+  .left {
+    padding-right: 10px;
+  }
+  .right {
+    padding-left: 10px;
+  }
+
+  .left,
+  .right {
+    display: table-cell;
+    width: 48%;
+  }
+
+  label {
+    &:not(.radio) {
+      display: block;
+      margin-bottom: 15px;
+      margin-top: 20px;
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
+
+  button,
+  input,
+  textarea {
+    outline: none;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  input,
+  textarea {
+    transition: 0.3s border-color;
+    width: 100%;
+    border-radius: 3px;
+    box-sizing: border-box;
+    border: 1px solid #eee;
+
+    &:focus {
+      border-color: #08b3f2;
+    }
+  }
+
+  textarea {
+    padding: 15px;
+    height: 110px;
+    resize: none;
+  }
+
+  input {
+    padding: 0 15px;
+    height: 36px;
+  }
+
+  input[type="radio"] {
+    display: none;
+
+    &:checked + .radio:after {
+      opacity: 1;
+    }
+  }
+}

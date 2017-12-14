@@ -1,40 +1,35 @@
 {
   "name": "oracles-dapps-validators",
-  "version": "1.0.0",
-  "description": "Oracles network Validators Dapp",
-  "main": "gulpfile.js",
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-add-src": "^0.2.0",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-concat": "^2.6.1",
-    "gulp-include": "^2.3.1",
-    "gulp-order": "^1.1.1",
-    "gulp-postcss": "^6.2.0",
-    "gulp-sass": "^2.3.2",
-    "gulp-sass-glob": "^1.0.6",
-    "gulp-uglify": "^2.0.0",
-    "gulp-uglifycss": "^1.0.6",
-    "gulp-util": "^3.0.8",
-    "http-server": "^0.9.0"
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://rstormsf.github.io/oracles-dapps-validators",
+  "dependencies": {
+    "clipboard": "^1.7.1",
+    "gh-pages": "^1.1.0",
+    "keythereum": "^1.0.2",
+    "moment": "^2.19.3",
+    "node-sass-chokidar": "0.0.3",
+    "npm-run-all": "^4.1.2",
+    "password-generator": "^2.2.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-places-autocomplete": "^5.4.3",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "sweetalert": "^2.0.8",
+    "web3": "^1.0.0-beta.26"
   },
   "scripts": {
-    "sass": "gulp sass",
-    "coffee": "gulp javascript",
-    "watch": "gulp watch",
-    "start": "gulp javascript && http-server -a localhost -p 8000"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/oraclesorg/oracles-dapps-validators"
-  },
-  "keywords": [],
-  "author": "oraclesorg",
-  "license": "MIT",
-  "homepage": "https://oracles.org/",
-  "dependencies": {
-    "jquery": "^3.2.1",
-    "sweetalert2": "^7.0.3",
-    "web3": "^1.0.0-beta.26"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build -o rstorm",
+    "build-css": "node-sass-chokidar src/index/index.scss -o src/index",
+    "watch-css": "npm run build-css && node-sass-chokidar src/index/index.scss -o src/index --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   }
 }
