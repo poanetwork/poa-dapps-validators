@@ -229,7 +229,7 @@ class App extends Component {
           <input type="date" id="expirationDate" value={this.state.form.expirationDate} onChange={this.onChangeFormField}/>
         </div>
       </form>
-      <button onClick={this.onClick} className="create-keys-button">{BtnAction} Metadata</button>
+      <button onClick={this.onClick} className="create-keys-button set">{BtnAction} Metadata</button>
             </div>)
     let content = createKeyBtn;
     return (
