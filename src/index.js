@@ -36,7 +36,7 @@ class AppMainRouter extends Component {
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
+    this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.state = {
       showSearch: true,
@@ -72,34 +72,30 @@ class AppMainRouter extends Component {
     })
   }
   onRouteChange(){
-    const rootPath = this.rootPath + "/";
-    if(history.location.pathname !== rootPath){
+    const setMetadata = this.rootPath + "/set";
+    if(history.location.pathname === setMetadata){
       this.setState({showSearch: false})
     } else {
       this.setState({showSearch: true})
     }
   }
-  onSubmit(e){
-    e.preventDefault();
-    switch (history.location.pathname) {
-      case "/":
-        console.log('main')
-        break;
-    }
-  }
   onSetRender() {
     return this.state.votingKey ? <App web3Config={this.state}/> :  '';
   }
-  async onConfirmPendingChange(e) {
-    e.preventDefault();
-    const miningKey = e.currentTarget.getAttribute('miningkey');
+  async _onBtnClick({event, methodToCall, successMsg}){
+    event.preventDefault();
+    this.setState({loading: true})
+    const miningKey = event.currentTarget.getAttribute('miningkey');
     try{
-      let result = await this.state.metadataContract.confirmPendingChange({
+      let result = await this.state.metadataContract[methodToCall]({
         miningKeyToConfirm: miningKey,
         senderVotingKey: this.state.votingKey
       });
       console.log(result);
+      this.setState({loading: false})
+      swal("Congratulations!", successMsg, "success");
     } catch(error) {
+      this.setState({loading: false})
       console.error(error.message);
       swal({
         icon: 'error',
@@ -108,22 +104,37 @@ class AppMainRouter extends Component {
       });
     }
   }
+  async onConfirmPendingChange(event) {
+    await this._onBtnClick({
+      event,
+      methodToCall: 'confirmPendingChange',
+      successMsg: 'You have successfully confirmed the change!'
+    });
+  }
+  async onFinalize(event){
+    await this._onBtnClick({
+      event,
+      methodToCall: 'finalize',
+      successMsg: 'You have successfully finalized the change!'
+    });
+  }
   onPendingChangesRender() {
     return this.state.votingKey ? <AllValidators 
       methodToCall="getAllPendingChanges"
+      searchTerm={this.state.searchTerm}
       web3Config={this.state}>
-        <button onClick={this.onConfirmPendingChange} className="create-keys-button right">Confirm</button>
+          <button onClick={this.onFinalize} className="create-keys-button finalize">Finalize</button>
+          <button onClick={this.onConfirmPendingChange} className="create-keys-button">Confirm</button>
       </AllValidators> : '';
   }
   onAllValidatorsRender() {
     return this.state.votingKey ? <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> : '';
   }
   onSearch(term){
-    this.setState({searchTerm: term.target.value})
+    this.setState({searchTerm: term.target.value.toLowerCase()})
   }
   render(){
-    
-    console.log('v2.02', this.rootPath)
+    console.log('v2.03')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
@@ -131,18 +142,16 @@ class AppMainRouter extends Component {
         <section className="content">
         {loading}
         <div className="search">
-          <div className="container">
+          <div className="container flex-container">
             <div className="nav">
             <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
             <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
             <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
             </div>
-            <form action="" className="search-form" onSubmit={this.onSubmit}>
-              {search}
-            </form>
+            {search}
           </div>
         </div>
-        <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} onSubmit={this.onSubmit} web3Config={this.state}/>
+        <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
         </section>

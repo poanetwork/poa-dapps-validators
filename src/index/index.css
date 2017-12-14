@@ -86,6 +86,11 @@ body {
   max-width: 960px;
   margin: 0 auto; }
 
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; }
+
 .content {
   display: table-cell;
   vertical-align: top;
@@ -350,6 +355,10 @@ button:focus {
     border: 1px solid #eee;
     background-color: #fff;
     color: #333; }
+    .validators-i .confirmations {
+      font-weight: normal;
+      font-size: 12px;
+      padding-top: 5px; }
   .validators-header {
     border-bottom: 1px solid #eee;
     padding: 25px 20px;
@@ -360,8 +369,8 @@ button:focus {
     align-items: center; }
     .validators-header .left {
       flex: 1; }
-    .validators-header .right {
-      flex: 0; }
+    .validators-header .finalize {
+      margin-right: 20px; }
   .validators-body {
     overflow: hidden;
     padding: 0 20px 20px; }
@@ -438,7 +447,7 @@ button:focus {
     z-index: 1;
     right: 0;
     top: 50%;
-    width: 40px;
+    width: 80px;
     height: 40px;
     margin: -20px 0 0;
     outline: none;

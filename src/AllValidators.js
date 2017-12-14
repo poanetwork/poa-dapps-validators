@@ -28,7 +28,8 @@ export default class AllValidators extends Component {
       );
     })
     let validators = [];
-    filtered.forEach((validator, index) => {
+    let confirmations = [];
+    for(let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, (child) => {
         return React.cloneElement(child, { miningkey: validator.address });
       })
@@ -45,8 +46,11 @@ export default class AllValidators extends Component {
           expirationDate={validator.expirationDate}
           createdDate={validator.createdDate}
           updatedDate={validator.updatedDate}
+          metadataContract={this.props.web3Config.metadataContract}
+          methodToCall={this.props.methodToCall}
         >{childrenWithProps}</Validator>)
-    })
+
+    }
     return (<div className="container">
       {validators}
     </div>)

@@ -36,6 +36,12 @@ body {
   margin: 0 auto;
 }
 
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .content {
   display: table-cell;
   vertical-align: top;

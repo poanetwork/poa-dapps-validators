@@ -114,7 +114,9 @@ export default class Metadata {
     for (let key of miningKeys) {
       let pendingChange = await this.getPendingChange({miningKey: key})
       pendingChange.address = key;
-      pendingChanges.push(pendingChange)
+      if(pendingChange.postal_code > 0){
+        pendingChanges.push(pendingChange)
+      }
     }
     return pendingChanges
   }
@@ -124,6 +126,19 @@ export default class Metadata {
     // you can't confirm twice
     // 
     return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey});
+  }
+
+  async getConfirmations({miningKey}) {
+    return await this.metadataInstance.methods.confirmations(miningKey).call();
+  }
+
+  async getMinThreshold({miningKey}) {
+    let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
+    return validatorData.minThreshold;
+  }
+
+  async finalize({miningKeyToConfirm, senderVotingKey}) {
+    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({from: senderVotingKey});
   }
   
 }
