@@ -17,14 +17,14 @@
   }
 
   &-logo {
-    @include image-2x('../images/CEREMONY_footer@2x.png', 100px, 24px);
+    @include image-2x('../images/logo_validators_dapp_footer@2x.png', 123px, 24px);
     position: relative;
     z-index: 2;
     display: inline-block;
     vertical-align: middle;
-    width: 100px;
+    width: 123px;
   	height: 24px;
-    background-image: url('../images/CEREMONY_footer.png');
+    background-image: url('../images/logo_validators_dapp_footer.png');
     background-position: 0 0;
   }
 
