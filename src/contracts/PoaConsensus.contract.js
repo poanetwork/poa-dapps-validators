@@ -1,7 +1,7 @@
 import poaConsensusAbi from './poaConsensus.abi.json'
 import Web3 from 'web3';
 
-const KEYS_MANAGER_ADDRESS = '0xf472E0e43570B9AfaAB67089615080cF7C20018d';
+const KEYS_MANAGER_ADDRESS = '0x8bf38d4764929064f2d4d3a56520a76ab3df415b';
 export default class POAConsensus {
   constructor(){
     if(window.web3.currentProvider){

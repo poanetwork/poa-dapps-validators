@@ -1,7 +1,7 @@
 import KeysManagerAbi from './keysManager.abi.json'
 import Web3 from 'web3';
 
-const KEYS_MANAGER_ADDRESS = '0xafb147e450f0375bc3e61709b053238f5804c9a6';
+const KEYS_MANAGER_ADDRESS = '0x88a34124bfffa27ef3e052c8dd2908e212643771';
 export default class KeysManager {
   constructor(){
     if(window.web3.currentProvider){
