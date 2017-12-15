@@ -122,9 +122,20 @@ export default class Metadata {
   }
 
   async confirmPendingChange({miningKeyToConfirm, senderVotingKey}) {
-    // you can't confirm your own
-    // you can't confirm twice
-    // 
+    let alreadyConfirmed = await this.metadataInstance.methods.isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey).call();
+    console.log(alreadyConfirmed)
+    if(alreadyConfirmed){
+      throw(
+        {message:
+          `You already confirmed this change.`})
+    }
+    const miningKeySender = await this.getMiningByVoting(senderVotingKey);
+    if(miningKeySender === miningKeyToConfirm){
+      throw(
+        {message:
+          `You cannot confirm your own changes.\n
+          Please ask other validators to verify your new information.`})
+    }
     return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey});
   }
 
@@ -138,6 +149,14 @@ export default class Metadata {
   }
 
   async finalize({miningKeyToConfirm, senderVotingKey}) {
+    const confirmations = await this.getConfirmations({miningKey: miningKeyToConfirm});
+    const getMinThreshold = await this.getMinThreshold({miningKey: miningKeyToConfirm});
+    if(Number(confirmations) < Number(getMinThreshold)){
+      throw(
+        {message:
+          `There is not enough confimations.\n
+          The minimum threshold to finalize is ${getMinThreshold}.`})
+    }
     return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({from: senderVotingKey});
   }
   
