@@ -50,7 +50,7 @@
     "constant": true,
     "inputs": [
       {
-        "name": "",
+        "name": "_miningKey",
         "type": "address"
       }
     ],
@@ -349,6 +349,25 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_miningKey",
+        "type": "address"
+      }
+    ],
+    "name": "getMiningKeyHistory",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "proxyStorage",
     "outputs": [
@@ -363,12 +382,25 @@
   },
   {
     "constant": true,
-    "inputs": [],
-    "name": "votingContract",
+    "inputs": [
+      {
+        "name": "_initialKey",
+        "type": "address"
+      },
+      {
+        "name": "_votingKey",
+        "type": "address"
+      },
+      {
+        "name": "_payoutKey",
+        "type": "address"
+      }
+    ],
+    "name": "getInitialKey",
     "outputs": [
       {
         "name": "",
-        "type": "address"
+        "type": "uint8"
       }
     ],
     "payable": false,
@@ -392,14 +424,28 @@
       }
     ],
     "name": "createKeys",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "_key",
+        "type": "address"
+      },
+      {
+        "name": "_miningKey",
+        "type": "address"
+      }
+    ],
     "name": "initialKeysCount",
     "outputs": [
       {
@@ -442,7 +488,12 @@
       }
     ],
     "name": "swapMiningKey",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -463,31 +514,17 @@
   },
   {
     "constant": true,
-    "inputs": [],
-    "name": "masterOfCeremony",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "constant": true,
     "inputs": [
       {
-        "name": "_miningKey",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "isPayoutActive",
+    "name": "miningKeyByVoting",
     "outputs": [
       {
         "name": "",
-        "type": "bool"
+        "type": "address"
       }
     ],
     "payable": false,
@@ -510,8 +547,71 @@
       }
     ],
     "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "name": "masterOfCeremony",
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ]
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "_miningKey",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "miningKey",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "action",
+        "type": "string"
+      }
+    ],
+    "name": "isPayoutActive",
+    "type": "function",
+    "constant": true,
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "name": "_proxyStorage",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "name": "_poaConsensus",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "_masterOfCeremony",
+        "type": "address"
+      }
+    ],
+    "name": "VotingKeyChanged",
+    "type": "constructor",
+    "payable": false,
+    "stateMutability": "nonpayable"
   },
   {
     "anonymous": false,
@@ -569,6 +669,11 @@
         "indexed": false,
         "name": "action",
         "type": "string"
+      },
+      {
+        "indexed": false,
+        "name": "initialKeysCount",
+        "type": "uint256"
       }
     ],
     "name": "MiningKeyChanged",
