@@ -2,14 +2,6 @@ let errorMsgNoMetamaskAccount = `You haven't chosen any account in MetaMask.
 Please, choose your initial key in MetaMask and reload the page.
 Check Oracles network <a href='https://github.com/oraclesorg/oracles-wiki' target='blank'>wiki</a> for more info.`;
 
-
-function generateElement(msg){
-  let errorNode = document.createElement("div");
-  errorNode.innerHTML = `<div>
-    ${msg}
-  </div>`;
-  return errorNode;
-}
 let getWeb3 = () => {
   return new Promise(function (resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -28,7 +20,7 @@ let getWeb3 = () => {
             case "12648430":
               netIdName = 'Oracles'
               console.log('This is oracles')
-              break
+              break;
             default:
               netIdName = 'ERROR'
               errorMsg = `You aren't connected to Oracles Network. 
@@ -38,10 +30,10 @@ let getWeb3 = () => {
           }
           var defaultAccount = web3.eth.defaultAccount || null;
           if(defaultAccount === null){
-            reject({msg: errorMsgNoMetamaskAccount, node: generateElement(errorMsgNoMetamaskAccount)})
+            reject({message: errorMsgNoMetamaskAccount})
           }
           if(errorMsg !== null){
-            reject({msg: errorMsg, node: generateElement(errorMsg)})
+            reject({message: errorMsg})
           }
           results = {
             web3Instance: web3,
@@ -56,7 +48,7 @@ let getWeb3 = () => {
         console.log('Injected web3 detected.');
 
       } else {
-        reject({msg: errorMsgNoMetamaskAccount, node: generateElement(errorMsgNoMetamaskAccount)})
+        reject({message: errorMsgNoMetamaskAccount})
         console.error('Metamask not found'); 
       }
     })
