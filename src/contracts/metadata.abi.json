@@ -243,26 +243,6 @@
       {
         "name": "_voter",
         "type": "address"
-      },
-      {
-        "name": "_licenseId",
-        "type": "bytes32"
-      },
-      {
-        "name": "_fullAddress",
-        "type": "string"
-      },
-      {
-        "name": "_state",
-        "type": "bytes32"
-      },
-      {
-        "name": "_zipcode",
-        "type": "uint256"
-      },
-      {
-        "name": "_expirationDate",
-        "type": "uint256"
       }
     ],
     "name": "isAddressAlreadyVoted",
@@ -309,65 +289,19 @@
       }
     ],
     "name": "createMetadata",
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": false,
-    "inputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "cancelPendingChange",
     "outputs": [
       {
         "name": "",
         "type": "bool"
-      },
-      {
-        "name": "lastName",
-        "type": "bytes32"
-      },
-      {
-        "name": "licenseId",
-        "type": "bytes32"
-      },
-      {
-        "name": "fullAddress",
-        "type": "string"
-      },
-      {
-        "name": "state",
-        "type": "bytes32"
-      },
-      {
-        "name": "zipcode",
-        "type": "uint256"
-      },
-      {
-        "name": "expirationDate",
-        "type": "uint256"
-      },
-      {
-        "name": "createdDate",
-        "type": "uint256"
-      },
-      {
-        "name": "updatedDate",
-        "type": "uint256"
-      },
-      {
-        "name": "minThreshold",
-        "type": "uint256"
       }
     ],
     "payable": false,
@@ -375,16 +309,13 @@
     "type": "function"
   },
   {
+    "constant": true,
     "inputs": [
       {
         "name": "",
         "type": "address"
       }
     ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true,
     "name": "validators",
     "outputs": [
       {
@@ -427,21 +358,21 @@
         "name": "minThreshold",
         "type": "uint256"
       }
-    ]
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
         "name": "_proxyStorage",
         "type": "address"
       }
     ],
-    "name": "MetadataCreated",
-    "type": "constructor",
     "payable": false,
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
     "anonymous": false,
@@ -473,11 +404,6 @@
       {
         "indexed": true,
         "name": "miningKey",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "votingSender",
         "type": "address"
       }
     ],
