@@ -2,7 +2,7 @@
   "name": "oracles-dapps-validators",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://rstormsf.github.io/oracles-dapps-validators",
+  "homepage": "https://oraclesorg.github.io/poa-dapps-validators",
   "dependencies": {
     "clipboard": "^1.7.1",
     "gh-pages": "^1.1.0",
@@ -22,7 +22,7 @@
   },
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -o rstorm",
+    "deploy": "gh-pages -d build -o origin",
     "build-css": "node-sass-chokidar src/index/index.scss -o src/index",
     "watch-css": "npm run build-css && node-sass-chokidar src/index/index.scss -o src/index --watch --recursive",
     "start-js": "react-scripts start",
