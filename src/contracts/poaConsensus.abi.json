@@ -19,6 +19,25 @@
     "type": "function"
   },
   {
+    "constant": true,
+    "inputs": [
+      {
+        "name": "_newAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getCurrentValidatorsLength",
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "constant": false,
     "inputs": [
       {
@@ -41,18 +60,32 @@
       }
     ],
     "name": "removeValidator",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
     "name": "currentValidatorsLength",
     "outputs": [
       {
         "name": "",
+        "type": "uint256"
+      },
+      {
+        "name": "index",
         "type": "uint256"
       }
     ],
@@ -99,7 +132,12 @@
   },
   {
     "constant": true,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "_validator",
+        "type": "address"
+      }
+    ],
     "name": "getVotingToChangeKeys",
     "outputs": [
       {
@@ -127,9 +165,19 @@
   },
   {
     "constant": false,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256"
+      }
+    ],
     "name": "finalizeChange",
-    "outputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address"
+      }
+    ],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -239,7 +287,12 @@
   },
   {
     "constant": true,
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "_someone",
+        "type": "address"
+      }
+    ],
     "name": "masterOfCeremony",
     "outputs": [
       {
@@ -252,34 +305,42 @@
     "type": "function"
   },
   {
-    "constant": true,
     "inputs": [
       {
         "name": "_someone",
         "type": "address"
       }
     ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
     "name": "isValidator",
     "outputs": [
       {
         "name": "",
         "type": "bool"
       }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function"
+    ]
   },
   {
+    "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
         "name": "_masterOfCeremony",
         "type": "address"
+      },
+      {
+        "indexed": false,
+        "name": "newSet",
+        "type": "address[]"
       }
     ],
+    "name": "InitiateChange",
+    "type": "constructor",
     "payable": false,
-    "stateMutability": "nonpayable",
-    "type": "constructor"
+    "stateMutability": "nonpayable"
   },
   {
     "anonymous": false,
@@ -305,6 +366,11 @@
         "indexed": false,
         "name": "newSet",
         "type": "address[]"
+      },
+      {
+        "indexed": false,
+        "name": "newAddress",
+        "type": "address"
       }
     ],
     "name": "ChangeFinalized",
