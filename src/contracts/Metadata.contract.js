@@ -17,7 +17,7 @@ var toAscii = function(hex) {
   return str;
 };
 
-const METADATA_ADDRESS = '0xfda8a3536aa1bb69073259d305fd22fcec368b71';
+const METADATA_ADDRESS = '0xa1b344ee240564f61117f2dbf999547ad4b871ed';
 export default class Metadata {
   constructor(){
     if(window.web3.currentProvider){

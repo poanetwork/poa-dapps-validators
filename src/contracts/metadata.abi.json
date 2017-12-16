@@ -56,12 +56,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_miningKey",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "getBallotsStorage",
     "outputs": [
       {
@@ -101,48 +96,14 @@
       }
     ],
     "name": "finalize",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_firstName",
-        "type": "bytes32"
-      },
-      {
-        "name": "_lastName",
-        "type": "bytes32"
-      },
-      {
-        "name": "_licenseId",
-        "type": "bytes32"
-      },
-      {
-        "name": "_fullAddress",
-        "type": "string"
-      },
-      {
-        "name": "_state",
-        "type": "bytes32"
-      },
-      {
-        "name": "_zipcode",
-        "type": "uint256"
-      },
-      {
-        "name": "_expirationDate",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "getTime",
     "outputs": [
       {
@@ -208,56 +169,6 @@
     "name": "changeRequest",
     "outputs": [
       {
-        "components": [
-          {
-            "name": "firstName",
-            "type": "bytes32"
-          },
-          {
-            "name": "lastName",
-            "type": "bytes32"
-          },
-          {
-            "name": "licenseId",
-            "type": "bytes32"
-          },
-          {
-            "name": "fullAddress",
-            "type": "string"
-          },
-          {
-            "name": "state",
-            "type": "bytes32"
-          },
-          {
-            "name": "zipcode",
-            "type": "uint256"
-          },
-          {
-            "name": "expirationDate",
-            "type": "uint256"
-          },
-          {
-            "name": "createdDate",
-            "type": "uint256"
-          },
-          {
-            "name": "updatedDate",
-            "type": "uint256"
-          },
-          {
-            "name": "minThreshold",
-            "type": "uint256"
-          },
-          {
-            "name": "requestNonce",
-            "type": "uint256"
-          }
-        ],
-        "name": "",
-        "type": "bool"
-      },
-      {
         "name": "",
         "type": "bool"
       }
@@ -268,12 +179,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_miningKey",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "getKeysManager",
     "outputs": [
       {
@@ -294,12 +200,7 @@
       }
     ],
     "name": "confirmPendingChange",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -320,36 +221,7 @@
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_firstName",
-        "type": "bytes32"
-      },
-      {
-        "name": "_lastName",
-        "type": "bytes32"
-      },
-      {
-        "name": "_licenseId",
-        "type": "bytes32"
-      },
-      {
-        "name": "_fullAddress",
-        "type": "string"
-      },
-      {
-        "name": "_state",
-        "type": "bytes32"
-      },
-      {
-        "name": "_zipcode",
-        "type": "uint256"
-      },
-      {
-        "name": "_expirationDate",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "getMinThreshold",
     "outputs": [
       {
@@ -371,6 +243,26 @@
       {
         "name": "_voter",
         "type": "address"
+      },
+      {
+        "name": "_licenseId",
+        "type": "bytes32"
+      },
+      {
+        "name": "_fullAddress",
+        "type": "string"
+      },
+      {
+        "name": "_state",
+        "type": "bytes32"
+      },
+      {
+        "name": "_zipcode",
+        "type": "uint256"
+      },
+      {
+        "name": "_expirationDate",
+        "type": "uint256"
       }
     ],
     "name": "isAddressAlreadyVoted",
@@ -475,10 +367,6 @@
       },
       {
         "name": "minThreshold",
-        "type": "uint256"
-      },
-      {
-        "name": "requestNonce",
         "type": "uint256"
       }
     ],
