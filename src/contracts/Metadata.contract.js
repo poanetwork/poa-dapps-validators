@@ -2,6 +2,7 @@ import PoaConsensus from './PoaConsensus.contract'
 import MetadataAbi from './metadata.abi.json'
 import Web3 from 'web3';
 import moment from 'moment';
+import {METADATA_ADDRESS} from './addresses';
 var toAscii = function(hex) {
   var str = '',
       i = 0,
@@ -17,7 +18,7 @@ var toAscii = function(hex) {
   return str;
 };
 
-const METADATA_ADDRESS = '0xa1b344ee240564f61117f2dbf999547ad4b871ed';
+console.log('Metadata contract:', METADATA_ADDRESS)
 export default class Metadata {
   constructor(){
     if(window.web3.currentProvider){

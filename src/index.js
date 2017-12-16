@@ -30,7 +30,7 @@ function generateElement(msg){
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
-    this.rootPath = '/oracles-dapps-validators'
+    this.rootPath = '/poa-dapps-validators'
     history.listen(this.onRouteChange.bind(this));
     this.onSetRender = this.onSetRender.bind(this);
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
@@ -134,7 +134,7 @@ class AppMainRouter extends Component {
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
   render(){
-    console.log('v2.03')
+    console.log('v2.04')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
