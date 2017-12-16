@@ -386,14 +386,6 @@
       {
         "name": "_initialKey",
         "type": "address"
-      },
-      {
-        "name": "_votingKey",
-        "type": "address"
-      },
-      {
-        "name": "_payoutKey",
-        "type": "address"
       }
     ],
     "name": "getInitialKey",
@@ -424,28 +416,14 @@
       }
     ],
     "name": "createKeys",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "constant": true,
-    "inputs": [
-      {
-        "name": "_key",
-        "type": "address"
-      },
-      {
-        "name": "_miningKey",
-        "type": "address"
-      }
-    ],
+    "inputs": [],
     "name": "initialKeysCount",
     "outputs": [
       {
@@ -488,12 +466,7 @@
       }
     ],
     "name": "swapMiningKey",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function"
@@ -532,54 +505,28 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "name": "_proxyStorage",
-        "type": "address"
-      },
-      {
-        "name": "_poaConsensus",
-        "type": "address"
-      },
-      {
-        "name": "_masterOfCeremony",
-        "type": "address"
-      }
-    ],
-    "payable": false,
-    "stateMutability": "view",
-    "type": "function",
     "constant": true,
+    "inputs": [],
     "name": "masterOfCeremony",
     "outputs": [
       {
         "name": "",
         "type": "address"
       }
-    ]
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "anonymous": false,
+    "constant": true,
     "inputs": [
       {
-        "indexed": false,
         "name": "_miningKey",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "name": "miningKey",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "name": "action",
-        "type": "string"
       }
     ],
     "name": "isPayoutActive",
-    "type": "function",
-    "constant": true,
     "outputs": [
       {
         "name": "",
@@ -587,31 +534,27 @@
       }
     ],
     "payable": false,
-    "stateMutability": "view"
+    "stateMutability": "view",
+    "type": "function"
   },
   {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
         "name": "_proxyStorage",
         "type": "address"
       },
       {
-        "indexed": true,
         "name": "_poaConsensus",
         "type": "address"
       },
       {
-        "indexed": false,
         "name": "_masterOfCeremony",
         "type": "address"
       }
     ],
-    "name": "VotingKeyChanged",
-    "type": "constructor",
     "payable": false,
-    "stateMutability": "nonpayable"
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
     "anonymous": false,
@@ -669,11 +612,6 @@
         "indexed": false,
         "name": "action",
         "type": "string"
-      },
-      {
-        "indexed": false,
-        "name": "initialKeysCount",
-        "type": "uint256"
       }
     ],
     "name": "MiningKeyChanged",
