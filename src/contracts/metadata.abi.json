@@ -221,6 +221,25 @@
   },
   {
     "constant": true,
+    "inputs": [
+      {
+        "name": "_miningKey",
+        "type": "address"
+      }
+    ],
+    "name": "onlyIfChangeExist",
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "payable": false,
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "constant": true,
     "inputs": [],
     "name": "getMinThreshold",
     "outputs": [
