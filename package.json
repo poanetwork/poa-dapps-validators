@@ -1,6 +1,6 @@
 {
-  "name": "oracles-dapps-validators",
-  "version": "0.1.0",
+  "name": "poa-dapps-validators",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://oraclesorg.github.io/poa-dapps-validators",
   "dependencies": {
