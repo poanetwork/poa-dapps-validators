@@ -6,14 +6,14 @@
 
 ## MetaMask plugin setup
 
-* Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/oraclesorg/oracles-wiki/blob/master/MetaMask-connect.md#connect-to-oracles-network-via-metamask))
+* Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/poanetwork/wiki/blob/master/MetaMask-connect.md#connect-to-poa-network-via-metamask))
 
 ![](./docs/all.png)
 
 ![](./docs/set_metadata.png)
 
 ## Configuration file
-It is configured with [POA Network contract](https://github.com/oraclesorg/poa-network-consensus-contracts)
+It is configured with [POA Network contract](https://github.com/poanetwork/poa-network-consensus-contracts)
 
 Path: [`./src/contracts/addresses.js`](./src/contracts/addresses.js)
 
