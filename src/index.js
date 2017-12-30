@@ -46,7 +46,8 @@ class AppMainRouter extends Component {
       poaConsensus: null,
       votingKey :null,
       loading: true,
-      searchTerm: ''
+      searchTerm: '',
+      injectedWeb3: null
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -60,6 +61,7 @@ class AppMainRouter extends Component {
         keysManager,
         metadataContract,
         loading: false,
+        injectedWeb3: web3Config.injectedWeb3
       })
     }).catch((error) => {
       console.error(error.message);
@@ -75,6 +77,13 @@ class AppMainRouter extends Component {
     const setMetadata = this.rootPath + "/set";
     if(history.location.pathname === setMetadata){
       this.setState({showSearch: false})
+      if(this.state.injectedWeb3 === false){
+        swal({
+          icon: 'warning',
+          title: 'Warning',
+          content: generateElement('Metamask was not found')
+        });  
+      }
     } else {
       this.setState({showSearch: true})
     }
@@ -119,16 +128,16 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.votingKey ? <AllValidators 
+    return this.state.loading ? '' : <AllValidators 
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
           <button onClick={this.onFinalize} className="create-keys-button finalize">Finalize</button>
           <button onClick={this.onConfirmPendingChange} className="create-keys-button">Confirm</button>
-      </AllValidators> : '';
+      </AllValidators>;
   }
   onAllValidatorsRender() {
-    return this.state.votingKey ? <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> : '';
+    return this.state.loading ? '' : <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> 
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})

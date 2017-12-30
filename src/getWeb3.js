@@ -1,3 +1,5 @@
+import Web3 from 'web3'
+
 let errorMsgNoMetamaskAccount = `You haven't chosen any account in MetaMask.
 Please, choose your initial key in MetaMask and reload the page.
 Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
@@ -29,10 +31,11 @@ let getWeb3 = () => {
             default:
               netIdName = 'ERROR'
               errorMsg = `You aren't connected to POA Network. 
-                  Please, switch on POA plugin and refresh the page. 
+                  Please, switch to POA network and refresh the page. 
                   Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`
               console.log('This is an unknown network.', netId)
           }
+          document.title = `${netIdName} - POA validators dApp`
           var defaultAccount = web3.eth.defaultAccount || null;
           if(defaultAccount === null){
             reject({message: errorMsgNoMetamaskAccount})
@@ -53,7 +56,24 @@ let getWeb3 = () => {
         console.log('Injected web3 detected.');
 
       } else {
-        reject({message: errorMsgNoMetamaskAccount})
+        // Fallback to localhost if no web3 injection.
+        const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
+        const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
+        const network = window.location.host.indexOf('sokol') !== -1 ? POA_SOKOL : POA_CORE
+
+        document.title = `${network.netIdName} - POA validators dApp`
+        const provider = new Web3.providers.HttpProvider(network.RPC_URL)
+        let web3 = new Web3(provider)
+
+        results = {
+          web3Instance: web3,
+          netIdName: network.netIdName,
+          netId: network.netIdName,
+          injectedWeb3: false,
+          defaultAccount: null
+        }
+        resolve(results)
+        console.log('No web3 instance injected, using Local web3.');
         console.error('Metamask not found'); 
       }
     })

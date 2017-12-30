@@ -19,12 +19,12 @@ var toAscii = function(hex) {
 };
 
 console.log('Metadata contract:', METADATA_ADDRESS)
+const SOKOL_MOC = '0xe8ddc5c7a2d2f0d7a9798459c0104fdf5e987aca';
+const CORE_MOC = '0xCf260eA317555637C55F70e55dbA8D5ad8414Cb0';
 export default class Metadata {
-  constructor(){
-    if(window.web3.currentProvider){
-      this.web3_10 = new Web3(window.web3.currentProvider);
-      this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
-    }
+  constructor({web3}){
+    this.web3_10 = new Web3(web3.currentProvider);
+    this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
   }
   async createMetadata({
     firstName,
@@ -47,6 +47,21 @@ export default class Metadata {
       zipcode,
       expirationDate
     ).send({from: votingKey});
+  }
+
+  getMocData() {
+    // Barinov, Igor		755 Bounty Dr 202	Foster City	CA	94404 	41	2206724	07/23/2021
+    return {
+      firstName: 'Igor',
+      lastName: 'Barinov',
+      fullAddress: '755 Bounty Dr 202',
+      createdDate: '2017-12-18',
+      updatedDate: '',
+      expirationDate: '2021-07-23',
+      licenseId: '2206724',
+      us_state: 'CA',
+      postal_code: 94404,
+    }
   }
 
   async getValidatorData({votingKey, miningKey}){
@@ -75,14 +90,18 @@ export default class Metadata {
 
   async getAllValidatorsData(){
     let all = [];
+    
     return new Promise(async(resolve, reject) => {
       const poaInstance = new PoaConsensus({web3: this.web3_10})
       const keys = await poaInstance.getValidators()
       for (let key of keys) {
         let data = await this.getValidatorData({miningKey: key})
+        if(key === SOKOL_MOC || key === CORE_MOC) {
+          data = this.getMocData()
+        }
         data.address = key
         all.push(data)
-      }
+      }      
       resolve(all);
     })
   }
