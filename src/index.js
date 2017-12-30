@@ -51,10 +51,12 @@ class AppMainRouter extends Component {
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
-        web3: web3Config.web3Instance
+        web3: web3Config.web3Instance,
+        netId: web3Config.netId
       });
       const metadataContract = new Metadata({
-        web3: web3Config.web3Instance
+        web3: web3Config.web3Instance,
+        netId: web3Config.netId
       })
       this.setState({
         votingKey: web3Config.defaultAccount,

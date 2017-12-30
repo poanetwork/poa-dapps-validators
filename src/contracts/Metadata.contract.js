@@ -2,7 +2,7 @@ import PoaConsensus from './PoaConsensus.contract'
 import MetadataAbi from './metadata.abi.json'
 import Web3 from 'web3';
 import moment from 'moment';
-import {METADATA_ADDRESS} from './addresses';
+import networkAddresses from './addresses';
 var toAscii = function(hex) {
   var str = '',
       i = 0,
@@ -17,14 +17,13 @@ var toAscii = function(hex) {
   }
   return str;
 };
-
-console.log('Metadata contract:', METADATA_ADDRESS)
-const SOKOL_MOC = '0xe8ddc5c7a2d2f0d7a9798459c0104fdf5e987aca';
-const CORE_MOC = '0xCf260eA317555637C55F70e55dbA8D5ad8414Cb0';
 export default class Metadata {
-  constructor({web3}){
+  constructor({web3, netId}){
     this.web3_10 = new Web3(web3.currentProvider);
+    const {METADATA_ADDRESS, MOC} = networkAddresses(netId);
     this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
+    this.MOC_ADDRESS = MOC;
+    console.log('Metadata contract:', METADATA_ADDRESS)
   }
   async createMetadata({
     firstName,
@@ -96,7 +95,7 @@ export default class Metadata {
       const keys = await poaInstance.getValidators()
       for (let key of keys) {
         let data = await this.getValidatorData({miningKey: key})
-        if(key === SOKOL_MOC || key === CORE_MOC) {
+        if(key === this.MOC_ADDRESS) {
           data = this.getMocData()
         }
         data.address = key
