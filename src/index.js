@@ -145,7 +145,7 @@ class AppMainRouter extends Component {
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
   render(){
-    console.log('v2.04')
+    console.log('v2.05')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
@@ -163,6 +163,7 @@ class AppMainRouter extends Component {
           </div>
         </div>
         <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state}/>
+        <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
         </section>
