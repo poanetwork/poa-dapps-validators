@@ -23,6 +23,7 @@ export default class Metadata {
     const {METADATA_ADDRESS, MOC} = networkAddresses(netId);
     this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
     this.MOC_ADDRESS = MOC;
+    this.netId = netId;
     console.log('Metadata contract:', METADATA_ADDRESS)
   }
   async createMetadata({
@@ -91,7 +92,7 @@ export default class Metadata {
     let all = [];
     
     return new Promise(async(resolve, reject) => {
-      const poaInstance = new PoaConsensus({web3: this.web3_10})
+      const poaInstance = new PoaConsensus({web3: this.web3_10, netId: this.netId})
       const keys = await poaInstance.getValidators()
       for (let key of keys) {
         let data = await this.getValidatorData({miningKey: key})

@@ -16,7 +16,7 @@ module.exports = (netId) => {
   switch (netId){
     case '77':
       return SOKOL_ADDRESSES
-      case '99':
+    case '99':
       return CORE_ADDRESSES
     default:
       return CORE_ADDRESSES
