@@ -17,6 +17,10 @@ import createBrowserHistory from 'history/createBrowserHistory'
 import Loading from './Loading'
 import AllValidators from './AllValidators'
 
+let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
+Please, choose your voting key in MetaMask and reload the page.
+Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
+
 const history = createBrowserHistory()
 
 function generateElement(msg){
@@ -90,30 +94,46 @@ class AppMainRouter extends Component {
       this.setState({showSearch: true})
     }
   }
+  checkForVotingKey(cb){
+    if(this.state.votingKey){
+      return cb();
+    } else {
+      swal({
+        icon: 'warning',
+        title: 'Warning',
+        content: generateElement(errorMsgNoMetamaskAccount)
+      });  
+      return ''
+    }
+  }
   onSetRender() {
-    return this.state.votingKey ? <App web3Config={this.state}/> :  '';
+    return this.checkForVotingKey(() => {
+      return <App web3Config={this.state}/>
+    })
   }
   async _onBtnClick({event, methodToCall, successMsg}){
     event.preventDefault();
-    this.setState({loading: true})
-    const miningKey = event.currentTarget.getAttribute('miningkey');
-    try{
-      let result = await this.state.metadataContract[methodToCall]({
-        miningKeyToConfirm: miningKey,
-        senderVotingKey: this.state.votingKey
-      });
-      console.log(result);
-      this.setState({loading: false})
-      swal("Congratulations!", successMsg, "success");
-    } catch(error) {
-      this.setState({loading: false})
-      console.error(error.message);
-      swal({
-        icon: 'error',
-        title: 'Error',
-        content: generateElement(error.message)
-      });
-    }
+    this.checkForVotingKey(async () => {
+      this.setState({loading: true})
+      const miningKey = event.currentTarget.getAttribute('miningkey');
+      try{
+        let result = await this.state.metadataContract[methodToCall]({
+          miningKeyToConfirm: miningKey,
+          senderVotingKey: this.state.votingKey
+        });
+        console.log(result);
+        this.setState({loading: false})
+        swal("Congratulations!", successMsg, "success");
+      } catch(error) {
+        this.setState({loading: false})
+        console.error(error.message);
+        swal({
+          icon: 'error',
+          title: 'Error',
+          content: generateElement(error.message)
+        });
+      }
+    })
   }
   async onConfirmPendingChange(event) {
     await this._onBtnClick({
@@ -145,7 +165,7 @@ class AppMainRouter extends Component {
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
   render(){
-    console.log('v2.05')
+    console.log('v2.06')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading /> : ''
     return (
