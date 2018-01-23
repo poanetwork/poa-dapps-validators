@@ -37,11 +37,11 @@ let getWeb3 = () => {
           }
           document.title = `${netIdName} - POA validators dApp`
           var defaultAccount = web3.eth.defaultAccount || null;
-          if(defaultAccount === null){
-            reject({message: errorMsgNoMetamaskAccount})
-          }
           if(errorMsg !== null){
             reject({message: errorMsg})
+          }
+          if(defaultAccount === null){
+            reject({message: errorMsgNoMetamaskAccount})
           }
           results = {
             web3Instance: web3,
