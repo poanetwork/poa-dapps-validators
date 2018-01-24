@@ -20,11 +20,7 @@ body {
   font-family: 'Open Sans', sans-serif;
   -webkit-font-smoothing: antialiased; }
 
-.footer {
-  left: 0;
-  right: 0; }
-
-.header {
+.footer, .header {
   left: 0;
   right: 0; }
 
@@ -234,7 +230,7 @@ button:focus {
   z-index: 1;
   top: 0;
   padding: 18px 10px;
-  background-image: url("../images/bg_header.png");
+  background-color: #6d2eae;
   background-repeat: no-repeat;
   background-size: cover; }
   .header-settings {
@@ -259,6 +255,10 @@ button:focus {
   .header-new-ballot {
     float: right;
     margin-top: 3px; }
+
+.select-network-id {
+  width: 40px;
+  background: #fff; }
 
 @keyframes fadeOut {
   0% {

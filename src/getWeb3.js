@@ -1,9 +1,5 @@
 import Web3 from 'web3'
 
-let errorMsgNoMetamaskAccount = `You haven't chosen any account in MetaMask.
-Please, choose your initial key in MetaMask and reload the page.
-Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
-
 let getWeb3 = () => {
   return new Promise(function (resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -26,6 +22,8 @@ let getWeb3 = () => {
               break;
             case "77":
               netIdName = 'Sokol'
+              window.document.querySelector('.footer').style.backgroundColor = "#6ac9b9";
+              window.document.querySelector('.header').style.backgroundColor = "#6ac9b9";
               console.log('This is Sokol', netId)
               break;
             default:
@@ -39,9 +37,6 @@ let getWeb3 = () => {
           var defaultAccount = web3.eth.defaultAccount || null;
           if(errorMsg !== null){
             reject({message: errorMsg})
-          }
-          if(defaultAccount === null){
-            reject({message: errorMsgNoMetamaskAccount})
           }
           results = {
             web3Instance: web3,

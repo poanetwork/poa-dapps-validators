@@ -96,7 +96,7 @@ export default class Metadata {
       const keys = await poaInstance.getValidators()
       for (let key of keys) {
         let data = await this.getValidatorData({miningKey: key})
-        if(key === this.MOC_ADDRESS) {
+        if(key.toLowerCase() === this.MOC_ADDRESS.toLowerCase()) {
           data = this.getMocData()
         }
         data.address = key
