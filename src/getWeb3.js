@@ -22,6 +22,8 @@ let getWeb3 = () => {
               break;
             case "77":
               netIdName = 'Sokol'
+              window.document.querySelector('.footer').style.backgroundColor = "#6ac9b9";
+              window.document.querySelector('.header').style.backgroundColor = "#6ac9b9";
               console.log('This is Sokol', netId)
               break;
             default:

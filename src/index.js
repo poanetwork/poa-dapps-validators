@@ -30,7 +30,15 @@ function generateElement(msg){
   </div>`;
   return errorNode;
 }
-
+let Header = ({netId, onChange}) => {
+  return (
+    <header id="header" class="header">
+      <div className="container">
+          <a href="/poa-dapps-validators" className="header-logo"></a>
+      </div>
+    </header>
+  )
+}
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
@@ -95,7 +103,7 @@ class AppMainRouter extends Component {
     }
   }
   checkForVotingKey(cb){
-    if(this.state.votingKey){
+    if(this.state.votingKey && !this.state.loading){
       return cb();
     } else {
       swal({
@@ -171,6 +179,7 @@ class AppMainRouter extends Component {
     return (
       <Router history={history}>
         <section className="content">
+          <Header />
         {loading}
         <div className="search">
           <div className="container flex-container">

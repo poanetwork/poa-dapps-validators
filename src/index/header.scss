@@ -1,10 +1,10 @@
 .header {
-  @extend %stretch-width;
+  @extend %full-width;
   position: absolute;
   z-index: 1;
   top: 0;
   padding: 18px 10px;
-  background-image: url('../images/bg_header.png');
+  background-color: #6d2eae;
   background-repeat: no-repeat;
   background-size: cover;
 
@@ -34,4 +34,8 @@
     float: right;
     margin-top: 3px;
   }
+}
+.select-network-id {
+  width: 40px;
+  background: #fff;
 }
