@@ -63,7 +63,7 @@ let getWeb3 = () => {
         results = {
           web3Instance: web3,
           netIdName: network.netIdName,
-          netId: network.netIdName,
+          netId: network.netId,
           injectedWeb3: false,
           defaultAccount: null
         }

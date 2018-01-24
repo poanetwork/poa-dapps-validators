@@ -59,7 +59,8 @@ class AppMainRouter extends Component {
       votingKey :null,
       loading: true,
       searchTerm: '',
-      injectedWeb3: null
+      injectedWeb3: null,
+      netId: ''
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -75,7 +76,8 @@ class AppMainRouter extends Component {
         keysManager,
         metadataContract,
         loading: false,
-        injectedWeb3: web3Config.injectedWeb3
+        injectedWeb3: web3Config.injectedWeb3,
+        netId: web3Config.netId
       })
     }).catch((error) => {
       console.error(error.message);
@@ -173,9 +175,9 @@ class AppMainRouter extends Component {
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
   render(){
-    console.log('v2.06')
+    console.log('v2.07')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
-    const loading = this.state.loading ? <Loading /> : ''
+    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (
       <Router history={history}>
         <section className="content">
