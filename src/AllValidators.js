@@ -9,24 +9,26 @@ export default class AllValidators extends Component {
     this.state = {
       validators: [],
       loading: true,
-      netId: props.web3Config.metadataContract.netId
     }
     this.getValidatorsData.call(this);
   }
   async getValidatorsData() {
-    this.setState({loading: true})
-    this.getMetadataContract()[this.props.methodToCall](this.state.netId).then((data) => {
+    const netId = this.props.web3Config.netId;
+    this.setState({loading: true, netId: netId})
+    this.getMetadataContract()[this.props.methodToCall](netId).then((data) => {
       this.setState({
         validators: data,
-        netId: this.props.web3Config.metadataContract.netId,
-        loading: false
+        loading: false,
+        reload: false,
       })
     })
   }
-  componentWillUpdate(nextProps){
-    if(nextProps.web3Config.metadataContract.netId !== this.state.netId && !this.state.loading){
-      this.getValidatorsData()
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.web3Config.netId !== this.state.netId){
+      this.getValidatorsData.call(this)
+      return false;
     }
+    return true;
   }
   getMetadataContract(){
     return this.props.web3Config.metadataContract;

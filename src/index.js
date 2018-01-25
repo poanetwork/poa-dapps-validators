@@ -212,7 +212,6 @@ class AppMainRouter extends Component {
       </AllValidators>;
   }
   onAllValidatorsRender() {
-    console.log(this.state.error, 'erororoorroor')
     return this.state.loading || this.state.error ? '' : <AllValidators
       searchTerm={this.state.searchTerm}
       methodToCall="getAllValidatorsData"
