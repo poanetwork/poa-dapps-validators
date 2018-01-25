@@ -3,7 +3,7 @@ import getWeb3 from './getWeb3'
 import KeysManager from './contracts/KeysManager.contract';
 import MetadataContract from './contracts/Metadata.contract';
 import swal from 'sweetalert';
-import './index/index.css';
+import './stylesheets/application.css';
 import ReactDOM from 'react-dom';
 import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId } from 'react-places-autocomplete';
 import moment from 'moment';
@@ -37,12 +37,12 @@ class App extends Component {
         licenseId: ''
       },
       hasData: false
-      
+
     }
 
     this.defaultValues = null;
     this.setMetadata.call(this);
-    
+
   }
   async setMetadata(){
     const currentData = await this.getMetadataContract().getValidatorData({votingKey: this.getVotingKey()});
@@ -176,7 +176,7 @@ class App extends Component {
       this.setState({loading: false})
       var content = document.createElement("div");
       content.innerHTML = `<div>
-        Something went wrong!<br/><br/> 
+        Something went wrong!<br/><br/>
         ${error.message}
       </div>`;
       swal({
@@ -201,12 +201,12 @@ class App extends Component {
         <small>{ formattedSuggestion.secondaryText }</small>
       </div>
     )
-    
+
     const inputProps = {
       value: this.state.form.fullAddress,
       onChange: this.onChangeAutoComplete,
       id: 'address'
-    }    
+    }
     let loader = this.state.loading ? <Loading /> : '';
     let createKeyBtn = (<div className="create-keys">
                    <form className="create-keys-inputs">
@@ -235,7 +235,7 @@ class App extends Component {
     return (
       <div className="container">
         {loader}
-        {content}  
+        {content}
       </div>
     );
   }
