@@ -90,7 +90,6 @@ export default class Metadata {
 
   async getAllValidatorsData(){
     let all = [];
-    
     return new Promise(async(resolve, reject) => {
       const poaInstance = new PoaConsensus({web3: this.web3_10, netId: this.netId})
       const keys = await poaInstance.getValidators()

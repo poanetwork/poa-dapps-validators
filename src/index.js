@@ -5,7 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
-import getWeb3 from './getWeb3'
+import getWeb3, {setWeb3} from './getWeb3'
 import { setTimeout } from 'timers';
 import {
   Router,
@@ -16,6 +16,8 @@ import {
 import createBrowserHistory from 'history/createBrowserHistory'
 import Loading from './Loading'
 import AllValidators from './AllValidators'
+import Select from 'react-select'
+import "react-select/dist/react-select.css";
 
 let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please, choose your voting key in MetaMask and reload the page.
@@ -30,12 +32,31 @@ function generateElement(msg){
   </div>`;
   return errorNode;
 }
+
+
 let Header = ({netId, onChange}) => {
   return (
-    <header id="header" class="header">
+    <header id="header" className="header">
       <div className="container">
           <a href="/poa-dapps-validators" className="header-logo"></a>
       </div>
+      <Select id="netId"
+        value={netId}
+        onChange={onChange}
+        style={{
+          width: '150px',
+        }}
+        wrapperStyle={{
+          width: '150px',
+          marginRight: '15%',
+          float: 'right',
+        }}
+        clearable={false}
+        options={[
+          { value: '77', label: 'Network: Sokol' },
+          { value: '99', label: 'Network: Core' },
+        ]} />
+      
     </header>
   )
 }
@@ -50,6 +71,7 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onNetworkChage = this.onNetworkChage.bind(this);
     this.state = {
       showSearch: true,
       web3loaded: false,
@@ -160,7 +182,7 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading ? '' : <AllValidators 
+    return this.state.loading ? '' : <AllValidators
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -169,10 +191,27 @@ class AppMainRouter extends Component {
       </AllValidators>;
   }
   onAllValidatorsRender() {
-    return this.state.loading ? '' : <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> 
+    return this.state.loading ? '' : <AllValidators
+      searchTerm={this.state.searchTerm}
+      methodToCall="getAllValidatorsData"
+      web3Config={this.state} 
+      /> 
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
+  }
+  onNetworkChage(e){
+    const netId = e.value;
+    const web3 = setWeb3(netId);
+    const keysManager = new KeysManager({
+      web3,
+      netId
+    });
+    const metadataContract = new Metadata({
+      web3,
+      netId
+    })
+    this.setState({netId: e.value, keysManager, metadataContract})
   }
   render(){
     console.log('v2.07')
@@ -181,7 +220,7 @@ class AppMainRouter extends Component {
     return (
       <Router history={history}>
         <section className="content">
-          <Header />
+          <Header netId={this.state.netId} onChange={this.onNetworkChage} />
         {loading}
         <div className="search">
           <div className="container flex-container">
