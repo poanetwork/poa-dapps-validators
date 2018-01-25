@@ -9,6 +9,7 @@
     "keythereum": "^1.0.2",
     "moment": "^2.19.3",
     "node-sass-chokidar": "0.0.3",
+    "nodemon": "^1.14.11",
     "npm-run-all": "^4.1.2",
     "password-generator": "^2.2.0",
     "react": "^16.2.0",
@@ -23,8 +24,8 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build -o origin",
-    "build-css": "node-sass-chokidar src/index/index.scss -o src/index",
-    "watch-css": "npm run build-css && node-sass-chokidar src/index/index.scss -o src/index --watch --recursive",
+    "build-css": "node-sass-chokidar src/stylesheets/application.scss -o src/stylesheets --output-style=compressed",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
     "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
