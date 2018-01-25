@@ -34,13 +34,10 @@ function generateElement(msg){
 }
 
 
-let Header = ({netId, onChange}) => {
-  return (
-    <header id="header" className="header">
-      <div className="container">
-          <a href="/poa-dapps-validators" className="header-logo"></a>
-      </div>
-      <Select id="netId"
+let Header = ({netId, onChange, injectedWeb3}) => {
+  let select;
+  if(!injectedWeb3) {
+    select = <Select id="netId"
         value={netId}
         onChange={onChange}
         style={{
@@ -48,7 +45,6 @@ let Header = ({netId, onChange}) => {
         }}
         wrapperStyle={{
           width: '150px',
-          marginRight: '15%',
           float: 'right',
         }}
         clearable={false}
@@ -56,7 +52,13 @@ let Header = ({netId, onChange}) => {
           { value: '77', label: 'Network: Sokol' },
           { value: '99', label: 'Network: Core' },
         ]} />
-      
+  }
+  return (
+    <header id="header" className="header">
+      <div className="container">
+          <a href="/poa-dapps-validators" className="header-logo"></a>
+          {select}
+      </div>
     </header>
   )
 }
@@ -82,7 +84,8 @@ class AppMainRouter extends Component {
       loading: true,
       searchTerm: '',
       injectedWeb3: null,
-      netId: ''
+      netId: '',
+      error: false
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -103,7 +106,7 @@ class AppMainRouter extends Component {
       })
     }).catch((error) => {
       console.error(error.message);
-      this.setState({loading: false})
+      this.setState({loading: false, error: true});
       swal({
         icon: 'error',
         title: 'Error',
@@ -182,7 +185,7 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading ? '' : <AllValidators
+    return this.state.loading && this.state.error? '' : <AllValidators
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -191,7 +194,8 @@ class AppMainRouter extends Component {
       </AllValidators>;
   }
   onAllValidatorsRender() {
-    return this.state.loading ? '' : <AllValidators
+    console.log(this.state.error, 'erororoorroor')
+    return this.state.loading || this.state.error ? '' : <AllValidators
       searchTerm={this.state.searchTerm}
       methodToCall="getAllValidatorsData"
       web3Config={this.state} 
@@ -220,7 +224,7 @@ class AppMainRouter extends Component {
     return (
       <Router history={history}>
         <section className="content">
-          <Header netId={this.state.netId} onChange={this.onNetworkChage} />
+          <Header netId={this.state.netId} onChange={this.onNetworkChage} injectedWeb3={this.state.injectedWeb3} />
         {loading}
         <div className="search">
           <div className="container flex-container">
