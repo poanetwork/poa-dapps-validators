@@ -6,7 +6,6 @@ import registerServiceWorker from './registerServiceWorker';
 import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
 import getWeb3, {setWeb3} from './getWeb3'
-import { setTimeout } from 'timers';
 import {
   Router,
   Route,

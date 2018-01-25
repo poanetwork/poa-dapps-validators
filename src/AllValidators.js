@@ -1,4 +1,4 @@
-import React, {Component, Children} from 'react';
+import React, {Component} from 'react';
 import Validator from './Validator'
 import Loading from './Loading'
 
@@ -15,7 +15,7 @@ export default class AllValidators extends Component {
   }
   async getValidatorsData() {
     this.setState({loading: true})
-    this.getMetadataContract()[this.props.methodToCall]().then((data) => {
+    this.getMetadataContract()[this.props.methodToCall](this.state.netId).then((data) => {
       this.setState({
         validators: data,
         netId: this.props.web3Config.metadataContract.netId,

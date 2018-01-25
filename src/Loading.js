@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 const styles = (netId) => {
   const core = {
     backgroundColor: 'rgba(35, 29, 115, 0.8)'

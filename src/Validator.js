@@ -1,4 +1,4 @@
-import React, {Component, Children} from 'react';
+import React, {Component} from 'react';
 
 class Validator extends Component {
   constructor(props) {
