@@ -1,27 +1,40 @@
-import React, {Component, Children} from 'react';
+import React, {Component} from 'react';
 import Validator from './Validator'
+import Loading from './Loading'
 
 export default class AllValidators extends Component {
   constructor(props){
     super(props);
     this.getMetadataContract = this.getMetadataContract.bind(this);
     this.state = {
-      validators: []
+      validators: [],
+      loading: true,
     }
     this.getValidatorsData.call(this);
   }
   async getValidatorsData() {
-    this.getMetadataContract()[this.props.methodToCall]().then((data) => {
+    const netId = this.props.web3Config.netId;
+    this.setState({loading: true, netId: netId})
+    this.getMetadataContract()[this.props.methodToCall](netId).then((data) => {
       this.setState({
-        validators: data
+        validators: data,
+        loading: false,
+        reload: false,
       })
     })
+  }
+  shouldComponentUpdate(nextProps, nextState){
+    if(nextProps.web3Config.netId !== this.state.netId){
+      this.getValidatorsData.call(this)
+      return false;
+    }
+    return true;
   }
   getMetadataContract(){
     return this.props.web3Config.metadataContract;
   }
   render() {
-
+    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     const filtered = this.state.validators.filter((validator, index) => {
       return Object.values(validator).some( val => 
         String(val).toLowerCase().includes(this.props.searchTerm) 
@@ -52,6 +65,7 @@ export default class AllValidators extends Component {
 
     }
     return (<div className="container">
+      {loading}
       {validators}
     </div>)
   }

@@ -1,5 +1,6 @@
 import Web3 from 'web3'
-
+const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
+const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
 let getWeb3 = () => {
   return new Promise(function (resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -22,8 +23,6 @@ let getWeb3 = () => {
               break;
             case "77":
               netIdName = 'Sokol'
-              window.document.querySelector('.footer').style.backgroundColor = "#6ac9b9";
-              window.document.querySelector('.header').style.backgroundColor = "#6ac9b9";
               console.log('This is Sokol', netId)
               break;
             default:
@@ -52,8 +51,7 @@ let getWeb3 = () => {
 
       } else {
         // Fallback to localhost if no web3 injection.
-        const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
-        const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
+        
         const network = window.location.host.indexOf('sokol') !== -1 ? POA_SOKOL : POA_CORE
 
         document.title = `${network.netIdName} - POA validators dApp`
@@ -63,7 +61,7 @@ let getWeb3 = () => {
         results = {
           web3Instance: web3,
           netIdName: network.netIdName,
-          netId: network.netIdName,
+          netId: network.netId,
           injectedWeb3: false,
           defaultAccount: null
         }
@@ -75,5 +73,24 @@ let getWeb3 = () => {
   })
 }
 
+const setWeb3 = (netId) => {
+  let network;
+  switch(netId){
+    case '77':
+      network = POA_SOKOL;
+      break;
+    case '99':
+      network = POA_CORE;
+      break;
+    default:
+      network = POA_CORE
+      break; 
+  }
+  const provider = new Web3.providers.HttpProvider(network.RPC_URL)
+  return new Web3(provider)
+}
+
 export default getWeb3
+
+export {setWeb3};
 
