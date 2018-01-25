@@ -2,11 +2,11 @@
   text-align: left;
 
   &-i {
-    margin-bottom: 30px;
-    border-radius: 8px;
-    border: 1px solid #eee;
-    background-color: #fff;
-    color: #333;
+    @extend %item;
+
+    @media (max-width: $mobile-width) {
+      margin-bottom: 20px;
+    }
 
     .confirmations {
       font-weight: normal;
@@ -16,56 +16,59 @@
   }
 
   &-header {
+    @extend %item-paddings;
     border-bottom: 1px solid #eee;
-    padding: 25px 20px;
+    line-height: 20px;
     font-size: 16px;
     font-weight: bold;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-    .left {
-      flex: 1;
+    &--address {
+      word-break: break-all;
     }
-    .finalize { 
-      margin-right: 20px;
-    }
-
   }
 
   &-body {
     overflow: hidden;
     padding: 0 20px 20px;
+
+    @media (max-width: $mobile-width) {
+      padding: 0 15px 15px;
+    }
   }
 
   &-notary,
   &-license {
     width: 48%;
+    font-size: 12px;
+
+    @media (max-width: $mobile-width) {
+      float: none;
+      width: 100%;
+    }
   }
 
   &-title {
-    text-transform: uppercase;
     margin: 20px 0;
     color: #8197a2;
-    font-size: 12px;
+    text-transform: uppercase;
     font-weight: bold;
+
+    @media (max-width: $mobile-width) {
+      margin: 15px 0;
+    }
   }
 
   &-table {
     border: 1px solid #eee;
 
-    &-tr {
-      overflow: hidden;
-      padding: 0 10px;
+    &-i {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
 
       &:not(:last-child) {
         border-bottom: 1px solid #eee;
       }
-    }
-
-    &-td {
-      padding: 10px 0;
-      font-size: 12px;
     }
   }
 }

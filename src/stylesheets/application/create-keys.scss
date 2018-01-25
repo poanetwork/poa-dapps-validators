@@ -3,9 +3,10 @@
   align-items: center;
   justify-content: center
 }
+
 .create-keys {
   @extend %item;
-  padding: 30px 20px;
+  @extend %item-paddings;
 
   h1 {
     margin-bottom: 20px;
@@ -14,44 +15,37 @@
   h2 {
     margin-bottom: 20px;
   }
-  .set {
-    margin-top: 20px;
-  }
+
   &-button {
     @extend %btn;
-    display: inline-block;
-    background-color: #08b3f2;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAAFVBMVEX///////////////////////////9nSIHRAAAABnRSTlMASUrk5udXTd49AAAAOUlEQVR42tXQsQEAIAgDQcAn+4+snRZxAK79KokrIcNBwgYdc0Migwxk8Qsd1TJWDf/KQWobqt+9G4coA99W7as5AAAAAElFTkSuQmCC);
-    background-size: 12px 12px;
+    @extend %btn-new;
 
     &[disabled] {
       background-color: #079dd4;
     }
   }
 
-  &-inputs {
-    display: table;
-    width: 100%;
-  }
+  &-form {
+    display: flex;
+    justify-content: space-between;
 
-  .left {
-    padding-right: 10px;
-  }
-  .right {
-    padding-left: 10px;
-  }
+    @media (max-width: $tablet-width) {
+      flex-direction: column;
+    }
 
-  .left,
-  .right {
-    display: table-cell;
-    width: 48%;
+    &-i {
+      width: 48%;
+
+      @media (max-width: $tablet-width) {
+        width: 100%;
+      }
+    }
   }
 
   label {
     &:not(.radio) {
       display: block;
-      margin-bottom: 15px;
-      margin-top: 20px;
+      margin-bottom: 10px;
       text-transform: uppercase;
       font-size: 12px;
       font-weight: bold;
@@ -69,6 +63,7 @@
   textarea {
     transition: 0.3s border-color;
     width: 100%;
+    margin-bottom: 20px;
     border-radius: 3px;
     box-sizing: border-box;
     border: 1px solid #eee;
@@ -85,8 +80,8 @@
   }
 
   input {
-    padding: 0 15px;
-    height: 36px;
+    padding: 0 10px;
+    height: $input-height;
   }
 
   input[type="radio"] {

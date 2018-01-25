@@ -1,25 +1,25 @@
 html,
 body {
   margin: 0;
-  padding: 0px;
+  padding: 0;
+  background-color: #fbfbfb;
 }
 
 html {
   height: 100%;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center center;
 }
 
 body {
   position: relative;
   display: table;
   width: 100%;
-  min-width: 960px;
   height: 100%;
   box-sizing: border-box;
-  padding: 80px 0 60px;
+  padding-bottom: $footer-height;
+
+  @media screen and (max-width: $tablet-width) {
+    padding-bottom: $footer-height + 30;
+  }
 }
 
 p, h1, h2, h3, h4 {
@@ -28,26 +28,13 @@ p, h1, h2, h3, h4 {
   font-family: 'Open Sans', sans-serif;
 }
 
-#root {
-  display: table;
-  width: 100%;
-}
-
 .container {
   max-width: 960px;
   margin: 0 auto;
-}
 
-.flex-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.content {
-  display: table-cell;
-  vertical-align: top;
-  background-color: #fbfbfb;
+  @media (max-width: $container-width) {
+    padding: 0 10px;
+  }
 }
 
 .key-content {

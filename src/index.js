@@ -84,7 +84,7 @@ class AppMainRouter extends Component {
           icon: 'warning',
           title: 'Warning',
           content: generateElement('Metamask was not found')
-        });  
+        });
       }
     } else {
       this.setState({showSearch: true})
@@ -130,7 +130,7 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading ? '' : <AllValidators 
+    return this.state.loading ? '' : <AllValidators
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -139,7 +139,7 @@ class AppMainRouter extends Component {
       </AllValidators>;
   }
   onAllValidatorsRender() {
-    return this.state.loading ? '' : <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} /> 
+    return this.state.loading ? '' : <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} />
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
@@ -152,12 +152,12 @@ class AppMainRouter extends Component {
       <Router history={history}>
         <section className="content">
         {loading}
-        <div className="search">
-          <div className="container flex-container">
+        <div className="nav-container">
+          <div className="container">
             <div className="nav">
-            <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
+              <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
             </div>
             {search}
           </div>
@@ -170,8 +170,7 @@ class AppMainRouter extends Component {
       </Router>
     )
   }
-} 
+}
 
 ReactDOM.render(<AppMainRouter />, document.getElementById('root'));
 registerServiceWorker();
-
