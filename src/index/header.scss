@@ -7,7 +7,9 @@
   background-color: #6d2eae;
   background-repeat: no-repeat;
   background-size: cover;
-
+  &.sokol {
+    background-color: #6ac9b9;
+  }
   &-settings {
     float: right;
     text-transform: uppercase;
@@ -25,6 +27,15 @@
     width: 182px;
   	height: 35px;
     background-image: url('../images/logo_validators_dapp.png');
+    background-position: 0 0;
+  }
+  
+  &-logo-sokol {
+    @include image-2x('../images/logo_sokol@2x.png', 146px, 35px);
+    float: left;
+    width: 190px;
+  	height: 35px;
+    background-image: url('../images/logo_sokol.png');
     background-position: 0 0;
   }
 

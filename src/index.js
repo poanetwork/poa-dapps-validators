@@ -33,9 +33,28 @@ function generateElement(msg){
   return errorNode;
 }
 
+let Footer = ({netId}) => {
+  const footerClassName = netId === '77' ? 'sokol' : '';
+  return (
+    <footer className={`footer ${footerClassName}`}>
+      <div className="container">
+        <p className="footer-rights">2017 POA Network. All rights reserved.</p>
+        <a href="/poa-dapps-validators" className="footer-logo"></a>
+        <div className="socials">
+          <a href="https://twitter.com/poanetwork" className="socials-i socials-i_twitter"></a>
+          <a href="https://poa.network" className="socials-i socials-i_oracles"></a>
+          <a href="https://t.me/oraclesnetwork" className="socials-i socials-i_telegram"></a>
+          <a href="https://github.com/poanetwork/" className="socials-i socials-i_github"></a>
+        </div>
+      </div>
+    </footer>
+  )
+}
 
 let Header = ({netId, onChange, injectedWeb3}) => {
   let select;
+  let headerClassName = netId === '77' ? 'sokol' : '';
+  const logoClassName = netId === '77' ? 'header-logo-sokol' : 'header-logo';
   if(!injectedWeb3) {
     select = <Select id="netId"
         value={netId}
@@ -54,9 +73,9 @@ let Header = ({netId, onChange, injectedWeb3}) => {
         ]} />
   }
   return (
-    <header id="header" className="header">
+    <header id="header" className={`header ${headerClassName}`}>
       <div className="container">
-          <a href="/poa-dapps-validators" className="header-logo"></a>
+          <a href="/poa-dapps-validators" className={logoClassName}></a>
           {select}
       </div>
     </header>
@@ -83,7 +102,7 @@ class AppMainRouter extends Component {
       votingKey :null,
       loading: true,
       searchTerm: '',
-      injectedWeb3: null,
+      injectedWeb3: true,
       netId: '',
       error: false
     }
@@ -240,6 +259,7 @@ class AppMainRouter extends Component {
         <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
+        <Footer netId={this.state.netId} />
         </section>
       </Router>
     )

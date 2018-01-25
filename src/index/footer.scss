@@ -4,7 +4,9 @@
   bottom: 0;
   height: $footer-height;
   background-color: #6d2eae;
-
+  &.sokol {
+    background-color: #6ac9b9;
+  }
   @media screen and (max-width: $mobile-width) {
     height: auto;
     padding: 20px 10px 0;
