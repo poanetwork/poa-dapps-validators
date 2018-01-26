@@ -1,24 +1,63 @@
-const CORE_ADDRESSES = {
-  METADATA_ADDRESS: '0xcBB2912666c7e8023B7ec78B6842702eB26336aC',
-  KEYS_MANAGER_ADDRESS: '0xfc90125492e58dbfe80c0bfb6a2a759c4f703ca8',
-  POA_ADDRESS: '0x8bf38d4764929064f2d4d3a56520a76ab3df415b',
-  MOC: '0xCf260eA317555637C55F70e55dbA8D5ad8414Cb0'
+import { messages } from "../messages";
+import swal from 'sweetalert';
+// const local = {
+//     VOTING_TO_CHANGE_KEYS_ADDRESS: '0xecdbe3937cf6ff27f70480855cfe03254f915b48',
+//     VOTING_TO_CHANGE_MIN_THRESHOLD_ADDRESS: '0x5ae30d4c8892292e0d8164f87a2e12dff9dc99e1',
+//     VOTING_TO_CHANGE_PROXY_ADDRESS: '0x6c221df3695ac13a7f9366568ec069c353d273b8',
+//     BALLOTS_STORAGE_ADDRESS: '0x5d6573e62e3688e40c1fc36e01b155fb0006f432',
+//     METADATA_ADDRESS: '0x93eba9d9de66133fcde35775e9da593edd59a4e3',
+//     POA_ADDRESS: '0xf472e0e43570b9afaab67089615080cf7c20018d',
+// }
+
+let SOKOL_ADDRESSES = {};
+let CORE_ADDRESSES = {};
+
+function addressesURL(network) {
+    const organization = 'poanetwork';
+    const repoName = 'poa-chain-spec';
+    const sourceFile = 'contracts.json';
+    return `https://raw.githubusercontent.com/${organization}/${repoName}/${network}/${sourceFile}`;
 }
 
-const SOKOL_ADDRESSES = {
-  METADATA_ADDRESS: '0x1ce9ad5614d3e00b88affdfa64e65e52f2e4e0f4',
-  KEYS_MANAGER_ADDRESS: '0x1aa02bd52fe418ac70263351282f66f1dacf898c',
-  POA_ADDRESS: '0x03048F666359CFD3C74a1A5b9a97848BF71d5038',
-  MOC: '0xe8ddc5c7a2d2f0d7a9798459c0104fdf5e987aca'
+function getContractsAddresses(network) {
+    fetch(addressesURL(network)).then(function(response) { 
+        return response.json();
+    }).then(function(contracts) {
+        switch (network) {
+            case 'core':
+                CORE_ADDRESSES = contracts;
+                break;
+            case 'sokol':
+                SOKOL_ADDRESSES = contracts;
+                break;
+            default:
+                CORE_ADDRESSES = contracts;
+                break;
+        }
+    }).catch(function(err) {
+        var content = document.createElement("div");
+        content.innerHTML = `<div>
+          Something went wrong!<br/><br/>
+          ${messages.wrongRepo(addressesURL(network))}
+        </div>`;
+        swal({
+          icon: 'error',
+          title: 'Error',
+          content: content
+        });
+    });
 }
 
-module.exports = (netId) => {
-  switch (netId){
-    case '77':
-      return SOKOL_ADDRESSES
-    case '99':
-      return CORE_ADDRESSES
-    default:
-      return CORE_ADDRESSES
-  }
+getContractsAddresses('core');
+getContractsAddresses('sokol');
+
+export default (netId) => {
+    switch (netId) {
+        case '77':
+            return SOKOL_ADDRESSES
+        case '99':
+            return CORE_ADDRESSES
+        default:
+            return CORE_ADDRESSES
+    }
 }
