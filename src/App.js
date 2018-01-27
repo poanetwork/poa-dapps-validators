@@ -1,13 +1,8 @@
 import React, { Component } from 'react';
-import getWeb3 from './getWeb3'
-import KeysManager from './contracts/KeysManager.contract';
-import MetadataContract from './contracts/Metadata.contract';
 import swal from 'sweetalert';
 import './stylesheets/application.css';
-import ReactDOM from 'react-dom';
-import PlacesAutocomplete, { geocodeByAddress, geocodeByPlaceId } from 'react-places-autocomplete';
+import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import moment from 'moment';
-import Metadata from './contracts/Metadata.contract';
 import Loading from './Loading';
 
 class App extends Component {

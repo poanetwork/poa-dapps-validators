@@ -5,8 +5,7 @@ import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
-import getWeb3 from './getWeb3'
-import { setTimeout } from 'timers';
+import getWeb3, {setWeb3} from './getWeb3'
 import {
   Router,
   Route,
@@ -16,6 +15,12 @@ import {
 import createBrowserHistory from 'history/createBrowserHistory'
 import Loading from './Loading'
 import AllValidators from './AllValidators'
+import Select from 'react-select'
+import "react-select/dist/react-select.css";
+
+let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
+Please, choose your voting key in MetaMask and reload the page.
+Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
 
 const history = createBrowserHistory()
 
@@ -27,6 +32,54 @@ function generateElement(msg){
   return errorNode;
 }
 
+let Footer = ({netId}) => {
+  const footerClassName = netId === '77' ? 'sokol' : '';
+  return (
+    <footer className={`footer ${footerClassName}`}>
+      <div className="container">
+        <p className="footer-rights">2017 POA Network. All rights reserved.</p>
+        <a href="/poa-dapps-validators" className="footer-logo"></a>
+        <div className="socials">
+          <a href="https://twitter.com/poanetwork" className="socials-i socials-i_twitter"></a>
+          <a href="https://poa.network" className="socials-i socials-i_oracles"></a>
+          <a href="https://t.me/oraclesnetwork" className="socials-i socials-i_telegram"></a>
+          <a href="https://github.com/poanetwork/" className="socials-i socials-i_github"></a>
+        </div>
+      </div>
+    </footer>
+  )
+}
+
+let Header = ({netId, onChange, injectedWeb3}) => {
+  let select;
+  let headerClassName = netId === '77' ? 'sokol' : '';
+  const logoClassName = netId === '77' ? 'header-logo-sokol' : 'header-logo';
+  if(!injectedWeb3) {
+    select = <Select id="netId"
+        value={netId}
+        onChange={onChange}
+        style={{
+          width: '150px',
+        }}
+        wrapperStyle={{
+          width: '150px',
+          float: 'right',
+        }}
+        clearable={false}
+        options={[
+          { value: '77', label: 'Network: Sokol' },
+          { value: '99', label: 'Network: Core' },
+        ]} />
+  }
+  return (
+    <header id="header" className={`header ${headerClassName}`}>
+      <div className="container">
+          <a href="/poa-dapps-validators" className={logoClassName}></a>
+          {select}
+      </div>
+    </header>
+  )
+}
 class AppMainRouter extends Component {
   constructor(props){
     super(props);
@@ -38,6 +91,7 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.onNetworkChage = this.onNetworkChage.bind(this);
     this.state = {
       showSearch: true,
       web3loaded: false,
@@ -47,7 +101,9 @@ class AppMainRouter extends Component {
       votingKey :null,
       loading: true,
       searchTerm: '',
-      injectedWeb3: null
+      injectedWeb3: true,
+      netId: '',
+      error: false
     }
     getWeb3().then(async (web3Config) => {
       const keysManager = new KeysManager({
@@ -63,11 +119,12 @@ class AppMainRouter extends Component {
         keysManager,
         metadataContract,
         loading: false,
-        injectedWeb3: web3Config.injectedWeb3
+        injectedWeb3: web3Config.injectedWeb3,
+        netId: web3Config.netId
       })
     }).catch((error) => {
       console.error(error.message);
-      this.setState({loading: false})
+      this.setState({loading: false, error: true});
       swal({
         icon: 'error',
         title: 'Error',
@@ -90,30 +147,46 @@ class AppMainRouter extends Component {
       this.setState({showSearch: true})
     }
   }
+  checkForVotingKey(cb){
+    if(this.state.votingKey && !this.state.loading){
+      return cb();
+    } else {
+      swal({
+        icon: 'warning',
+        title: 'Warning',
+        content: generateElement(errorMsgNoMetamaskAccount)
+      });
+      return ''
+    }
+  }
   onSetRender() {
-    return this.state.votingKey ? <App web3Config={this.state}/> :  '';
+    return this.checkForVotingKey(() => {
+      return <App web3Config={this.state}/>
+    })
   }
   async _onBtnClick({event, methodToCall, successMsg}){
     event.preventDefault();
-    this.setState({loading: true})
-    const miningKey = event.currentTarget.getAttribute('miningkey');
-    try{
-      let result = await this.state.metadataContract[methodToCall]({
-        miningKeyToConfirm: miningKey,
-        senderVotingKey: this.state.votingKey
-      });
-      console.log(result);
-      this.setState({loading: false})
-      swal("Congratulations!", successMsg, "success");
-    } catch(error) {
-      this.setState({loading: false})
-      console.error(error.message);
-      swal({
-        icon: 'error',
-        title: 'Error',
-        content: generateElement(error.message)
-      });
-    }
+    this.checkForVotingKey(async () => {
+      this.setState({loading: true})
+      const miningKey = event.currentTarget.getAttribute('miningkey');
+      try{
+        let result = await this.state.metadataContract[methodToCall]({
+          miningKeyToConfirm: miningKey,
+          senderVotingKey: this.state.votingKey
+        });
+        console.log(result);
+        this.setState({loading: false})
+        swal("Congratulations!", successMsg, "success");
+      } catch(error) {
+        this.setState({loading: false})
+        console.error(error.message);
+        swal({
+          icon: 'error',
+          title: 'Error',
+          content: generateElement(error.message)
+        });
+      }
+    })
   }
   async onConfirmPendingChange(event) {
     await this._onBtnClick({
@@ -130,7 +203,7 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading ? '' : <AllValidators
+    return this.state.loading && this.state.error? '' : <AllValidators
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -139,18 +212,36 @@ class AppMainRouter extends Component {
       </AllValidators>;
   }
   onAllValidatorsRender() {
-    return this.state.loading ? '' : <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} />
+    return this.state.loading || this.state.error ? '' : <AllValidators
+      searchTerm={this.state.searchTerm}
+      methodToCall="getAllValidatorsData"
+      web3Config={this.state}
+      />
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
+  onNetworkChage(e){
+    const netId = e.value;
+    const web3 = setWeb3(netId);
+    const keysManager = new KeysManager({
+      web3,
+      netId
+    });
+    const metadataContract = new Metadata({
+      web3,
+      netId
+    })
+    this.setState({netId: e.value, keysManager, metadataContract})
+  }
   render(){
-    console.log('v2.05')
+    console.log('v2.07')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
-    const loading = this.state.loading ? <Loading /> : ''
+    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (
       <Router history={history}>
         <section className="content">
+          <Header netId={this.state.netId} onChange={this.onNetworkChage} injectedWeb3={this.state.injectedWeb3} />
         {loading}
         <div className="nav-container">
           <div className="container">
@@ -166,6 +257,7 @@ class AppMainRouter extends Component {
         <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state}/>
         <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
         <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
+        <Footer netId={this.state.netId} />
         </section>
       </Router>
     )

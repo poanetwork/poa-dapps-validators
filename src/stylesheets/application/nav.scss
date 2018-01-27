@@ -69,3 +69,7 @@
     }
   }
 }
+
+.Select.is-focused:not(.is-open) > .Select-control {
+  border: none;
+}
