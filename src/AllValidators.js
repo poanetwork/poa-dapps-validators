@@ -41,7 +41,6 @@ export default class AllValidators extends Component {
       );
     })
     let validators = [];
-    let confirmations = [];
     for(let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, (child) => {
         return React.cloneElement(child, { miningkey: validator.address });

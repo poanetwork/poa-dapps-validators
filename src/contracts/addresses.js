@@ -1,5 +1,4 @@
-import { messages } from "../messages";
-import swal from 'sweetalert';
+import helpers from "./helpers";
 // const local = {
 //     VOTING_TO_CHANGE_KEYS_ADDRESS: '0xecdbe3937cf6ff27f70480855cfe03254f915b48',
 //     VOTING_TO_CHANGE_MIN_THRESHOLD_ADDRESS: '0x5ae30d4c8892292e0d8164f87a2e12dff9dc99e1',
@@ -12,18 +11,12 @@ import swal from 'sweetalert';
 let SOKOL_ADDRESSES = {};
 let CORE_ADDRESSES = {};
 
-function addressesURL(network) {
-    const organization = 'poanetwork';
-    const repoName = 'poa-chain-spec';
-    const sourceFile = 'contracts.json';
-    return `https://raw.githubusercontent.com/${organization}/${repoName}/${network}/${sourceFile}`;
-}
-
-function getContractsAddresses(network) {
-    fetch(addressesURL(network)).then(function(response) { 
+function getContractsAddresses(branch) {
+    let addr = helpers.addressesURL(branch);
+    fetch(addr).then(function(response) { 
         return response.json();
     }).then(function(contracts) {
-        switch (network) {
+        switch (branch) {
             case 'core':
                 CORE_ADDRESSES = contracts;
                 break;
@@ -35,16 +28,7 @@ function getContractsAddresses(network) {
                 break;
         }
     }).catch(function(err) {
-        var content = document.createElement("div");
-        content.innerHTML = `<div>
-          Something went wrong!<br/><br/>
-          ${messages.wrongRepo(addressesURL(network))}
-        </div>`;
-        swal({
-          icon: 'error',
-          title: 'Error',
-          content: content
-        });
+        helpers.wrongRepoAlert(addr);
     });
 }
 

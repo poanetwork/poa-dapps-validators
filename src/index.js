@@ -91,7 +91,7 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.onNetworkChage = this.onNetworkChage.bind(this);
+    this.onNetworkChange = this.onNetworkChange.bind(this);
     this.state = {
       showSearch: true,
       web3loaded: false,
@@ -106,11 +106,13 @@ class AppMainRouter extends Component {
       error: false
     }
     getWeb3().then(async (web3Config) => {
-      const keysManager = new KeysManager({
+      const keysManager = new KeysManager()
+      await keysManager.init({
         web3: web3Config.web3Instance,
         netId: web3Config.netId
-      });
-      const metadataContract = new Metadata({
+      })
+      const metadataContract = new Metadata()
+      await metadataContract.init({
         web3: web3Config.web3Instance,
         netId: web3Config.netId
       })
@@ -204,6 +206,7 @@ class AppMainRouter extends Component {
   }
   onPendingChangesRender() {
     return this.state.loading && this.state.error? '' : <AllValidators
+      ref="AllValidatorsRef"
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -221,17 +224,19 @@ class AppMainRouter extends Component {
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
-  onNetworkChage(e){
+  async onNetworkChange(e){
     const netId = e.value;
     const web3 = setWeb3(netId);
-    const keysManager = new KeysManager({
+    const keysManager = new KeysManager();
+    await keysManager.init({
       web3,
       netId
     });
-    const metadataContract = new Metadata({
+    const metadataContract = new Metadata()
+    await metadataContract.init({
       web3,
       netId
-    })
+    });
     this.setState({netId: e.value, keysManager, metadataContract})
   }
   render(){
@@ -241,7 +246,7 @@ class AppMainRouter extends Component {
     return (
       <Router history={history}>
         <section className="content">
-          <Header netId={this.state.netId} onChange={this.onNetworkChage} injectedWeb3={this.state.injectedWeb3} />
+          <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
         {loading}
         <div className="search">
           <div className="container flex-container">
