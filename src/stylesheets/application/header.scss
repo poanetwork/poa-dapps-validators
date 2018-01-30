@@ -19,7 +19,7 @@
 
   &-logo-sokol {
     @include image-2x('../images/logo_sokol@2x.png', 146px, 35px);
-    float: left;
+    display: block;
     width: 146px;
   	height: 35px;
     background-image: url('../images/logo_sokol.png');
