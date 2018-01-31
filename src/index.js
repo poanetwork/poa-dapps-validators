@@ -64,7 +64,6 @@ let Header = ({netId, onChange, injectedWeb3}) => {
         }}
         wrapperStyle={{
           width: '150px',
-          float: 'right',
         }}
         clearable={false}
         options={[
@@ -128,7 +127,7 @@ class AppMainRouter extends Component {
         metadataContract,
         loading: false,
         injectedWeb3: web3Config.injectedWeb3,
-        netId: web3Config.netId
+        netId: web3Config.netId,
       })
     }).catch((error) => {
       console.error(error.message);
@@ -233,20 +232,25 @@ class AppMainRouter extends Component {
   async onNetworkChange(e){
     const netId = e.value;
     const web3 = setWeb3(netId);
-    const keysManager = new KeysManager();
-    await keysManager.init({
-      web3,
-      netId
-    });
-    const metadataContract = new Metadata()
-    await metadataContract.init({
-      web3,
-      netId
-    });
-    this.setState({netId: e.value, keysManager, metadataContract})
+    networkAddresses({netId}).then(async (config) => {
+      const {addresses} = config;
+      const keysManager = new KeysManager();
+      await keysManager.init({
+        web3,
+        netId,
+        addresses
+      });
+      const metadataContract = new Metadata()
+      await metadataContract.init({
+        web3,
+        netId,
+        addresses
+      });
+      this.setState({netId: e.value, keysManager, metadataContract})
+    })
   }
   render(){
-    console.log('v2.07')
+    console.log('v2.08')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (

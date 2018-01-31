@@ -74,7 +74,12 @@ export default class Metadata {
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
-    let postal_code = Number(validatorData.zipcode) || ''
+    if(validatorData.zipcode.length === 4){
+      validatorData.zipcode = "0" + validatorData.zipcode;
+    }
+    if(validatorData.zipcode === "0"){
+      validatorData.zipcode = '';
+    }
     return {
       firstName: toAscii(validatorData.firstName),
       lastName: toAscii(validatorData.lastName),
@@ -84,7 +89,7 @@ export default class Metadata {
       expirationDate,
       licenseId: toAscii(validatorData.licenseId),
       us_state: toAscii(validatorData.state),
-      postal_code,
+      postal_code: validatorData.zipcode,
     }
   }
 
