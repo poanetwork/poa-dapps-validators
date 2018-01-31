@@ -17,6 +17,7 @@ import Loading from './Loading'
 import AllValidators from './AllValidators'
 import Select from 'react-select'
 import "react-select/dist/react-select.css";
+import networkAddresses from './contracts/addresses';
 
 let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please, choose your voting key in MetaMask and reload the page.
@@ -106,15 +107,20 @@ class AppMainRouter extends Component {
       error: false
     }
     getWeb3().then(async (web3Config) => {
+      return networkAddresses(web3Config)
+    }).then(async (config) => {
+      const {web3Config, addresses} = config;
       const keysManager = new KeysManager()
       await keysManager.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
+        netId: web3Config.netId,
+        addresses,
       })
       const metadataContract = new Metadata()
       await metadataContract.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
+        netId: web3Config.netId,
+        addresses,
       })
       this.setState({
         votingKey: web3Config.defaultAccount,

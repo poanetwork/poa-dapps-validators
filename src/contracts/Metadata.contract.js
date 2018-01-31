@@ -18,16 +18,17 @@ var toAscii = function(hex) {
   return str;
 };
 export default class Metadata {
-  async init({web3, netId}){
+  async init({web3, netId, addresses}){
     this.web3_10 = new Web3(web3.currentProvider);
-    const {METADATA_ADDRESS, MOC} = networkAddresses(netId);
-
+    const {METADATA_ADDRESS, MOC} = addresses;
+    console.log('Metadata contract Address: ', METADATA_ADDRESS)
     const branch = helpers.getBranch(netId);
 
     let MetadataAbi = await helpers.getABI(branch, 'ValidatorMetadata')
 
     this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
     this.MOC_ADDRESS = MOC;
+    this.addresses = addresses;
   }
   async createMetadata({
     firstName,
@@ -95,7 +96,7 @@ export default class Metadata {
     let all = [];
     return new Promise(async(resolve, reject) => {
       const poaInstance = new PoaConsensus()
-      await poaInstance.init({web3: this.web3_10, netId})
+      await poaInstance.init({web3: this.web3_10, netId, addresses: this.addresses})
       const keys = await poaInstance.getValidators()
       console.log(keys)
       for (let key of keys) {
