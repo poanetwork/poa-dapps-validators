@@ -4,18 +4,20 @@
   bottom: 0;
   height: $footer-height;
   background-color: #6d2eae;
-  &.sokol {
-    background-color: #6ac9b9;
-  }
-  @media screen and (max-width: $mobile-width) {
+
+  @media screen and (max-width: $tablet-width) {
     height: auto;
     padding: 20px 10px 0;
+  }
+
+  &.sokol {
+    background-color: #6ac9b9;
   }
 
   .container {
     position: relative;
 
-    @media screen and (max-width: $mobile-width) {
+    @media screen and (max-width: $tablet-width) {
       padding-top: $footer-height - 20;
     }
   }
@@ -27,7 +29,7 @@
     z-index: 1;
     top: 50%;
 
-    @media screen and (max-width: $mobile-width) {
+    @media screen and (max-width: $tablet-width) {
       transform: translateY(0);
       top: 0;
     }
@@ -50,7 +52,7 @@
     text-align: center;
     font-size: 12px;
 
-    @media screen and (max-width: $mobile-width) {
+    @media screen and (max-width: $tablet-width) {
       line-height: 30px;
     }
   }

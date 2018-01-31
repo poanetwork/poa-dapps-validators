@@ -141,7 +141,7 @@ class AppMainRouter extends Component {
           icon: 'warning',
           title: 'Warning',
           content: generateElement('Metamask was not found')
-        });  
+        });
       }
     } else {
       this.setState({showSearch: true})
@@ -155,7 +155,7 @@ class AppMainRouter extends Component {
         icon: 'warning',
         title: 'Warning',
         content: generateElement(errorMsgNoMetamaskAccount)
-      });  
+      });
       return ''
     }
   }
@@ -215,8 +215,8 @@ class AppMainRouter extends Component {
     return this.state.loading || this.state.error ? '' : <AllValidators
       searchTerm={this.state.searchTerm}
       methodToCall="getAllValidatorsData"
-      web3Config={this.state} 
-      /> 
+      web3Config={this.state}
+      />
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
@@ -243,12 +243,12 @@ class AppMainRouter extends Component {
         <section className="content">
           <Header netId={this.state.netId} onChange={this.onNetworkChage} injectedWeb3={this.state.injectedWeb3} />
         {loading}
-        <div className="search">
-          <div className="container flex-container">
+        <div className="nav-container">
+          <div className="container">
             <div className="nav">
-            <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
+              <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
             </div>
             {search}
           </div>
@@ -262,8 +262,7 @@ class AppMainRouter extends Component {
       </Router>
     )
   }
-} 
+}
 
 ReactDOM.render(<AppMainRouter />, document.getElementById('root'));
 registerServiceWorker();
-

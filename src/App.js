@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import swal from 'sweetalert';
-import './index/index.css';
+import './stylesheets/application.css';
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import moment from 'moment';
 import Loading from './Loading';
@@ -32,12 +32,12 @@ class App extends Component {
         licenseId: ''
       },
       hasData: false
-      
+
     }
 
     this.defaultValues = null;
     this.setMetadata.call(this);
-    
+
   }
   async setMetadata(){
     const currentData = await this.getMetadataContract().getValidatorData({votingKey: this.getVotingKey()});
@@ -171,7 +171,7 @@ class App extends Component {
       this.setState({loading: false})
       var content = document.createElement("div");
       content.innerHTML = `<div>
-        Something went wrong!<br/><br/> 
+        Something went wrong!<br/><br/>
         ${error.message}
       </div>`;
       swal({
@@ -196,41 +196,42 @@ class App extends Component {
         <small>{ formattedSuggestion.secondaryText }</small>
       </div>
     )
-    
+
     const inputProps = {
       value: this.state.form.fullAddress,
       onChange: this.onChangeAutoComplete,
       id: 'address'
-    }    
+    }
     let loader = this.state.loading ? <Loading /> : '';
-    let createKeyBtn = (<div className="create-keys">
-                   <form className="create-keys-inputs">
-        <div className="left">
-          <label htmlFor="first-name">First name </label>
-          <input type="text" id="firstName" value={this.state.form.firstName} onChange={this.onChangeFormField}/>
-          <label htmlFor="last-name">Last name</label>
-          <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField}/>
-          <label htmlFor="address">Address</label>
-          <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
-          <label htmlFor="state">State</label>
-          <input type="text" id="us_state" value={this.state.form.us_state} onChange={this.onChangeFormField}/>
-        </div>
-        <div className="right">
-          <label htmlFor="zip">Zip code</label>
-          <input type="number" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField}/>
-          <label htmlFor="licenseId">License id</label>
-          <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField}/>
-          <label htmlFor="expirationDate">License expiration</label>
-          <input type="date" id="expirationDate" value={this.state.form.expirationDate} onChange={this.onChangeFormField}/>
-        </div>
-      </form>
-      <button onClick={this.onClick} className="create-keys-button set">{BtnAction} Metadata</button>
-            </div>)
+    let createKeyBtn = (
+      <div className="create-keys">
+        <form className="create-keys-form">
+          <div className="create-keys-form-i">
+            <label htmlFor="first-name">First name</label>
+            <input type="text" id="firstName" value={this.state.form.firstName} onChange={this.onChangeFormField}/>
+            <label htmlFor="last-name">Last name</label>
+            <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField}/>
+            <label htmlFor="address">Address</label>
+            <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
+            <label htmlFor="state">State</label>
+            <input type="text" id="us_state" value={this.state.form.us_state} onChange={this.onChangeFormField}/>
+          </div>
+          <div className="create-keys-form-i">
+            <label htmlFor="zip">Zip code</label>
+            <input type="number" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField}/>
+            <label htmlFor="licenseId">License id</label>
+            <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField}/>
+            <label htmlFor="expirationDate">License expiration</label>
+            <input type="date" id="expirationDate" value={this.state.form.expirationDate} onChange={this.onChangeFormField}/>
+          </div>
+        </form>
+        <button onClick={this.onClick} className="create-keys-button">{BtnAction} Metadata</button>
+      </div>)
     let content = createKeyBtn;
     return (
       <div className="container">
         {loader}
-        {content}  
+        {content}
       </div>
     );
   }
