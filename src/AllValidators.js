@@ -12,14 +12,18 @@ export default class AllValidators extends Component {
     }
     this.getValidatorsData.call(this);
   }
-  async getValidatorsData() {
+  componentWillMount() {
     const netId = this.props.web3Config.netId;
     this.setState({loading: true, netId: netId})
+  }
+  async getValidatorsData() {
+    const netId = this.props.web3Config.netId;
     this.getMetadataContract()[this.props.methodToCall](netId).then((data) => {
       this.setState({
         validators: data,
         loading: false,
         reload: false,
+        netId
       })
     })
   }
@@ -41,7 +45,6 @@ export default class AllValidators extends Component {
       );
     })
     let validators = [];
-    let confirmations = [];
     for(let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, (child) => {
         return React.cloneElement(child, { miningkey: validator.address });

@@ -1,3 +1,4 @@
+import helpers from './helpers'
 const CORE_ADDRESSES = {
   METADATA_ADDRESS: '0xcBB2912666c7e8023B7ec78B6842702eB26336aC',
   KEYS_MANAGER_ADDRESS: '0x2b1dbc7390a65dc40f7d64d67ea11b4d627dd1bf',
@@ -5,20 +6,29 @@ const CORE_ADDRESSES = {
   MOC: '0xCf260eA317555637C55F70e55dbA8D5ad8414Cb0'
 }
 
-const SOKOL_ADDRESSES = {
-  METADATA_ADDRESS: '0x1ce9ad5614d3e00b88affdfa64e65e52f2e4e0f4',
-  KEYS_MANAGER_ADDRESS: '0x1aa02bd52fe418ac70263351282f66f1dacf898c',
-  POA_ADDRESS: '0x03048F666359CFD3C74a1A5b9a97848BF71d5038',
-  MOC: '0xe8ddc5c7a2d2f0d7a9798459c0104fdf5e987aca'
-}
-
-module.exports = (netId) => {
-  switch (netId){
-    case '77':
-      return SOKOL_ADDRESSES
-    case '99':
-      return CORE_ADDRESSES
-    default:
-      return CORE_ADDRESSES
-  }
+export default (web3Config) => {
+    let branch;
+    
+    switch (web3Config.netId) {
+        case '77':
+            branch = 'sokol'
+            break;
+        case '99':
+            branch = 'core'
+            break;
+        default:
+            branch = 'core'
+            break;
+    }
+    return new Promise((resolve, reject) => {
+        fetch(helpers.addressesURL(branch)).then((response) => { 
+            response.json().then((json) => {
+                resolve({addresses: json, web3Config});
+            })
+        }).catch(function(err) {
+            let addr = helpers.addressesURL(branch);
+            helpers.wrongRepoAlert(addr);
+            reject(err);
+        });
+    })
 }

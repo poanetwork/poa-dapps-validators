@@ -17,6 +17,7 @@ import Loading from './Loading'
 import AllValidators from './AllValidators'
 import Select from 'react-select'
 import "react-select/dist/react-select.css";
+import networkAddresses from './contracts/addresses';
 
 let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please, choose your voting key in MetaMask and reload the page.
@@ -63,7 +64,6 @@ let Header = ({netId, onChange, injectedWeb3}) => {
         }}
         wrapperStyle={{
           width: '150px',
-          float: 'right',
         }}
         clearable={false}
         options={[
@@ -91,7 +91,7 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this);
     this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
-    this.onNetworkChage = this.onNetworkChage.bind(this);
+    this.onNetworkChange = this.onNetworkChange.bind(this);
     this.state = {
       showSearch: true,
       web3loaded: false,
@@ -106,13 +106,20 @@ class AppMainRouter extends Component {
       error: false
     }
     getWeb3().then(async (web3Config) => {
-      const keysManager = new KeysManager({
+      return networkAddresses(web3Config)
+    }).then(async (config) => {
+      const {web3Config, addresses} = config;
+      const keysManager = new KeysManager()
+      await keysManager.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
-      });
-      const metadataContract = new Metadata({
+        netId: web3Config.netId,
+        addresses,
+      })
+      const metadataContract = new Metadata()
+      await metadataContract.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
+        netId: web3Config.netId,
+        addresses,
       })
       this.setState({
         votingKey: web3Config.defaultAccount,
@@ -120,7 +127,7 @@ class AppMainRouter extends Component {
         metadataContract,
         loading: false,
         injectedWeb3: web3Config.injectedWeb3,
-        netId: web3Config.netId
+        netId: web3Config.netId,
       })
     }).catch((error) => {
       console.error(error.message);
@@ -204,6 +211,7 @@ class AppMainRouter extends Component {
   }
   onPendingChangesRender() {
     return this.state.loading && this.state.error? '' : <AllValidators
+      ref="AllValidatorsRef"
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
@@ -221,27 +229,34 @@ class AppMainRouter extends Component {
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
   }
-  onNetworkChage(e){
+  async onNetworkChange(e){
     const netId = e.value;
     const web3 = setWeb3(netId);
-    const keysManager = new KeysManager({
-      web3,
-      netId
-    });
-    const metadataContract = new Metadata({
-      web3,
-      netId
+    networkAddresses({netId}).then(async (config) => {
+      const {addresses} = config;
+      const keysManager = new KeysManager();
+      await keysManager.init({
+        web3,
+        netId,
+        addresses
+      });
+      const metadataContract = new Metadata()
+      await metadataContract.init({
+        web3,
+        netId,
+        addresses
+      });
+      this.setState({netId: e.value, keysManager, metadataContract})
     })
-    this.setState({netId: e.value, keysManager, metadataContract})
   }
   render(){
-    console.log('v2.07')
+    console.log('v2.08')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (
       <Router history={history}>
         <section className="content">
-          <Header netId={this.state.netId} onChange={this.onNetworkChage} injectedWeb3={this.state.injectedWeb3} />
+          <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
         {loading}
         <div className="nav-container">
           <div className="container">
