@@ -1,0 +1,74 @@
+.validators {
+  text-align: left;
+
+  &-i {
+    @extend %item;
+
+    @media (max-width: $mobile-width) {
+      margin-bottom: 20px;
+    }
+
+    .confirmations {
+      font-weight: normal;
+      font-size: 12px;
+      padding-top: 5px;
+    }
+  }
+
+  &-header {
+    @extend %item-paddings;
+    border-bottom: 1px solid #eee;
+    line-height: 20px;
+    font-size: 16px;
+    font-weight: bold;
+
+    &--address {
+      word-break: break-all;
+    }
+  }
+
+  &-body {
+    overflow: hidden;
+    padding: 0 20px 20px;
+
+    @media (max-width: $mobile-width) {
+      padding: 0 15px 15px;
+    }
+  }
+
+  &-notary,
+  &-license {
+    width: 48%;
+    font-size: 12px;
+
+    @media (max-width: $mobile-width) {
+      float: none;
+      width: 100%;
+    }
+  }
+
+  &-title {
+    margin: 20px 0;
+    color: #8197a2;
+    text-transform: uppercase;
+    font-weight: bold;
+
+    @media (max-width: $mobile-width) {
+      margin: 15px 0;
+    }
+  }
+
+  &-table {
+    border: 1px solid #eee;
+
+    &-i {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #eee;
+      }
+    }
+  }
+}

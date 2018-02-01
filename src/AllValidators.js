@@ -23,6 +23,7 @@ export default class AllValidators extends Component {
         validators: data,
         loading: false,
         reload: false,
+        netId
       })
     })
   }

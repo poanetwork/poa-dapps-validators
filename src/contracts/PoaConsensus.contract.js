@@ -3,9 +3,9 @@ import networkAddresses from './addresses';
 import helpers from "./helpers";
 
 export default class POAConsensus {
-  async init({web3, netId}){
+  async init({web3, netId, addresses}){
     let web3_10 = new Web3(web3.currentProvider);
-    const {POA_ADDRESS} = networkAddresses(netId);
+    const {POA_ADDRESS} = addresses;
     console.log('POA Address ' , POA_ADDRESS)
 
     const branch = helpers.getBranch(netId);

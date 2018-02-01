@@ -17,6 +17,7 @@ import Loading from './Loading'
 import AllValidators from './AllValidators'
 import Select from 'react-select'
 import "react-select/dist/react-select.css";
+import networkAddresses from './contracts/addresses';
 
 let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please, choose your voting key in MetaMask and reload the page.
@@ -63,7 +64,6 @@ let Header = ({netId, onChange, injectedWeb3}) => {
         }}
         wrapperStyle={{
           width: '150px',
-          float: 'right',
         }}
         clearable={false}
         options={[
@@ -106,15 +106,20 @@ class AppMainRouter extends Component {
       error: false
     }
     getWeb3().then(async (web3Config) => {
+      return networkAddresses(web3Config)
+    }).then(async (config) => {
+      const {web3Config, addresses} = config;
       const keysManager = new KeysManager()
       await keysManager.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
+        netId: web3Config.netId,
+        addresses,
       })
       const metadataContract = new Metadata()
       await metadataContract.init({
         web3: web3Config.web3Instance,
-        netId: web3Config.netId
+        netId: web3Config.netId,
+        addresses,
       })
       this.setState({
         votingKey: web3Config.defaultAccount,
@@ -122,7 +127,7 @@ class AppMainRouter extends Component {
         metadataContract,
         loading: false,
         injectedWeb3: web3Config.injectedWeb3,
-        netId: web3Config.netId
+        netId: web3Config.netId,
       })
     }).catch((error) => {
       console.error(error.message);
@@ -143,7 +148,7 @@ class AppMainRouter extends Component {
           icon: 'warning',
           title: 'Warning',
           content: generateElement('Metamask was not found')
-        });  
+        });
       }
     } else {
       this.setState({showSearch: true})
@@ -157,7 +162,7 @@ class AppMainRouter extends Component {
         icon: 'warning',
         title: 'Warning',
         content: generateElement(errorMsgNoMetamaskAccount)
-      });  
+      });
       return ''
     }
   }
@@ -218,8 +223,8 @@ class AppMainRouter extends Component {
     return this.state.loading || this.state.error ? '' : <AllValidators
       searchTerm={this.state.searchTerm}
       methodToCall="getAllValidatorsData"
-      web3Config={this.state} 
-      /> 
+      web3Config={this.state}
+      />
   }
   onSearch(term){
     this.setState({searchTerm: term.target.value.toLowerCase()})
@@ -227,20 +232,25 @@ class AppMainRouter extends Component {
   async onNetworkChange(e){
     const netId = e.value;
     const web3 = setWeb3(netId);
-    const keysManager = new KeysManager();
-    await keysManager.init({
-      web3,
-      netId
-    });
-    const metadataContract = new Metadata()
-    await metadataContract.init({
-      web3,
-      netId
-    });
-    this.setState({netId: e.value, keysManager, metadataContract})
+    networkAddresses({netId}).then(async (config) => {
+      const {addresses} = config;
+      const keysManager = new KeysManager();
+      await keysManager.init({
+        web3,
+        netId,
+        addresses
+      });
+      const metadataContract = new Metadata()
+      await metadataContract.init({
+        web3,
+        netId,
+        addresses
+      });
+      this.setState({netId: e.value, keysManager, metadataContract})
+    })
   }
   render(){
-    console.log('v2.07')
+    console.log('v2.08')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (
@@ -248,12 +258,12 @@ class AppMainRouter extends Component {
         <section className="content">
           <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
         {loading}
-        <div className="search">
-          <div className="container flex-container">
+        <div className="nav-container">
+          <div className="container">
             <div className="nav">
-            <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
-            <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
+              <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
+              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
             </div>
             {search}
           </div>
@@ -267,8 +277,7 @@ class AppMainRouter extends Component {
       </Router>
     )
   }
-} 
+}
 
 ReactDOM.render(<AppMainRouter />, document.getElementById('root'));
 registerServiceWorker();
-
