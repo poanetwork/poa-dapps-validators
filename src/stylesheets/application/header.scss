@@ -1,4 +1,8 @@
 .header {
+  .container {		
+    display: flex;		
+    justify-content: space-between;		
+  }		
   padding: 18px 0;
   background-image: url('../images/bg_header.png');
   background-repeat: no-repeat;
