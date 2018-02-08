@@ -58,7 +58,7 @@ export default class Metadata {
     return {
       firstName: 'Igor',
       lastName: 'Barinov',
-      fullAddress: '755 Bounty Dr 202',
+      fullAddress: '755 Bounty Dr 202, Foster City',
       createdDate: '2017-12-18',
       updatedDate: '',
       expirationDate: '2021-07-23',
