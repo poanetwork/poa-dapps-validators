@@ -9,7 +9,6 @@ import getWeb3, {setWeb3} from './getWeb3'
 import {
   Router,
   Route,
-  Link,
   NavLink
 } from 'react-router-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
@@ -21,14 +20,14 @@ import "react-select/dist/react-select.css";
 import networkAddresses from './contracts/addresses';
 
 let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
-Please, choose your voting key in MetaMask and reload the page.
+Please choose your voting key in MetaMask and reload the page.
 Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
 
 const history = createBrowserHistory()
 
 function generateElement(msg){
   let errorNode = document.createElement("div");
-  errorNode.innerHTML = `<div>
+  errorNode.innerHTML = `<div style="line-height: 1.6;">
     ${msg}
   </div>`;
   return errorNode;
@@ -193,7 +192,7 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading && this.state.error? '' : <AllValidators
+    return this.state.loading || this.state.error? '' : <AllValidators
       ref="AllValidatorsRef"
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
