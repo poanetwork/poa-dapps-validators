@@ -14,6 +14,7 @@ import {
 } from 'react-router-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
 import Loading from './Loading'
+import Footer from './Footer';
 import AllValidators from './AllValidators'
 import Select from 'react-select'
 import "react-select/dist/react-select.css";
@@ -31,24 +32,6 @@ function generateElement(msg){
     ${msg}
   </div>`;
   return errorNode;
-}
-
-let Footer = ({netId}) => {
-  const footerClassName = netId === '77' ? 'sokol' : '';
-  return (
-    <footer className={`footer ${footerClassName}`}>
-      <div className="container">
-        <p className="footer-rights">2017 POA Network. All rights reserved.</p>
-        <a href="/poa-dapps-validators" className="footer-logo"></a>
-        <div className="socials">
-          <a href="https://twitter.com/poanetwork" className="socials-i socials-i_twitter"></a>
-          <a href="https://poa.network" className="socials-i socials-i_oracles"></a>
-          <a href="https://t.me/oraclesnetwork" className="socials-i socials-i_telegram"></a>
-          <a href="https://github.com/poanetwork/" className="socials-i socials-i_github"></a>
-        </div>
-      </div>
-    </footer>
-  )
 }
 
 let Header = ({netId, onChange, injectedWeb3}) => {
