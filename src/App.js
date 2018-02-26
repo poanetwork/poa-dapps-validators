@@ -122,6 +122,8 @@ class App extends Component {
         case "administrative_area_level_1":
           address_components.administrative_area_level_1 = place[0].address_components[i].short_name;
           break;
+        default:
+          break;
       }
       let form = this.state.form;
       form.fullAddress= `${address_components.street_number} ${address_components.route} ${address_components.locality}`;
@@ -145,7 +147,7 @@ class App extends Component {
         await this.sendTxToContract()
       } else {
         this.setState({loading:false});
-        swal("Warning!", "The key is not valid voting Key! Please make sure you have loaded correct voting key in metamask", "warning");
+        swal("Warning!", "The key is not valid voting Key! Please make sure you have loaded correct voting key in Metamask", "warning");
         return;
       }
 

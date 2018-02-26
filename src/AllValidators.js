@@ -64,11 +64,21 @@ export default class AllValidators extends Component {
           updatedDate={validator.updatedDate}
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
-        >{childrenWithProps}</Validator>)
-
+        >
+          {childrenWithProps}
+        </Validator>
+      )
     }
+    const isValidatorsPage = this.props.methodToCall == 'getAllValidatorsData';
+    const validatorsCountObj = <div className="validators-count">
+      <span className="validators-count-label">Total number of validators: </span>
+      <span className="validators-count-val">{this.state.validators.length}</span>
+    </div>;
+    const validatorsCount = isValidatorsPage ? validatorsCountObj : '';
+      
     return (<div className="container">
       {loading}
+      {validatorsCount}
       {validators}
     </div>)
   }
