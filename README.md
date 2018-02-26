@@ -1,4 +1,11 @@
-# POA Network Validators Dapp
+# POA Network Validators DApp
+
+Validators DApp is built for POA Network based blockchains. It gives an opportunity for the current validators of the network to set their personal information on-chain. Also, everyone can view current validators' personal data from this DApp.
+
+## Base supported networks
+
+- Core POA network (RPC endpoint: `https://core.poa.network`)
+- Sokol POA network (RPC endpoint: `https://sokol.poa.network`)
 
 ## Supported browsers
 
@@ -8,22 +15,32 @@
 
 * Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/poanetwork/wiki/blob/master/MetaMask-connect.md#connect-to-poa-network-via-metamask))
 
-![](./docs/all.png)
+Validators DApp is based on [POA Network Governance contracts](https://github.com/poanetwork/poa-network-consensus-contracts)
 
-![](./docs/set_metadata.png)
+## Validator role
 
-## Configuration file
-It is configured with [POA Network contract](https://github.com/poanetwork/poa-network-consensus-contracts)
+### Set metadata
+If you are a new validator of the POA Network and your validator node is successfully launched, you should fill your personal data. To do it you need:
+- connect to the corresponding endpoint of POA Network in Metamask
+- select your voting key from accounts in Metamask
+- click **SET METADATA** in the navigation bar
+- fill all fields in the form of a new validator
+- click **+ SET METADATA** button
+- confirm transaction in Metamask.
 
-Path: [`./src/contracts/addresses.js`](./src/contracts/addresses.js)
+That's it. After DApp will get a receipt for the transaction you'll see a success message and your personal data will be added to the list of validators.
 
-```
-module.exports = {
-  METADATA_ADDRESS: '0xcBB2912666c7e8023B7ec78B6842702eB26336aC',
-  KEYS_MANAGER_ADDRESS: '0xfc90125492e58dbfe80c0bfb6a2a759c4f703ca8',
-  POA_ADDRESS: '0x8bf38d4764929064f2d4d3a56520a76ab3df415b'
-}
-```
+If you need to change already submitted data you need to repeat previous instruction with the only difference your changes will be applied after two confirmations from other validators.
+
+### Confirm and finalize change in metadata
+If you are an active validator of POA Network you have an ability to confirm pending changes of personal information from other validators. To do it you need:
+- connect to the corresponding endpoint of POA Network in Metamask
+- select your voting key from accounts in Metamask
+- click **PENDING CHANGES** in the navigation bar. You'll see all pending changes 
+- find pending changes card
+- click **Confirm** button
+
+If you see **Finalize** button, then 2 confirmations are already submitted and you or any other validator might click it to apply changes of validator's personal data.
 
 ## Building from source
 
