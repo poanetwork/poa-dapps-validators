@@ -5,6 +5,7 @@ import moment from 'moment';
 import Loading from './Loading';
 import { messages } from './messages';
 import helpers from './helpers';
+import { constants } from "./constants";
 
 class App extends Component {
   constructor(props){
@@ -166,10 +167,15 @@ class App extends Component {
       helpers.generateAlert("success", "Congratulations!", "Your metadata was sent!");
     }).catch((error) => {
       console.error(error.message);
+      let errDescription
+      if (error.message.includes(constants.userDeniedTransactionPattern))
+        errDescription = `Error: User ${constants.userDeniedTransactionPattern}`
+      else
+        errDescription = error.message
       this.setState({loading: false})
       var msg = `
         Something went wrong!<br/><br/>
-        ${error.message}
+        ${errDescription}
       `;
       helpers.generateAlert("error", "Error!", msg);
     })
