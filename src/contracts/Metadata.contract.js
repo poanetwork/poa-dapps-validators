@@ -77,12 +77,7 @@ export default class Metadata {
       return {};
     }
 
-    let validatorData
-    try {
-      validatorData = await this.metadataInstance.methods.validators(miningKey).call();
-    } catch(e) {
-      console.log(e.message)
-    }
+    let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
