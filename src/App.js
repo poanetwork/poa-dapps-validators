@@ -48,13 +48,13 @@ class App extends Component {
     const pendingChange = await this.getMetadataContract().getPendingChange({votingKey: this.getVotingKey()});
     if(Number(pendingChange.minThreshold) > 0 ) {
       var msg = `
-        First Name: ${pendingChange.firstName} <br/>
-        Last Name: ${pendingChange.lastName} <br/>
-        Full Address: ${pendingChange.fullAddress} <br/>
-        Expiration Date: ${pendingChange.expirationDate} <br />
-        License ID: ${pendingChange.licenseId} <br/>
-        US state: ${pendingChange.us_state} <br/>
-        Zip Code: ${pendingChange.postal_code} <br/>
+        First Name: <b>${pendingChange.firstName}</b> <br/>
+        Last Name: <b>${pendingChange.lastName}</b> <br/>
+        Full Address: <b>${pendingChange.fullAddress}</b> <br/>
+        Expiration Date: <b>${pendingChange.expirationDate}</b> <br />
+        License ID: <b>${pendingChange.licenseId}</b> <br/>
+        US state: <b>${pendingChange.us_state}</b> <br/>
+        Zip Code: <b>${pendingChange.postal_code}</b> <br/>
       `;
       helpers.generateAlert("warning", "You have pending changes!", msg);
     }
