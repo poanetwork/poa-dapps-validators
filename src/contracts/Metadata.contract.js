@@ -41,6 +41,7 @@ export default class Metadata {
     hasData
   }) {
     let methodToCall = hasData ? 'changeRequest' : 'createMetadata'
+    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
     return await this.metadataInstance.methods[methodToCall](
       this.web3_10.utils.fromAscii(firstName),
       this.web3_10.utils.fromAscii(lastName),
@@ -49,7 +50,7 @@ export default class Metadata {
       this.web3_10.utils.fromAscii(state),
       zipcode,
       expirationDate
-    ).send({from: votingKey});
+    ).send({from: votingKey, gasPrice});
   }
 
   getMocData() {
@@ -165,7 +166,8 @@ export default class Metadata {
           `You cannot confirm your own changes.\n
           Please ask other validators to verify your new information.`})
     }
-    return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey});
+    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
+    return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey, gasPrice});
   }
 
   async getConfirmations({miningKey}) {
@@ -186,7 +188,8 @@ export default class Metadata {
           `There is not enough confimations.\n
           The minimum threshold to finalize is ${getMinThreshold}.`})
     }
-    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({from: senderVotingKey});
+    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
+    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({from: senderVotingKey, gasPrice});
   }
   
 }
