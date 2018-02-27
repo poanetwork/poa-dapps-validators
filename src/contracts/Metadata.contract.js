@@ -106,7 +106,6 @@ export default class Metadata {
   }
 
   async getMiningByVoting(votingKey){
-    //return await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
     let miningKey
     try {
       miningKey = await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
