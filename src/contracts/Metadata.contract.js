@@ -2,6 +2,9 @@ import PoaConsensus from './PoaConsensus.contract'
 import Web3 from 'web3';
 import moment from 'moment';
 import helpers from "./helpers";
+import helpersGlobal from "../helpers";
+import { messages } from '../messages';
+
 var toAscii = function(hex) {
   var str = '',
       i = 0,
@@ -69,7 +72,17 @@ export default class Metadata {
 
   async getValidatorData({votingKey, miningKey}){
     miningKey = miningKey || await this.getMiningByVoting(votingKey);
-    let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
+    if (!miningKey) {
+      helpersGlobal.generateAlert("warning", "Warning!", messages.invalidaVotingKey);
+      return {};
+    }
+
+    let validatorData
+    try {
+      validatorData = await this.metadataInstance.methods.validators(miningKey).call();
+    } catch(e) {
+      console.log(e.message)
+    }
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
@@ -93,7 +106,14 @@ export default class Metadata {
   }
 
   async getMiningByVoting(votingKey){
-    return await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
+    //return await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
+    let miningKey
+    try {
+      miningKey = await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
+    } catch(e) {
+      console.log(e.message)
+    }
+    return miningKey;
   }
 
   async getAllValidatorsData(netId){
@@ -117,6 +137,11 @@ export default class Metadata {
 
   async getPendingChange({votingKey, miningKey}){
     miningKey = miningKey || await this.getMiningByVoting(votingKey);
+    if (!miningKey) {
+      helpersGlobal.generateAlert("warning", "Warning!", messages.invalidaVotingKey);
+      return {};
+    }
+
     let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call();
     let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''

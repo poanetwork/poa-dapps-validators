@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import swal from 'sweetalert';
 import './stylesheets/application.css';
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete';
 import moment from 'moment';
 import Loading from './Loading';
+import { messages } from './messages';
+import helpers from './helpers';
 
 class App extends Component {
   constructor(props){
@@ -45,8 +46,7 @@ class App extends Component {
     this.defaultValues = currentData;
     const pendingChange = await this.getMetadataContract().getPendingChange({votingKey: this.getVotingKey()});
     if(Number(pendingChange.minThreshold) > 0 ) {
-      var content = document.createElement("div");
-      content.innerHTML = `<div>
+      var msg = `
         First Name: ${pendingChange.firstName} <br/>
         Last Name: ${pendingChange.lastName} <br/>
         Full Address: ${pendingChange.fullAddress} <br/>
@@ -54,12 +54,8 @@ class App extends Component {
         License ID: ${pendingChange.licenseId} <br/>
         US state: ${pendingChange.us_state} <br/>
         Zip Code: ${pendingChange.postal_code} <br/>
-      </div>`;
-      swal({
-        icon: 'warning',
-        title: 'You have pending changes!',
-        content: content
-      });
+      `;
+      helpers.generateAlert("warning", "You have pending changes!", msg);
     }
     this.setState({
       form: {
@@ -89,14 +85,14 @@ class App extends Component {
     keys.forEach((key) => {
       if(!this.state.form[key]){
         this.setState({loading: false})
-        swal("Warning!", `${key} cannot be empty`, "warning");
+        helpers.generateAlert("warning", "Warning!", `${key} cannot be empty`);
         return false;
       }
     })
     if(isAfter){
     } else {
       this.setState({loading: false})
-      swal("Warning!", "Expiration date should be valid", "warning");
+      helpers.generateAlert("warning", "Warning!", "Expiration date should be valid");
       return false;
     }
     return true;
@@ -147,7 +143,7 @@ class App extends Component {
         await this.sendTxToContract()
       } else {
         this.setState({loading:false});
-        swal("Warning!", "The key is not valid voting Key! Please make sure you have loaded correct voting key in Metamask", "warning");
+        helpers.generateAlert("warning", "Warning!", messages.invalidaVotingKey);
         return;
       }
 
@@ -167,20 +163,15 @@ class App extends Component {
     }).then((receipt) => {
       console.log(receipt);
       this.setState({loading: false})
-      swal("Congratulations!", "Your metadata was sent!", "success");
+      helpers.generateAlert("success", "Congratulations!", "Your metadata was sent!");
     }).catch((error) => {
       console.error(error.message);
       this.setState({loading: false})
-      var content = document.createElement("div");
-      content.innerHTML = `<div>
+      var msg = `
         Something went wrong!<br/><br/>
         ${error.message}
-      </div>`;
-      swal({
-        icon: 'error',
-        title: 'Error',
-        content: content
-      });
+      `;
+      helpers.generateAlert("error", "Error!", msg);
     })
   }
   onChangeFormField(event) {
