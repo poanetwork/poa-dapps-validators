@@ -23,6 +23,10 @@
     &[disabled] {
       background-color: #079dd4;
     }
+
+    &.finalize {
+      margin-right: 10px;
+    }
   }
 
   &-form {
