@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
-import swal from 'sweetalert';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
 import getWeb3, {setWeb3} from './getWeb3'
+import helpers from './helpers'
 import {
   Router,
   Route,
@@ -24,14 +24,6 @@ Please choose your voting key in MetaMask and reload the page.
 Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
 
 const history = createBrowserHistory()
-
-function generateElement(msg){
-  let errorNode = document.createElement("div");
-  errorNode.innerHTML = `<div style="line-height: 1.6;">
-    ${msg}
-  </div>`;
-  return errorNode;
-}
 
 let Header = ({netId, onChange, injectedWeb3}) => {
   let select;
@@ -114,11 +106,7 @@ class AppMainRouter extends Component {
     }).catch((error) => {
       console.error(error.message);
       this.setState({loading: false, error: true});
-      swal({
-        icon: 'error',
-        title: 'Error',
-        content: generateElement(error.message)
-      });
+      helpers.generateAlert("error", "Error!", error.message);
     })
   }
   onRouteChange(){
@@ -126,11 +114,7 @@ class AppMainRouter extends Component {
     if(history.location.pathname === setMetadata){
       this.setState({showSearch: false})
       if(this.state.injectedWeb3 === false){
-        swal({
-          icon: 'warning',
-          title: 'Warning',
-          content: generateElement('Metamask was not found')
-        });
+        helpers.generateAlert("warning", "Warning!", 'Metamask was not found');
       }
     } else {
       this.setState({showSearch: true})
@@ -140,11 +124,7 @@ class AppMainRouter extends Component {
     if(this.state.votingKey && !this.state.loading){
       return cb();
     } else {
-      swal({
-        icon: 'warning',
-        title: 'Warning',
-        content: generateElement(errorMsgNoMetamaskAccount)
-      });
+      helpers.generateAlert("warning", "Warning!", errorMsgNoMetamaskAccount);
       return ''
     }
   }
@@ -165,15 +145,11 @@ class AppMainRouter extends Component {
         });
         console.log(result);
         this.setState({loading: false})
-        swal("Congratulations!", successMsg, "success");
+        helpers.generateAlert("success", "Congratulations!", successMsg);
       } catch(error) {
         this.setState({loading: false})
         console.error(error.message);
-        swal({
-          icon: 'error',
-          title: 'Error',
-          content: generateElement(error.message)
-        });
+        helpers.generateAlert("error", "Error!", error.message);
       }
     })
   }
@@ -232,7 +208,7 @@ class AppMainRouter extends Component {
     })
   }
   render(){
-    console.log('v2.08')
+    console.log('v2.09')
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     return (

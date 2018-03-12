@@ -1,6 +1,4 @@
 import { constants } from "../constants";
-import { messages } from "../messages";
-import swal from 'sweetalert';
 
 function addressesURL(branch) {
     const URL = `https://raw.githubusercontent.com/${constants.organization}/${constants.repoName}/${branch}/${constants.addressesSourceFile}`;
@@ -21,19 +19,6 @@ function getABI(branch, contract) {
     })
 }
 
-function wrongRepoAlert(addr) {
-    var content = document.createElement("div");
-    content.innerHTML = `<div>
-      Something went wrong!<br/><br/>
-      ${messages.wrongRepo(addr)}
-    </div>`;
-    swal({
-      icon: 'error',
-      title: 'Error',
-      content: content
-    });
-}
-
 function getBranch(netId) {
     switch (netId) {
         case '77':
@@ -49,7 +34,6 @@ const helpers = {
     addressesURL,
     ABIURL,
     getABI,
-    wrongRepoAlert,
     getBranch
 }
 

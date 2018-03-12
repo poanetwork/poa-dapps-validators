@@ -7,6 +7,7 @@ constants.ABIsSources = {
 	'PoaNetworkConsensus': 'PoaNetworkConsensus.abi.json',
 	'ValidatorMetadata': 'ValidatorMetadata.abi.json'
 };
+constants.userDeniedTransactionPattern = 'User denied transaction';
 
 module.exports = {
   constants
