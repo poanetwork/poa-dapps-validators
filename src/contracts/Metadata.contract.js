@@ -51,7 +51,7 @@ export default class Metadata {
       this.web3_10.utils.fromAscii(licenseId),
       fullAddress,
       this.web3_10.utils.fromAscii(state),
-      zipcode,
+      this.web3_10.utils.fromAscii(zipcode),
       expirationDate
     ).send({from: votingKey, gasPrice});
   }
@@ -67,7 +67,7 @@ export default class Metadata {
       expirationDate: '2021-07-23',
       licenseId: '2206724',
       us_state: 'CA',
-      postal_code: 94404,
+      postal_code: '94404',
     }
   }
 
@@ -82,10 +82,10 @@ export default class Metadata {
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
-    if(validatorData.zipcode.length === 4){
+    if (validatorData.zipcode.length === 4) {
       validatorData.zipcode = "0" + validatorData.zipcode;
     }
-    if(validatorData.zipcode === "0"){
+    if (validatorData.zipcode === "0") {
       validatorData.zipcode = '';
     }
     return {
@@ -97,7 +97,7 @@ export default class Metadata {
       expirationDate,
       licenseId: toAscii(validatorData.licenseId),
       us_state: toAscii(validatorData.state),
-      postal_code: validatorData.zipcode,
+      postal_code: toAscii(validatorData.zipcode),
     }
   }
 
@@ -141,7 +141,6 @@ export default class Metadata {
     let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
-    let postal_code = Number(pendingChanges.zipcode) || ''
     return {
       firstName: toAscii(pendingChanges.firstName),
       lastName: toAscii(pendingChanges.lastName),
@@ -151,7 +150,7 @@ export default class Metadata {
       expirationDate,
       licenseId: toAscii(pendingChanges.licenseId),
       us_state: toAscii(pendingChanges.state),
-      postal_code,
+      postal_code: toAscii(pendingChanges.zipcode),
       minThreshold: pendingChanges.minThreshold
     }
   }
@@ -163,7 +162,7 @@ export default class Metadata {
     for (let key of miningKeys) {
       let pendingChange = await this.getPendingChange({miningKey: key})
       pendingChange.address = key;
-      if(pendingChange.postal_code > 0){
+      if (pendingChange.postal_code) {
         pendingChanges.push(pendingChange)
       }
     }
