@@ -200,7 +200,7 @@ export default class Metadata {
   async finalize({miningKeyToConfirm, senderVotingKey}) {
     const confirmations = await this.getConfirmations({miningKey: miningKeyToConfirm});
     const getMinThreshold = await this.getMinThreshold({miningKey: miningKeyToConfirm});
-    if(Number(confirmations) < Number(getMinThreshold)){
+    if(Number(confirmations[0]) < Number(getMinThreshold)){
       throw(
         {message:
           `There is not enough confimations.\n
