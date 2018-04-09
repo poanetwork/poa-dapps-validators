@@ -43,7 +43,7 @@ class App extends Component {
   }
   async setMetadata(){
     const currentData = await this.getMetadataContract().getValidatorData({votingKey: this.getVotingKey()});
-    const hasData = currentData.postal_code ? true : false
+    const hasData = Number(currentData.postal_code) > 0 ? true : false
     this.defaultValues = currentData;
     const pendingChange = await this.getMetadataContract().getPendingChange({votingKey: this.getVotingKey()});
     if(Number(pendingChange.minThreshold) > 0 ) {
@@ -105,7 +105,7 @@ class App extends Component {
       var addressType = place[0].address_components[i].types[0];
       switch(addressType) {
         case "postal_code":
-          address_components.postal_code = place[0].address_components[i].short_name;
+          address_components.postal_code = Number(place[0].address_components[i].short_name);
           break;
         case "street_number":
           address_components.street_number = place[0].address_components[i].short_name;
@@ -217,7 +217,7 @@ class App extends Component {
           </div>
           <div className="create-keys-form-i">
             <label htmlFor="zip">Zip code</label>
-            <input type="text" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField}/>
+            <input type="number" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField}/>
             <label htmlFor="licenseId">License id</label>
             <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField}/>
             <label htmlFor="expirationDate">License expiration</label>
