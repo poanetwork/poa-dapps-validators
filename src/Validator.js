@@ -7,7 +7,7 @@ class Validator extends Component {
       confirmation: null
     }
     this.props.metadataContract.getConfirmations({miningKey: this.props.address}).then((confirmation) => {
-      this.setState({confirmation})
+      this.setState({confirmation: confirmation[0]})
     })
   }
   render(){
