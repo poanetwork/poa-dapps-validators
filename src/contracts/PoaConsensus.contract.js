@@ -17,4 +17,10 @@ export default class POAConsensus {
     console.log(this.poaInstance)
     return await this.poaInstance.methods.getValidators().call();
   }
+  async isMasterOfCeremonyRemoved(){
+    if (this.poaInstance.methods.isMasterOfCeremonyRemoved) {
+      return await this.poaInstance.methods.isMasterOfCeremonyRemoved().call();
+    }
+    return false;
+  }
 }
