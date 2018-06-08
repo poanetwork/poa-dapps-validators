@@ -82,12 +82,6 @@ export default class Metadata {
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
-    if (validatorData.zipcode.length === 4) {
-      validatorData.zipcode = "0" + validatorData.zipcode;
-    }
-    if (validatorData.zipcode === "0") {
-      validatorData.zipcode = '';
-    }
     return {
       firstName: toAscii(validatorData.firstName),
       lastName: toAscii(validatorData.lastName),
@@ -114,17 +108,30 @@ export default class Metadata {
   async getAllValidatorsData(netId){
     let all = [];
     return new Promise(async(resolve, reject) => {
-      const poaInstance = new PoaConsensus()
-      await poaInstance.init({web3: this.web3_10, netId, addresses: this.addresses})
-      const keys = await poaInstance.getValidators()
-      console.log(keys)
+      const poaInstance = new PoaConsensus();
+      await poaInstance.init({web3: this.web3_10, netId, addresses: this.addresses});
+      const keys = await poaInstance.getValidators();
+      console.log(keys);
+      const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase();
+      
+      //const mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
+      let mocRemoved = false;
+      if (helpers.getBranch(netId) === 'sokol') {
+        mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
+      }
+
       for (let key of keys) {
-        let data = await this.getValidatorData({miningKey: key})
-        if(key.toLowerCase() === this.MOC_ADDRESS.toLowerCase()) {
-          data = this.getMocData()
+        let data;
+        if (key.toLowerCase() === mocAddressLowercase) {
+          if (mocRemoved) {
+            continue;
+          }
+          data = this.getMocData();
+        } else {
+          data = await this.getValidatorData({miningKey: key});
         }
-        data.address = key
-        all.push(data)
+        data.address = key;
+        all.push(data);
       }      
       resolve(all);
     })
