@@ -113,13 +113,7 @@ export default class Metadata {
       const keys = await poaInstance.getValidators();
       console.log(keys);
       const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase();
-      
-      //const mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
-      let mocRemoved = false;
-      if (helpers.getBranch(netId) === 'sokol') {
-        mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
-      }
-
+      const mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
       for (let key of keys) {
         let data;
         if (key.toLowerCase() === mocAddressLowercase) {
