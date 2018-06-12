@@ -22,6 +22,7 @@ class Validator extends Component {
       expirationDate,
       createdDate,
       updatedDate,
+      index,
       children,
     } = this.props;
     let confirmations = this.props.methodToCall === 'getAllValidatorsData' ? '' : <div className="confirmations">
@@ -30,7 +31,7 @@ class Validator extends Component {
     return(
       <div className="validators-i">
       <div className="validators-header">
-        <div className="validators-header--address">{address}</div>
+        <div className="validators-header--address">#{index}. {address}</div>
         <div>{confirmations}</div>
         <div>{children}</div>
       </div>
