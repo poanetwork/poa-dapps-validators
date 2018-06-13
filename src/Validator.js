@@ -10,7 +10,8 @@ class Validator extends Component {
       this.setState({confirmation: confirmation[0]})
     })
   }
-  render(){
+
+  render() {
     let {
       address,
       firstName,
@@ -22,15 +23,22 @@ class Validator extends Component {
       expirationDate,
       createdDate,
       updatedDate,
+      index,
       children,
     } = this.props;
-    let confirmations = this.props.methodToCall === 'getAllValidatorsData' ? '' : <div className="confirmations">
-          <div>{this.state.confirmation} confirmations</div>
-      </div>
+
+    const showAllValidators = this.props.methodToCall === 'getAllValidatorsData';
+
+    const confirmations = showAllValidators ? '' : <div className="confirmations">
+      <div>{this.state.confirmation} confirmations</div>
+    </div>;
+
+    const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address;
+
     return(
       <div className="validators-i">
       <div className="validators-header">
-        <div className="validators-header--address">{address}</div>
+        <div className="validators-header--address">{indexAndAddress}</div>
         <div>{confirmations}</div>
         <div>{children}</div>
       </div>

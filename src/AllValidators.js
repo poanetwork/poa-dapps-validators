@@ -19,6 +19,9 @@ export default class AllValidators extends Component {
   async getValidatorsData() {
     const netId = this.props.web3Config.netId;
     this.getMetadataContract()[this.props.methodToCall](netId).then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        data[i].index = i + 1;
+      }
       this.setState({
         validators: data,
         loading: false,
@@ -62,6 +65,7 @@ export default class AllValidators extends Component {
           expirationDate={validator.expirationDate}
           createdDate={validator.createdDate}
           updatedDate={validator.updatedDate}
+          index={validator.index}
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
         >
