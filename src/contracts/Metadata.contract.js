@@ -19,6 +19,7 @@ var toAscii = function(hex) {
   }
   return str;
 };
+
 export default class Metadata {
   async init({web3, netId, addresses}){
     this.web3_10 = new Web3(web3.currentProvider);
@@ -31,6 +32,11 @@ export default class Metadata {
     this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
     this.MOC_ADDRESS = MOC;
     this.addresses = addresses;
+
+    const poaInstance = new PoaConsensus();
+    await poaInstance.init({web3: this.web3_10, netId, addresses});
+    this.mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
+    this.miningKeys = await poaInstance.getValidators();
   }
   async createMetadata({
     firstName,
@@ -108,16 +114,12 @@ export default class Metadata {
   async getAllValidatorsData(netId){
     let all = [];
     return new Promise(async(resolve, reject) => {
-      const poaInstance = new PoaConsensus();
-      await poaInstance.init({web3: this.web3_10, netId, addresses: this.addresses});
-      const keys = await poaInstance.getValidators();
-      console.log(keys);
+      console.log(this.miningKeys);
       const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase();
-      const mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
-      for (let key of keys) {
+      for (let key of this.miningKeys) {
         let data;
         if (key.toLowerCase() === mocAddressLowercase) {
-          if (mocRemoved) {
+          if (this.mocRemoved) {
             continue;
           }
           data = this.getMocData();
@@ -157,10 +159,8 @@ export default class Metadata {
   }
 
   async getAllPendingChanges() {
-    let allChanges = await this.metadataInstance.getPastEvents('ChangeRequestInitiated', {fromBlock: 0});
-    let miningKeys = allChanges.map((event) => event.returnValues.miningKey)
     let pendingChanges = []
-    for (let key of miningKeys) {
+    for (let key of this.miningKeys) {
       let pendingChange = await this.getPendingChange({miningKey: key})
       pendingChange.address = key;
       if (pendingChange.postal_code) {
