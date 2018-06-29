@@ -68,11 +68,10 @@ class AppMainRouter extends Component {
     this.onNetworkChange = this.onNetworkChange.bind(this);
     this.state = {
       showSearch: true,
-      web3loaded: false,
-      keysManager :null,
+      keysManager: null,
       metadataContract: null,
       poaConsensus: null,
-      votingKey :null,
+      votingKey: null,
       loading: true,
       searchTerm: '',
       injectedWeb3: true,
@@ -129,9 +128,12 @@ class AppMainRouter extends Component {
     }
   }
   onSetRender() {
+    if (!this.state.netId) {
+      return '';
+    }
     return this.checkForVotingKey(() => {
       return <App web3Config={this.state}/>
-    })
+    });
   }
   async _onBtnClick({event, methodToCall, successMsg}){
     event.preventDefault();
