@@ -27,12 +27,12 @@ let getWeb3 = () => {
               break;
             default:
               netIdName = 'ERROR'
-              errorMsg = `You aren't connected to POA Network. 
-                  Please, switch to POA network and refresh the page. 
+              errorMsg = `You aren't connected to POA Network.
+                  Please, switch to POA network and refresh the page.
                   Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`
               console.log('This is an unknown network.', netId)
           }
-          document.title = `${netIdName} - POA validators dApp`
+          document.title = `${netIdName} - POA Validators dApp`
           var defaultAccount = web3.eth.defaultAccount || null;
           if(errorMsg !== null){
             reject({message: errorMsg})
@@ -51,7 +51,7 @@ let getWeb3 = () => {
 
       } else {
         // Fallback to localhost if no web3 injection.
-        
+
         const network = window.location.host.indexOf('sokol') !== -1 ? POA_SOKOL : POA_CORE
 
         document.title = `${network.netIdName} - POA validators dApp`
@@ -67,7 +67,7 @@ let getWeb3 = () => {
         }
         resolve(results)
         console.log('No web3 instance injected, using Local web3.');
-        console.error('Metamask not found'); 
+        console.error('Metamask not found');
       }
     })
   })
@@ -84,7 +84,7 @@ const setWeb3 = (netId) => {
       break;
     default:
       network = POA_CORE
-      break; 
+      break;
   }
   const provider = new Web3.providers.HttpProvider(network.RPC_URL)
   return new Web3(provider)
