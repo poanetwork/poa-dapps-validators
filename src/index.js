@@ -23,7 +23,37 @@ Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wi
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators';
-const sectionsTitles = ['All', 'Set Metadata', 'Pending Changes'];
+const navigationData = [
+  {
+  'icon': 'link-icon-all',
+  'title': 'All',
+  'url': baseRootPath
+  },
+  {
+  'icon': 'link-icon-set-metadata',
+  'title': 'Set Metadata',
+  'url': `${ baseRootPath }/set`
+  },
+  {
+  'icon': 'link-icon-pending-changes',
+  'title': 'Pending Changes',
+  'url': `${ baseRootPath }/pending-changes`
+  }];
+
+let NavigationLinks = () => {
+
+  return (
+    navigationData.map((item) =>
+      <NavLink
+        activeClassName="active"
+        className="link"
+        exact
+        to={item.url}
+      >
+        <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{item.title}</span>
+    </NavLink>
+  ));
+};
 
 let Header = ({ netId, onChange, injectedWeb3 }) => {
 
@@ -61,28 +91,7 @@ let Header = ({ netId, onChange, injectedWeb3 }) => {
           />
         </a>
         <div className="links-container">
-          <NavLink
-            activeClassName="active"
-            className="link"
-            exact
-            to={`${baseRootPath}/`}
-          >
-            <i className="link-icon link-icon-all" /><span className='link-text'>{sectionsTitles[0]}</span>
-          </NavLink>
-          <NavLink
-            activeClassName="active"
-            className="link"
-            to={`${baseRootPath}/set`}
-          >
-            <i className="link-icon link-icon-set-metadata" /><span className='link-text'>{sectionsTitles[1]}</span>
-          </NavLink>
-          <NavLink
-            activeClassName="active"
-            className="link"
-            to={`${baseRootPath}/pending-changes`}
-          >
-            <i className="link-icon link-icon-pending-changes" /><span className='link-text'>{sectionsTitles[2]}</span>
-          </NavLink>
+          <NavigationLinks />
         </div>
         {select}
       </div>
@@ -115,7 +124,7 @@ class AppMainRouter extends Component {
       injectedWeb3: true,
       netId: '',
       error: false,
-      title: sectionsTitles[0]
+      title: navigationData[0].title
     }
     getWeb3().then(async (web3Config) => {
       return networkAddresses(web3Config)
@@ -153,25 +162,32 @@ class AppMainRouter extends Component {
     this.setTitle()
 
     if (history.location.pathname === setMetadata) {
+
       this.setState({ showSearch: false })
+
       if (this.state.injectedWeb3 === false) {
         helpers.generateAlert("warning", "Warning!", 'Metamask was not found');
       }
+
     } else {
+
       this.setState({ showSearch: true })
+
     }
 
   }
   setTitle() {
+
     if (history.location.pathname.includes('/set')) {
-      this.state.title = sectionsTitles[1];
+      this.state.title = navigationData[1].title;
     }
     else if (history.location.pathname.includes('/pending-changes')) {
-      this.state.title = sectionsTitles[2];
+      this.state.title = navigationData[2].title;
     }
     else {
-      this.state.title = sectionsTitles[0];
+      this.state.title = navigationData[0].title;
     }
+
   }
   checkForVotingKey(cb) {
     if (this.state.votingKey && !this.state.loading) {
