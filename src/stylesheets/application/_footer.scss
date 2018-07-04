@@ -1,59 +1,51 @@
 .footer {
   @extend %full-width;
-  position: absolute;
+  background-color: #5c34a2;
   bottom: 0;
-  height: $footer-height_desktop;
-  background-color: #6d2eae;
-
-  @media screen and (max-width: $tablet-width) {
-    height: auto;
-    padding: 20px 10px 0;
-  }
-
-  &.sokol {
-    background-color: $secondary-color;
-  }
+  padding: 18px 0;
+  position: absolute;
 
   .container {
-    position: relative;
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 
     @media screen and (max-width: $tablet-width) {
-      padding-top: $footer-height_desktop - 20;
+      flex-direction: column;
     }
   }
 
-  &-logo,
   .socials {
-    transform: translateY(-50%);
-    position: absolute;
-    z-index: 1;
-    top: 50%;
+    order: 2;
 
     @media screen and (max-width: $tablet-width) {
-      transform: translateY(0);
-      top: 0;
+      margin-top: 15px;
+      order: 1;
     }
   }
 
   &-logo {
-    @include image-2x('../images/logo_validators_dapp_footer@2x.png', 123px, 24px);
-    z-index: 2;
-    display: inline-block;
-    vertical-align: middle;
-    width: 123px;
-    height: 24px;
-    background-image: url('../images/logo_validators_dapp_footer.png');
-    background-position: 0 0;
+    @include image-2x('#{ $base-images-path}/logos/logo_validators_dapp_footer@2x.png', 126px, 18px);
+    background-image: url('#{ $base-images-path}/logos/logo_validators_dapp_footer.png');
+    display: block;
+    height: 18px;
+    left: 0;
+    order: 0;
+    width: 126px;
   }
 
   &-rights {
     color: #fff;
-    line-height: $footer-height_desktop;
-    text-align: center;
     font-size: 12px;
+    order: 1;
+    text-align: center;
 
     @media screen and (max-width: $tablet-width) {
-      line-height: 30px;
+      line-height: normal;
+      margin-top: 15px;
+      order: 2;
+      width: 100%;
     }
   }
 }

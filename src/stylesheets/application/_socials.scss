@@ -1,19 +1,21 @@
 .socials {
   font-size: 0;
 
-  .footer & {
-    right: 0;
+  &-item {
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
   }
 
   &-i {
-    transition: 0.3s background-color;
-    position: relative;
+    background-color: #ffffff;
+    border-radius: 3px;
     display: inline-block;
+    height: 30px;
+    position: relative;
+    transition: 0.3s background-color;
     vertical-align: top;
     width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: fade-out(#fff, 0.8);
 
     &:not(:first-child) {
       margin-left: 10px;
@@ -24,53 +26,45 @@
     }
 
     &:before {
-      @include image-2x('../images/socials@2x.png', 16px, 69px);
-      transform: translate(-50%, -50%);
+      background-position: 50% 50%;
+      background-repeat: no-repeat;
+      background-size: contain;
       content: '';
-      position: absolute;
+      height: 16px;
       left: 50%;
+      position: absolute;
       top: 50%;
-      background-image: url(../images/socials.png);
+      transform: translate(-50%, -50%);
+      width: 16px;
     }
 
     &_github {
       &:before {
-        width: 16px;
-        height: 16px;
-        background-position: 0 0;
-      }
-    }
-
-    &_oracles {
-      &:before {
-        width: 16px;
-        height: 14px;
-        background-position: 0 -16px;
-      }
-    }
-
-    &_reddit {
-      &:before {
-        width: 15px;
-        height: 13px;
-        background-position: 0 -30px;
+        @include image-2x('#{ $base-images-path }/socials/git@2x.png');
+        background-image: url('#{ $base-images-path }/socials/git.png');
       }
     }
 
     &_telegram {
       &:before {
-        width: 16px;
-        height: 14px;
-        background-position: 0 -43px;
+        @include image-2x('#{ $base-images-path }/socials/telegram@2x.png');
+        background-image: url('#{ $base-images-path }/socials/telegram.png');
       }
     }
 
     &_twitter {
       &:before {
-        width: 15px;
-        height: 12px;
-        background-position: 0 -57px;
+        @include image-2x('#{ $base-images-path }/socials/tw@2x.png');
+        background-image: url('#{ $base-images-path }/socials/tw.png');
       }
     }
+
+    &_poa {
+      &:before {
+        @include image-2x('#{ $base-images-path }/socials/poa@2x.png');
+        background-image: url('#{ $base-images-path }/socials/poa.png');
+      }
+    }
+
   }
 }

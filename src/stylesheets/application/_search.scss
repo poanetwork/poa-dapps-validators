@@ -1,7 +1,6 @@
 @mixin search-active {
   cursor: text;
   border-color: #eee;
-  padding: 0 40px 0 10px;
 }
 .search-input {
   background-color: #fff;
@@ -17,6 +16,7 @@
   font-size: 14px;
   height: 38px;
   outline: none;
+  padding: 0 40px 0 10px;
   transition: 0.25s border-color;
   width: 300px;
 

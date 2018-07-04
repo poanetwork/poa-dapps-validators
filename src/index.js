@@ -267,7 +267,7 @@ class AppMainRouter extends Component {
 
     console.log('v2.09')
 
-    const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch} /> : '';
+    const search = this.state.showSearch ? <input type="search" className="search-input" onChange={ this.onSearch } placeholder="Address..." /> : '';
 
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
 

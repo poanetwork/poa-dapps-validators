@@ -1,11 +1,14 @@
 import React from 'react';
+
 const styles = (netId) => {
+
   const core = {
     backgroundColor: 'rgba(35, 29, 115, 0.8)'
   };
   const sokol = {
     backgroundColor: 'rgba(47, 109, 99, 0.8)'
   }
+
   switch(netId) {
     case '77':
       return sokol;
@@ -14,6 +17,7 @@ const styles = (netId) => {
     default:
       return {};
   }
+
 }
 const Loading = ({netId}) => (
   <div className="loading-container" style={styles(netId)}>
