@@ -2,7 +2,7 @@
   @extend %full-width;
   position: absolute;
   bottom: 0;
-  height: $footer-height;
+  height: $footer-height_desktop;
   background-color: #6d2eae;
 
   @media screen and (max-width: $tablet-width) {
@@ -11,14 +11,14 @@
   }
 
   &.sokol {
-    background-color: #6ac9b9;
+    background-color: $secondary-color;
   }
 
   .container {
     position: relative;
 
     @media screen and (max-width: $tablet-width) {
-      padding-top: $footer-height - 20;
+      padding-top: $footer-height_desktop - 20;
     }
   }
 
@@ -48,7 +48,7 @@
 
   &-rights {
     color: #fff;
-    line-height: $footer-height;
+    line-height: $footer-height_desktop;
     text-align: center;
     font-size: 12px;
 

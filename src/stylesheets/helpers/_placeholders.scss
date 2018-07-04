@@ -56,3 +56,14 @@
     padding: 15px;
   }
 }
+
+%container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: $container-width;
+
+  @media (max-width: $container-responsive-width) {
+    width: 98%;
+  }
+}

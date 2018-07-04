@@ -1,10 +1,30 @@
+$base-images-path: '../images';
+
+// colors
+$primary-color: #5c34a2;
+$secondary-color: #6ac9b9;
+
+// borders
+$base-border-color: #dadada;
+
+// widths
 $container-width: 960px;
+$container-responsive-width: 980px;
 $tablet-width: 768px;
 $mobile-width: 414px;
-$footer-height: 60px;
+$small-mobile-width: 360px;
 
+// header
+$header-links-container-height: 70px;
+
+// footer
+$footer-height_desktop: 66px;
+$footer-height_mobile: 98px;
+
+// misc
 $desktop-indent: 30px;
 $tablet-indent: 20px;
 $mobile-indent: 15px;
 
+// forms
 $input-height: 40px;

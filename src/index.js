@@ -1,63 +1,76 @@
-import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
-import registerServiceWorker from './registerServiceWorker';
-import KeysManager from './contracts/KeysManager.contract'
-import Metadata from './contracts/Metadata.contract'
-import getWeb3, {setWeb3} from './getWeb3'
-import helpers from './helpers'
-import {
-  Router,
-  Route,
-  NavLink
-} from 'react-router-dom'
-import createBrowserHistory from 'history/createBrowserHistory'
-import Loading from './Loading'
-import Footer from './Footer';
-import AllValidators from './AllValidators'
-import Select from 'react-select'
 import "react-select/dist/react-select.css";
+import AllValidators from './AllValidators'
+import App from './App';
+import Footer from './Footer';
+import KeysManager from './contracts/KeysManager.contract'
+import Loading from './Loading'
+import Metadata from './contracts/Metadata.contract'
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Select from 'react-select'
+import createBrowserHistory from 'history/createBrowserHistory'
+import getWeb3, { setWeb3 } from './getWeb3'
+import helpers from './helpers'
 import networkAddresses from './contracts/addresses';
+import registerServiceWorker from './registerServiceWorker';
+import { Router, Route, NavLink } from 'react-router-dom'
+import logoBase from './images/logos/logo_validators_dapp@2x.png'
+import logoSokol from './images/logos/logo_sokol@2x.png'
 
-let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
+const errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please choose your voting key in MetaMask and reload the page.
 Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
 
 const history = createBrowserHistory()
+const baseRootPath = '/poa-dapps-validators';
+const sectionsTitles = ['All', 'Set Metadata', 'Pending Changes'];
 
-let Header = ({netId, onChange, injectedWeb3}) => {
+let Header = ({ netId, onChange, injectedWeb3 }) => {
+
+  const headerClassName = netId === '77' ? 'sokol' : '';
+  const logoImageName = netId === '77' ? logoSokol : logoBase;
+
   let select;
-  let headerClassName = netId === '77' ? 'sokol' : '';
-  const logoClassName = netId === '77' ? 'header-logo-sokol' : 'header-logo';
-  if(!injectedWeb3) {
+
+  if (!injectedWeb3) {
     select = <Select id="netId"
-        value={netId}
-        onChange={onChange}
-        style={{
-          width: '150px',
-        }}
-        wrapperStyle={{
-          width: '150px',
-        }}
-        clearable={false}
-        options={[
-          { value: '77', label: 'Network: Sokol' },
-          { value: '99', label: 'Network: Core' },
-        ]} />
+      value={netId}
+      onChange={onChange}
+      style={{
+        width: '150px',
+      }}
+      wrapperStyle={{
+        width: '150px',
+      }}
+      clearable={false}
+      options={[
+        { value: '77', label: 'Network: Sokol' },
+        { value: '99', label: 'Network: Core' },
+      ]} />
   }
   return (
     <header id="header" className={`header ${headerClassName}`}>
       <div className="container">
-          <a href="/poa-dapps-validators" className={logoClassName}></a>
-          {select}
+        <a href={baseRootPath} className="header-logo-a">
+          <img className="header-logo" src={logoImageName} alt="" />
+        </a>
+        <div className="links-container">
+          <NavLink className="link" exact activeClassName="nav-i_active" to={`${baseRootPath}/`}>{sectionsTitles[0]}</NavLink>
+          <NavLink className="link" activeClassName="nav-i_active" to={`${baseRootPath}/set`}>{sectionsTitles[1]}</NavLink>
+          <NavLink className="link" activeClassName="nav-i_active" to={`${baseRootPath}/pending-changes`}>{sectionsTitles[2]}</NavLink>
+        </div>
+        {select}
       </div>
     </header>
   )
 }
+
 class AppMainRouter extends Component {
-  constructor(props){
+  constructor(props) {
+
     super(props);
-    this.rootPath = '/poa-dapps-validators'
+
+    this.rootPath = baseRootPath;
     history.listen(this.onRouteChange.bind(this));
     this.onSetRender = this.onSetRender.bind(this);
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
@@ -76,12 +89,13 @@ class AppMainRouter extends Component {
       searchTerm: '',
       injectedWeb3: true,
       netId: '',
-      error: false
+      error: false,
+      title: sectionsTitles[0]
     }
     getWeb3().then(async (web3Config) => {
       return networkAddresses(web3Config)
     }).then(async (config) => {
-      const {web3Config, addresses} = config;
+      const { web3Config, addresses } = config;
       const keysManager = new KeysManager()
       await keysManager.init({
         web3: web3Config.web3Instance,
@@ -104,23 +118,38 @@ class AppMainRouter extends Component {
       })
     }).catch((error) => {
       console.error(error.message);
-      this.setState({loading: false, error: true});
+      this.setState({ loading: false, error: true });
       helpers.generateAlert("error", "Error!", error.message);
     })
   }
-  onRouteChange(){
+  onRouteChange() {
+
     const setMetadata = this.rootPath + "/set";
-    if(history.location.pathname === setMetadata){
-      this.setState({showSearch: false})
-      if(this.state.injectedWeb3 === false){
+    this.setTitle()
+
+    if (history.location.pathname === setMetadata) {
+      this.setState({ showSearch: false })
+      if (this.state.injectedWeb3 === false) {
         helpers.generateAlert("warning", "Warning!", 'Metamask was not found');
       }
     } else {
-      this.setState({showSearch: true})
+      this.setState({ showSearch: true })
+    }
+
+  }
+  setTitle() {
+    if (history.location.pathname.includes('/set')) {
+      this.state.title = sectionsTitles[1];
+    }
+    else if (history.location.pathname.includes('/pending-changes')) {
+      this.state.title = sectionsTitles[2];
+    }
+    else {
+      this.state.title = sectionsTitles[0];
     }
   }
-  checkForVotingKey(cb){
-    if(this.state.votingKey && !this.state.loading){
+  checkForVotingKey(cb) {
+    if (this.state.votingKey && !this.state.loading) {
       return cb();
     } else {
       helpers.generateAlert("warning", "Warning!", errorMsgNoMetamaskAccount);
@@ -132,24 +161,24 @@ class AppMainRouter extends Component {
       return '';
     }
     return this.checkForVotingKey(() => {
-      return <App web3Config={this.state}/>
+      return <App web3Config={this.state} />
     });
   }
-  async _onBtnClick({event, methodToCall, successMsg}){
+  async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault();
     this.checkForVotingKey(async () => {
-      this.setState({loading: true})
+      this.setState({ loading: true })
       const miningKey = event.currentTarget.getAttribute('miningkey');
-      try{
+      try {
         let result = await this.state.metadataContract[methodToCall]({
           miningKeyToConfirm: miningKey,
           senderVotingKey: this.state.votingKey
         });
         console.log(result);
-        this.setState({loading: false})
+        this.setState({ loading: false })
         helpers.generateAlert("success", "Congratulations!", successMsg);
-      } catch(error) {
-        this.setState({loading: false})
+      } catch (error) {
+        this.setState({ loading: false })
         console.error(error.message);
         helpers.generateAlert("error", "Error!", error.message);
       }
@@ -162,7 +191,7 @@ class AppMainRouter extends Component {
       successMsg: 'You have successfully confirmed the change!'
     });
   }
-  async onFinalize(event){
+  async onFinalize(event) {
     await this._onBtnClick({
       event,
       methodToCall: 'finalize',
@@ -170,30 +199,30 @@ class AppMainRouter extends Component {
     });
   }
   onPendingChangesRender() {
-    return this.state.loading || this.state.error? '' : <AllValidators
+    return this.state.loading || this.state.error ? '' : <AllValidators
       ref="AllValidatorsRef"
       methodToCall="getAllPendingChanges"
       searchTerm={this.state.searchTerm}
       web3Config={this.state}>
-          <button onClick={this.onFinalize} className="create-keys-button finalize">Finalize</button>
-          <button onClick={this.onConfirmPendingChange} className="create-keys-button">Confirm</button>
-      </AllValidators>;
+      <button onClick={this.onFinalize} className="create-keys-button finalize">Finalize</button>
+      <button onClick={this.onConfirmPendingChange} className="create-keys-button">Confirm</button>
+    </AllValidators>;
   }
   onAllValidatorsRender() {
     return this.state.loading || this.state.error ? '' : <AllValidators
       searchTerm={this.state.searchTerm}
       methodToCall="getAllValidatorsData"
       web3Config={this.state}
-      />
+    />
   }
-  onSearch(term){
-    this.setState({searchTerm: term.target.value.toLowerCase()})
+  onSearch(term) {
+    this.setState({ searchTerm: term.target.value.toLowerCase() })
   }
-  async onNetworkChange(e){
+  async onNetworkChange(e) {
     const netId = e.value;
     const web3 = setWeb3(netId);
-    networkAddresses({netId}).then(async (config) => {
-      const {addresses} = config;
+    networkAddresses({ netId }).then(async (config) => {
+      const { addresses } = config;
       const keysManager = new KeysManager();
       await keysManager.init({
         web3,
@@ -206,33 +235,35 @@ class AppMainRouter extends Component {
         netId,
         addresses
       });
-      this.setState({netId: e.value, keysManager, metadataContract})
+      this.setState({ netId: e.value, keysManager, metadataContract })
     })
   }
-  render(){
+  render() {
+
     console.log('v2.09')
-    const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch}/> : ''
+
+    const search = this.state.showSearch ? <input type="search" className="search-input" onChange={this.onSearch} /> : '';
+
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
+
     return (
       <Router history={history}>
         <section className="content">
           <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
-        {loading}
-        <div className="nav-container">
-          <div className="container">
-            <div className="nav">
-              <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>All</NavLink>
-              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>Set metadata</NavLink>
-              <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>Pending changes</NavLink>
+          {loading}
+          <div className="app-container">
+            <div className="container">
+              <div className="main-title-container">
+                <span className="main-title">{this.state.title}</span>
+                { search }
+              </div>
             </div>
-            {search}
+            <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
+            <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
           </div>
-        </div>
-        <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state}/>
-        <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state}/>
-        <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
-        <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
-        <Footer netId={this.state.netId} />
+          <Footer netId={this.state.netId} />
         </section>
       </Router>
     )
