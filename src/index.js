@@ -2,22 +2,18 @@ import "react-select/dist/react-select.css";
 import AllValidators from './AllValidators'
 import App from './App';
 import Footer from './Footer';
+import Header from './Header';
 import KeysManager from './contracts/KeysManager.contract'
 import Loading from './Loading'
 import Metadata from './contracts/Metadata.contract'
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import Select from 'react-select'
 import createBrowserHistory from 'history/createBrowserHistory'
 import getWeb3, { setWeb3 } from './getWeb3'
 import helpers from './helpers'
 import networkAddresses from './contracts/addresses';
 import registerServiceWorker from './registerServiceWorker';
-import { Router, Route, NavLink } from 'react-router-dom'
-import logoBase from './images/logos/logo_validators_dapp@2x.png'
-import logoSokol from './images/logos/logo_sokol@2x.png'
-import menuIcon from './images/icons/icon-menu.svg'
-import menuOpenIcon from './images/icons/icon-close.svg'
+import { Router, Route } from 'react-router-dom'
 
 const errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please choose your voting key in MetaMask and reload the page.
@@ -42,106 +38,12 @@ const navigationData = [
   'url': `${ baseRootPath }/pending-changes`
   }];
 
-const NavigationLinks = () => {
-
-  return (
-    navigationData.map((item, index) =>
-      <NavLink
-        activeClassName="active"
-        className="link"
-        exact
-        key={ index }
-        to={item.url}
-      >
-        <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{item.title}</span>
-    </NavLink>
-  ));
-
-};
-
-const getMobileMenuLinks = (onMenuToggle) => {
-
-  return (
-    <div
-      className="links-container-mobile"
-      onClick={ onMenuToggle }
-    >
-      { navigationData.map((item) =>
-          <NavLink
-            activeClassName="active"
-            className="link"
-            exact
-            to={ item.url }
-          >
-              <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{ item.title }</span>
-          </NavLink>
-        )
-      }
-    </div>
-  );
-}
-
-let Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle }) => {
-
-  const headerClassName = netId === '77' ? 'sokol' : '';
-  const logoImageName = netId === '77' ? logoSokol : logoBase;
-
-  let select;
-
-  if (!injectedWeb3) {
-    select = <Select id="netId"
-      value={netId}
-      onChange={onChange}
-      style={{
-        width: '150px',
-      }}
-      wrapperStyle={{
-        width: '150px',
-      }}
-      clearable={false}
-      options={[
-        { value: '77', label: 'Network: Sokol' },
-        { value: '99', label: 'Network: Core' },
-      ]} />
-  }
-  return (
-    <header id="header" className={`header ${headerClassName}`}>
-      { showMobileMenu &&
-        (<div className="header-mobile-menu-container">{ getMobileMenuLinks(onMenuToggle) }</div>)
-      }
-      <div className="container">
-        <a
-          className="header-logo-a"
-          href={ baseRootPath }
-        >
-          <img
-            className="header-logo"
-            src={logoImageName} alt=""
-          />
-        </a>
-        <div className="links-container">
-          <NavigationLinks />
-        </div>
-        <div className="mobile-menu">
-          <img
-            alt=""
-            className={ showMobileMenu ? 'mobile-menu-open-icon' : 'mobile-menu-icon' }
-            onClick={ onMenuToggle }
-            src={ showMobileMenu ? menuOpenIcon : menuIcon }
-          />
-        </div>
-        { select }
-      </div>
-    </header>
-  )
-}
-
 class AppMainRouter extends Component {
+
   constructor(props) {
 
     super(props);
 
-    this.rootPath = baseRootPath;
     history.listen(this.onRouteChange.bind(this));
     this.onSetRender = this.onSetRender.bind(this);
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
@@ -343,6 +245,8 @@ class AppMainRouter extends Component {
             injectedWeb3={ this.state.injectedWeb3 }
             showMobileMenu={ this.state.showMobileMenu }
             onMenuToggle={ this.toggleMobileMenu }
+            baseRootPath={ baseRootPath }
+            navigationData={ navigationData }
           />
           { loading }
           <div className={`app-container ${ this.state.showMobileMenu ? 'app-container-open-mobile-menu' : '' }`}>
@@ -360,16 +264,16 @@ class AppMainRouter extends Component {
             />
             <Route
               exact
-              path={ `${ this.rootPath }/` }
+              path={ `${ baseRootPath }/` }
               render={ this.onAllValidatorsRender }
               web3Config={ this.state }
             />
             <Route
-              path={ `${ this.rootPath }/pending-changes` }
+              path={ `${ baseRootPath }/pending-changes` }
               render={this.onPendingChangesRender}
             />
             <Route
-              path={ `${ this.rootPath }/set` }
+              path={ `${ baseRootPath }/set` }
               render={ this.onSetRender }
             />
           </div>
