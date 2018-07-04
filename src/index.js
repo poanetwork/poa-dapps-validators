@@ -51,13 +51,38 @@ let Header = ({ netId, onChange, injectedWeb3 }) => {
   return (
     <header id="header" className={`header ${headerClassName}`}>
       <div className="container">
-        <a href={baseRootPath} className="header-logo-a">
-          <img className="header-logo" src={logoImageName} alt="" />
+        <a
+          className="header-logo-a"
+          href={baseRootPath}
+        >
+          <img
+            className="header-logo"
+            src={logoImageName} alt=""
+          />
         </a>
         <div className="links-container">
-          <NavLink className="link" exact activeClassName="nav-i_active" to={`${baseRootPath}/`}>{sectionsTitles[0]}</NavLink>
-          <NavLink className="link" activeClassName="nav-i_active" to={`${baseRootPath}/set`}>{sectionsTitles[1]}</NavLink>
-          <NavLink className="link" activeClassName="nav-i_active" to={`${baseRootPath}/pending-changes`}>{sectionsTitles[2]}</NavLink>
+          <NavLink
+            activeClassName="active"
+            className="link"
+            exact
+            to={`${baseRootPath}/`}
+          >
+            <i className="link-icon link-icon-all" /><span className='link-text'>{sectionsTitles[0]}</span>
+          </NavLink>
+          <NavLink
+            activeClassName="active"
+            className="link"
+            to={`${baseRootPath}/set`}
+          >
+            <i className="link-icon link-icon-set-metadata" /><span className='link-text'>{sectionsTitles[1]}</span>
+          </NavLink>
+          <NavLink
+            activeClassName="active"
+            className="link"
+            to={`${baseRootPath}/pending-changes`}
+          >
+            <i className="link-icon link-icon-pending-changes" /><span className='link-text'>{sectionsTitles[2]}</span>
+          </NavLink>
         </div>
         {select}
       </div>

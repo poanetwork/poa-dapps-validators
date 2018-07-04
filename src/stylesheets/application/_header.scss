@@ -36,7 +36,6 @@
     justify-content: space-between;
     height: $header-links-container-height;
     margin-left: auto;
-    width: 350px;
 
     @media screen and (max-width: $mobile-width) {
       display: none;
@@ -65,15 +64,37 @@
     font-weight: 700;
     line-height: 16px;
     margin-left: 30px;
+    opacity: 0.8;
     text-decoration: none;
+
+    &:hover,
+    &.active {
+      opacity: 1;
+    }
 
     @media screen and (max-width: $mobile-width) {
       margin-left: 0;
     }
   }
 
-  .link_text {
-    margin-left: 10px;
+  // header link items
+  .link-icon {
+    height: 18px;
+    width: 18px;
+    margin-right: 10px;
+    float: left;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+
+    &-all {
+      background-image: url('#{ $base-images-path }/icons/icon-events.svg');
+    }
+    &-set-metadata {
+      background-image: url('#{ $base-images-path }/icons/icon-status.svg');
+    }
+    &-pending-changes {
+      background-image: url('#{ $base-images-path }/icons/icon-statistics.svg');
+    }
   }
 
   .Select {
@@ -83,6 +104,6 @@
 }
 
 .select-network-id {
-  width: 40px;
   background: #fff;
+  width: 40px;
 }
