@@ -1,18 +1,18 @@
-import "react-select/dist/react-select.css";
+import "react-select/dist/react-select.css"
 import AllValidators from './AllValidators'
-import App from './App';
-import Footer from './Footer';
-import Header from './Header';
+import App from './App'
+import Footer from './Footer'
+import Header from './Header'
 import KeysManager from './contracts/KeysManager.contract'
 import Loading from './Loading'
 import Metadata from './contracts/Metadata.contract'
-import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
 import getWeb3, { setWeb3 } from './getWeb3'
 import helpers from './helpers'
-import networkAddresses from './contracts/addresses';
-import registerServiceWorker from './registerServiceWorker';
+import networkAddresses from './contracts/addresses'
+import registerServiceWorker from './registerServiceWorker'
 import { Router, Route } from 'react-router-dom'
 
 const errorMsgNoMetamaskAccount = `Your MetaMask is locked.
@@ -45,6 +45,7 @@ class AppMainRouter extends Component {
     super(props);
 
     history.listen(this.onRouteChange.bind(this));
+
     this.onSetRender = this.onSetRender.bind(this);
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this);
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
@@ -53,6 +54,7 @@ class AppMainRouter extends Component {
     this.onSearch = this.onSearch.bind(this);
     this.onNetworkChange = this.onNetworkChange.bind(this);
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
+
     this.state = {
       showSearch: true,
       keysManager: null,
@@ -207,10 +209,12 @@ class AppMainRouter extends Component {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
   }
   async onNetworkChange(e) {
+
     const netId = e.value;
     const web3 = setWeb3(netId);
 
     networkAddresses({ netId }).then(async (config) => {
+
       const { addresses } = config;
       const keysManager = new KeysManager();
 
