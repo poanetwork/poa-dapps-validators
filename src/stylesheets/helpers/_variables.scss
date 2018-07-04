@@ -2,6 +2,7 @@ $base-images-path: '../images';
 
 // colors
 $primary-color: #5c34a2;
+$primary-color-darker: #45277a;
 $secondary-color: #6ac9b9;
 
 // borders
@@ -16,10 +17,14 @@ $small-mobile-width: 360px;
 
 // header
 $header-links-container-height: 70px;
+$header-height_mobile: 70px;
+
+// mobile menu
+$header-mobile-menu-container-height: 172px;
 
 // footer
 $footer-height_desktop: 66px;
-$footer-height_mobile: 98px;
+$footer-height_mobile: 132px;
 
 // misc
 $desktop-indent: 30px;

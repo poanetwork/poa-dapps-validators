@@ -22,6 +22,9 @@ body {
   @media screen and (max-width: $tablet-width) {
     padding-bottom: $footer-height_mobile;
   }
+  @media screen and (max-width: $mobile-width) {
+    padding-bottom: $footer-height_mobile;
+  }
 }
 
 .container {

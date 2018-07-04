@@ -16,6 +16,8 @@ import registerServiceWorker from './registerServiceWorker';
 import { Router, Route, NavLink } from 'react-router-dom'
 import logoBase from './images/logos/logo_validators_dapp@2x.png'
 import logoSokol from './images/logos/logo_sokol@2x.png'
+import menuIcon from './images/icons/icon-menu.svg'
+import menuOpenIcon from './images/icons/icon-close.svg'
 
 const errorMsgNoMetamaskAccount = `Your MetaMask is locked.
 Please choose your voting key in MetaMask and reload the page.
@@ -40,7 +42,7 @@ const navigationData = [
   'url': `${ baseRootPath }/pending-changes`
   }];
 
-let NavigationLinks = () => {
+const NavigationLinks = () => {
 
   return (
     navigationData.map((item) =>
@@ -53,9 +55,32 @@ let NavigationLinks = () => {
         <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{item.title}</span>
     </NavLink>
   ));
+
 };
 
-let Header = ({ netId, onChange, injectedWeb3 }) => {
+const getMobileMenuLinks = (onMenuToggle) => {
+
+  return (
+    <div
+      className="links-container-mobile"
+      onClick={ onMenuToggle }
+    >
+      { navigationData.map((item) =>
+          <NavLink
+            activeClassName="active"
+            className="link"
+            exact
+            to={ item.url }
+          >
+              <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{ item.title }</span>
+          </NavLink>
+        )
+      }
+    </div>
+  );
+}
+
+let Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle }) => {
 
   const headerClassName = netId === '77' ? 'sokol' : '';
   const logoImageName = netId === '77' ? logoSokol : logoBase;
@@ -80,10 +105,13 @@ let Header = ({ netId, onChange, injectedWeb3 }) => {
   }
   return (
     <header id="header" className={`header ${headerClassName}`}>
+      { showMobileMenu &&
+        (<div className="header-mobile-menu-container">{ getMobileMenuLinks(onMenuToggle) }</div>)
+      }
       <div className="container">
         <a
           className="header-logo-a"
-          href={baseRootPath}
+          href={ baseRootPath }
         >
           <img
             className="header-logo"
@@ -93,7 +121,15 @@ let Header = ({ netId, onChange, injectedWeb3 }) => {
         <div className="links-container">
           <NavigationLinks />
         </div>
-        {select}
+        <div className="mobile-menu">
+          <img
+            alt=""
+            className={ showMobileMenu ? 'mobile-menu-open-icon' : 'mobile-menu-icon' }
+            onClick={ onMenuToggle }
+            src={ showMobileMenu ? menuOpenIcon : menuIcon }
+          />
+        </div>
+        { select }
       </div>
     </header>
   )
@@ -113,6 +149,7 @@ class AppMainRouter extends Component {
     this.onFinalize = this.onFinalize.bind(this);
     this.onSearch = this.onSearch.bind(this);
     this.onNetworkChange = this.onNetworkChange.bind(this);
+    this.toggleMobileMenu = this.toggleMobileMenu.bind(this);
     this.state = {
       showSearch: true,
       keysManager: null,
@@ -124,7 +161,8 @@ class AppMainRouter extends Component {
       injectedWeb3: true,
       netId: '',
       error: false,
-      title: navigationData[0].title
+      title: navigationData[0].title,
+      showMobileMenu: false
     }
     getWeb3().then(async (web3Config) => {
       return networkAddresses(web3Config)
@@ -205,6 +243,12 @@ class AppMainRouter extends Component {
       return <App web3Config={this.state} />
     });
   }
+  toggleMobileMenu = () => {
+
+    this.setState(prevState => ({ showMobileMenu: !prevState.showMobileMenu }))
+
+  }
+
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault();
     this.checkForVotingKey(async () => {
@@ -262,9 +306,11 @@ class AppMainRouter extends Component {
   async onNetworkChange(e) {
     const netId = e.value;
     const web3 = setWeb3(netId);
+
     networkAddresses({ netId }).then(async (config) => {
       const { addresses } = config;
       const keysManager = new KeysManager();
+
       await keysManager.init({
         web3,
         netId,
@@ -288,21 +334,43 @@ class AppMainRouter extends Component {
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
 
     return (
-      <Router history={history}>
-        <section className="content">
-          <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
-          {loading}
-          <div className="app-container">
+      <Router history={ history }>
+        <section className={`content ${ this.state.showMobileMenu ? 'content-menu-open' : '' }`}>
+          <Header
+            netId={ this.state.netId }
+            onChange={ this.onNetworkChange }
+            injectedWeb3={ this.state.injectedWeb3 }
+            showMobileMenu={ this.state.showMobileMenu }
+            onMenuToggle={ this.toggleMobileMenu }
+          />
+          { loading }
+          <div className={`app-container ${ this.state.showMobileMenu ? 'app-container-open-mobile-menu' : '' }`}>
             <div className="container">
               <div className="main-title-container">
-                <span className="main-title">{this.state.title}</span>
+                <span className="main-title">{ this.state.title }</span>
                 { search }
               </div>
             </div>
-            <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
-            <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
+            <Route
+              exact
+              path="/"
+              render={ this.onAllValidatorsRender }
+              web3Config={ this.state }
+            />
+            <Route
+              exact
+              path={ `${ this.rootPath }/` }
+              render={ this.onAllValidatorsRender }
+              web3Config={ this.state }
+            />
+            <Route
+              path={ `${ this.rootPath }/pending-changes` }
+              render={this.onPendingChangesRender}
+            />
+            <Route
+              path={ `${ this.rootPath }/set` }
+              render={ this.onSetRender }
+            />
           </div>
           <Footer netId={this.state.netId} />
         </section>
