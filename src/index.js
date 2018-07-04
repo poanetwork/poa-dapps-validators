@@ -45,11 +45,12 @@ const navigationData = [
 const NavigationLinks = () => {
 
   return (
-    navigationData.map((item) =>
+    navigationData.map((item, index) =>
       <NavLink
         activeClassName="active"
         className="link"
         exact
+        key={ index }
         to={item.url}
       >
         <i className={`link-icon ${ item.icon }`} /><span className='link-text'>{item.title}</span>

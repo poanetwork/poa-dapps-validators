@@ -26,8 +26,12 @@ let Socials = () => {
 
   return (
     <div className="socials">
-      {socialItems.map((item) =>
-        <a href={ item.url } className={`socials-i ${ item.icon }`}>{ item.title }</a>
+      {socialItems.map((item, index) =>
+        <a
+          className={`socials-i ${ item.icon }`}
+          key={ index }
+          href={ item.url }
+        >{ item.title }</a>
       )}
     </div>
     );
