@@ -63,6 +63,8 @@
       &:before {
         @include image-2x('#{ $base-images-path }/socials/poa@2x.png');
         background-image: url('#{ $base-images-path }/socials/poa.png');
+        height: 20px;
+        width: 20px;
       }
     }
 
