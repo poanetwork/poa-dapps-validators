@@ -1,9 +1,14 @@
 .footer {
   @extend %full-width;
+
   background-color: #5c34a2;
   bottom: 0;
   padding: 18px 0;
   position: absolute;
+
+  &.sokol {
+    background-color: $secondary-color;
+  }
 
   .container {
     align-items: center;
@@ -31,10 +36,10 @@
     background-repeat: no-repeat;
     background-size: contain;
     display: block;
-    height: 18px;
+    height: 20px;
     left: 0;
     order: 0;
-    width: 126px;
+    width: 123px;
   }
 
   &-rights {
