@@ -1,5 +1,6 @@
 .header {
   background-color: $primary-color;
+  position: relative;
   width: 100%;
   z-index: 9999;
 
@@ -110,6 +111,7 @@
     display: none;
     @media screen and (max-width: $mobile-width) {
       display: block;
+      order: 3;
     }
 
     .mobile-menu-icon {
@@ -131,7 +133,17 @@
   }
 
   .Select {
+    $select-mobile-width: 125px;
+
     margin-left: 25px;
+    @media screen and (max-width: $mobile-width) {
+      margin-left: 0;
+      max-width: $select-mobile-width;
+      order: 2;
+      .Select-control {
+        max-width: $select-mobile-width;
+      }
+    }
   }
 
 }
