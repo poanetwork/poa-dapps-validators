@@ -238,11 +238,12 @@ class AppMainRouter extends Component {
 
     const search = this.state.showSearch ? <input type="search" className="search-input" onChange={ this.onSearch } placeholder="Address..." /> : '';
 
-    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
+    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : '';
 
     return (
       <Router history={ history }>
         <section className={`content ${ this.state.showMobileMenu ? 'content-menu-open' : '' }`}>
+          { loading }
           <Header
             netId={ this.state.netId }
             onChange={ this.onNetworkChange }
@@ -252,7 +253,6 @@ class AppMainRouter extends Component {
             baseRootPath={ baseRootPath }
             navigationData={ navigationData }
           />
-          { loading }
           <div className={`app-container ${ this.state.showMobileMenu ? 'app-container-open-mobile-menu' : '' }`}>
             <div className="container">
               <div className="main-title-container">

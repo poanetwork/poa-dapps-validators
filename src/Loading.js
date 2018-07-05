@@ -3,7 +3,7 @@ import React from 'react';
 const styles = (netId) => {
 
   const core = {
-    backgroundColor: 'rgba(35, 29, 115, 0.8)'
+    backgroundColor: 'rgba(78,44,137, 0.9)'
   };
   const sokol = {
     backgroundColor: 'rgba(47, 109, 99, 0.8)'
@@ -20,7 +20,10 @@ const styles = (netId) => {
 
 }
 const Loading = ({netId}) => (
-  <div className="loading-container" style={styles(netId)}>
+  <div
+    className="loading-container"
+    style={ styles(netId) }
+  >
     <div className="loading">
       <div className="loading-i"></div>
       <div className="loading-i"></div>
