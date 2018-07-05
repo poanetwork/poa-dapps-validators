@@ -34,6 +34,10 @@ class Validator extends Component {
     </div>;
 
     const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address;
+    const pendingChangeDate = !updatedDate ? '' : <div className="validators-table-i">
+      <p>Pending Change Date</p>
+      <p>{updatedDate}</p>
+    </div>;
 
     return(
       <div className="validators-i">
@@ -79,10 +83,7 @@ class Validator extends Component {
               <p>Miner Creation Date</p>
               <p>{createdDate}</p>
             </div>
-            <div className="validators-table-i">
-              <p>Pending Change Requested Date</p>
-              <p>{updatedDate}</p>
-            </div>
+            {pendingChangeDate}
           </div>
         </div>
       </div>
