@@ -2,7 +2,8 @@
   text-align: left;
 
   &-i {
-    @extend %item;
+
+    margin-bottom: 30px;
 
     @media (max-width: $mobile-width) {
       margin-bottom: 20px;
@@ -16,11 +17,12 @@
   }
 
   &-header {
-    @extend %item-paddings;
-    border-bottom: 1px solid #eee;
-    line-height: 20px;
+    border-bottom: 1px solid $base-border-color;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
+    line-height: 20px;
+    margin: 0 0 20px;
+    padding: 20px 0;
 
     &--address {
       word-break: break-all;
@@ -29,11 +31,7 @@
 
   &-body {
     overflow: hidden;
-    padding: 0 20px 20px;
 
-    @media (max-width: $mobile-width) {
-      padding: 0 15px 15px;
-    }
   }
 
   &-notary,
@@ -48,10 +46,11 @@
   }
 
   &-title {
-    margin: 20px 0;
-    color: #8197a2;
-    text-transform: uppercase;
-    font-weight: bold;
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: left;
+    color: #333;
 
     @media (max-width: $mobile-width) {
       margin: 15px 0;
@@ -59,30 +58,29 @@
   }
 
   &-table {
-    border: 1px solid #eee;
+    border: 1px solid $base-border-color;
 
     &-i {
+      color: #333;
       display: flex;
+      font-size: 14px;
       justify-content: space-between;
-      padding: 10px;
+      line-height: 1.2;
+      padding: 20px 10px;
 
       &:not(:last-child) {
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid $base-border-color;
       }
     }
   }
 }
 
 .validators-count {
-  margin-bottom: 20px;
-
-  &-label {
-    font-size: 14px;
-    text-transform: uppercase;
-  }
+  font-size: 22px;
+  line-height: 1.2;
+  margin-bottom: 10px;
 
   &-val {
-    font-size: 16px;
-    font-weight: bold;
+    font-weight: 700;
   }
 }
