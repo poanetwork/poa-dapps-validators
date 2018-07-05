@@ -5,8 +5,7 @@
 }
 
 .create-keys {
-  @extend %item;
-  @extend %item-paddings;
+  padding-bottom: 20px;
 
   h1 {
     margin-bottom: 20px;
@@ -21,7 +20,8 @@
     @extend %btn-new;
 
     &[disabled] {
-      background-color: #079dd4;
+      cursor: default;
+      opacity: 0.7;
     }
 
     &.finalize {
@@ -48,11 +48,12 @@
 
   label {
     &:not(.radio) {
+      color: #b9c2cc;
       display: block;
-      margin-bottom: 10px;
-      text-transform: uppercase;
-      font-size: 12px;
-      font-weight: bold;
+      font-size: 15px;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 6px;
     }
   }
 
@@ -65,27 +66,22 @@
 
   input,
   textarea {
-    transition: 0.3s border-color;
-    width: 100%;
+    @include default-text-input-styles();
     margin-bottom: 20px;
-    border-radius: 3px;
-    box-sizing: border-box;
-    border: 1px solid #eee;
+    width: 100%;
+  }
 
-    &:focus {
-      border-color: #08b3f2;
+  #PlacesAutocomplete__root {
+    margin-bottom: 20px;
+    input {
+      margin-bottom: 0;
     }
   }
 
   textarea {
-    padding: 15px;
     height: 110px;
+    padding: 15px;
     resize: none;
-  }
-
-  input {
-    padding: 0 10px;
-    height: $input-height;
   }
 
   input[type="radio"] {

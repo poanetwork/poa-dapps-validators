@@ -1,28 +1,11 @@
 .search-input {
-  background-color: #fff;
+  @include default-text-input-styles();
+
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAA0lBMVEWAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6OAl6McEf5GAAAARXRSTlMAAQIDBQYHDA0bHB8gISQmJyg+P0BGR0lMU1RVWFlcXV5iY2tsdXZ4iYqLo6Spqqusra7Cw8TFysvM29zm5+jr8vP4+fzSh6raAAABM0lEQVR4AYWTeVeCQBTFr6AtuaTYkpUVlqZm0JIaLhjBfP+v1NxDyDCcA7+/3nLPecu8QULFGs/9MPTnE6uCPIa9EntWtgGN5lJkWDaR4WwnNHYWFM5DxsLXfqN22Ok7sXeR5ts/jHy0Er/1Tj9oJ77J+tEICqOIfZiIsalnXlUwNvifn/O50HA5bQWky45OoHHMTrsgY2nNkONFhscgX9K6Ro6eDH+C+NKqI0ddhn0QFjtAjhpb2wuOigQscVpQorzJScGYRYv65aLSVTvQcLhqI7YHQjJEhqHyWDC/+dxPUHjkc3tm4nYC6t/Sg3GFdgGX8ZHNeo1qtdGb0ZNEd4oiEBq6ouNlc95zRMW9+nHWaXptG3jQFTCs6YJfbzG1OL+m0EkVt2WKLUoUGxRxs91c/QFA1F3oKOgExAAAAABJRU5ErkJggg==);
   background-position: 15px 50%;
   background-repeat: no-repeat;
   background-size: 16px 16px;
-  border-radius: 3px;
-  border: 1px solid $base-border-color;
-  box-sizing: border-box;
-  color: #333;
   display: inline-block;
-  font-size: 16px;
-  height: 38px;
-  outline: none;
-  padding: 0 15px 0 40px;
-  transition: 0.15s border-color;
+  padding-left: 40px;
   width: 300px;
-
-  &:hover {
-    border-color: #8e959d;
-    color: $input-color;
-  }
-  &:focus {
-    border-color: $primary-color;
-    color: $input-color;
-  }
-
 }

@@ -14,5 +14,8 @@
   @media screen and (max-width: $mobile-width) {
     -ms-flex-direction: column;
     flex-direction: column;
+    .search-input {
+      width: 100%;
+    }
   }
 }
