@@ -6,6 +6,7 @@ import KeysManager from './contracts/KeysManager.contract'
 import Metadata from './contracts/Metadata.contract'
 import getWeb3, {setWeb3} from './getWeb3'
 import helpers from './helpers'
+import {messages} from './messages'
 import {
   Router,
   Route,
@@ -18,10 +19,6 @@ import AllValidators from './AllValidators'
 import Select from 'react-select'
 import "react-select/dist/react-select.css";
 import networkAddresses from './contracts/addresses';
-
-let errorMsgNoMetamaskAccount = `Your MetaMask is locked.
-Please choose your voting key in MetaMask and reload the page.
-Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
 
 const history = createBrowserHistory()
 
@@ -119,13 +116,12 @@ class AppMainRouter extends Component {
       this.setState({showSearch: true})
     }
   }
-  checkForVotingKey(cb){
-    if(this.state.votingKey && !this.state.loading){
+  checkForVotingKey(cb) {
+    if (this.state.votingKey && !this.state.loading) {
       return cb();
-    } else {
-      helpers.generateAlert("warning", "Warning!", errorMsgNoMetamaskAccount);
-      return ''
     }
+    helpers.generateAlert("warning", "Warning!", messages.noMetamaskAccount);
+    return '';
   }
   onSetRender() {
     if (!this.state.netId) {
