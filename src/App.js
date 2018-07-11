@@ -38,6 +38,9 @@ class App extends Component {
 
     this.defaultValues = null
     this.setMetadata.call(this)
+
+    this.isValidVotingKey = false
+    this.setIsValidVotingKey.call(this)
   }
   async setMetadata() {
     const currentData = await this.getMetadataContract().getValidatorData({
@@ -72,6 +75,12 @@ class App extends Component {
       },
       hasData
     })
+  }
+  async setIsValidVotingKey() {
+    this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
+    if (!this.isValidVotingKey) {
+      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+    }
   }
   getKeysManager() {
     return this.props.web3Config.keysManager
@@ -193,6 +202,9 @@ class App extends Component {
     this.setState({ form })
   }
   render() {
+    if (!this.isValidVotingKey) {
+      return null
+    }
     const BtnAction = this.state.hasData ? 'Update' : 'Set'
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="custom-container">
