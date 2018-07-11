@@ -8,33 +8,35 @@ import messages from '../messages'
   MOC: '0xCf260eA317555637C55F70e55dbA8D5ad8414Cb0'
 }*/
 
-export default (web3Config) => {
-    let branch;
-    
-    switch (web3Config.netId) {
-        case '77':
-            branch = 'sokol'
-            break;
-        case '99':
-            branch = 'core'
-            break;
-        default:
-            branch = 'core'
-            break;
-    }
-    return new Promise((resolve, reject) => {
-        fetch(helpers.addressesURL(branch)).then((response) => { 
-            response.json().then((json) => {
-                resolve({addresses: json, web3Config});
-            })
-        }).catch(function(err) {
-            let addr = helpers.addressesURL(branch);
-            let msg = `
+export default web3Config => {
+  let branch
+
+  switch (web3Config.netId) {
+    case '77':
+      branch = 'sokol'
+      break
+    case '99':
+      branch = 'core'
+      break
+    default:
+      branch = 'core'
+      break
+  }
+  return new Promise((resolve, reject) => {
+    fetch(helpers.addressesURL(branch))
+      .then(response => {
+        response.json().then(json => {
+          resolve({ addresses: json, web3Config })
+        })
+      })
+      .catch(function(err) {
+        let addr = helpers.addressesURL(branch)
+        let msg = `
                 Something went wrong!<br/><br/>
                 ${messages.wrongRepo(addr)}
             `
-            helpersGlobal.generateAlert("error", "Error!", msg);
-            reject(err);
-        });
-    })
+        helpersGlobal.generateAlert('error', 'Error!', msg)
+        reject(err)
+      })
+  })
 }

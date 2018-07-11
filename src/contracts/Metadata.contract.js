@@ -1,42 +1,42 @@
 import PoaConsensus from './PoaConsensus.contract'
-import Web3 from 'web3';
-import moment from 'moment';
-import helpers from "./helpers";
-import helpersGlobal from "../helpers";
-import { messages } from '../messages';
+import Web3 from 'web3'
+import moment from 'moment'
+import helpers from './helpers'
+import helpersGlobal from '../helpers'
+import { messages } from '../messages'
 
 var toAscii = function(hex) {
   var str = '',
-      i = 0,
-      l = hex.length;
+    i = 0,
+    l = hex.length
   if (hex.substring(0, 2) === '0x') {
-      i = 2;
+    i = 2
   }
-  for (; i < l; i+=2) {
-      var code = parseInt(hex.substr(i, 2), 16);
-      if (code === 0) continue; // this is added
-      str += String.fromCharCode(code);
+  for (; i < l; i += 2) {
+    var code = parseInt(hex.substr(i, 2), 16)
+    if (code === 0) continue // this is added
+    str += String.fromCharCode(code)
   }
-  return str;
-};
+  return str
+}
 
 export default class Metadata {
-  async init({web3, netId, addresses}){
-    this.web3_10 = new Web3(web3.currentProvider);
-    const {METADATA_ADDRESS, MOC} = addresses;
+  async init({ web3, netId, addresses }) {
+    this.web3_10 = new Web3(web3.currentProvider)
+    const { METADATA_ADDRESS, MOC } = addresses
     console.log('Metadata contract Address: ', METADATA_ADDRESS)
-    const branch = helpers.getBranch(netId);
+    const branch = helpers.getBranch(netId)
 
     let MetadataAbi = await helpers.getABI(branch, 'ValidatorMetadata')
 
-    this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS);
-    this.MOC_ADDRESS = MOC;
-    this.addresses = addresses;
+    this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS)
+    this.MOC_ADDRESS = MOC
+    this.addresses = addresses
 
-    const poaInstance = new PoaConsensus();
-    await poaInstance.init({web3: this.web3_10, netId, addresses});
-    this.mocRemoved = await poaInstance.isMasterOfCeremonyRemoved();
-    this.miningKeys = await poaInstance.getValidators();
+    const poaInstance = new PoaConsensus()
+    await poaInstance.init({ web3: this.web3_10, netId, addresses })
+    this.mocRemoved = await poaInstance.isMasterOfCeremonyRemoved()
+    this.miningKeys = await poaInstance.getValidators()
   }
   async createMetadata({
     firstName,
@@ -59,7 +59,7 @@ export default class Metadata {
       this.web3_10.utils.fromAscii(state),
       this.web3_10.utils.fromAscii(zipcode),
       expirationDate
-    ).send({from: votingKey, gasPrice});
+    ).send({ from: votingKey, gasPrice })
   }
 
   getMocData() {
@@ -73,21 +73,22 @@ export default class Metadata {
       expirationDate: '2021-07-23',
       licenseId: '2206724',
       us_state: 'CA',
-      postal_code: '94404',
+      postal_code: '94404'
     }
   }
 
-  async getValidatorData({votingKey, miningKey}){
-    miningKey = miningKey || await this.getMiningByVoting(votingKey);
+  async getValidatorData({ votingKey, miningKey }) {
+    miningKey = miningKey || (await this.getMiningByVoting(votingKey))
     if (!miningKey) {
-      helpersGlobal.generateAlert("warning", "Warning!", messages.invalidaVotingKey);
-      return {};
+      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+      return {}
     }
 
-    let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
+    let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
-    let expirationDate = validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
+    let expirationDate =
+      validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
     return {
       firstName: toAscii(validatorData.firstName),
       lastName: toAscii(validatorData.lastName),
@@ -97,53 +98,54 @@ export default class Metadata {
       expirationDate,
       licenseId: toAscii(validatorData.licenseId),
       us_state: toAscii(validatorData.state),
-      postal_code: toAscii(validatorData.zipcode),
+      postal_code: toAscii(validatorData.zipcode)
     }
   }
 
-  async getMiningByVoting(votingKey){
+  async getMiningByVoting(votingKey) {
     let miningKey
     try {
-      miningKey = await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call();
-    } catch(e) {
+      miningKey = await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call()
+    } catch (e) {
       console.log(e.message)
     }
-    return miningKey;
+    return miningKey
   }
 
-  async getAllValidatorsData(netId){
-    let all = [];
-    return new Promise(async(resolve, reject) => {
-      console.log(this.miningKeys);
-      const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase();
+  async getAllValidatorsData(netId) {
+    let all = []
+    return new Promise(async (resolve, reject) => {
+      console.log(this.miningKeys)
+      const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase()
       for (let key of this.miningKeys) {
-        let data;
+        let data
         if (key.toLowerCase() === mocAddressLowercase) {
           if (this.mocRemoved) {
-            continue;
+            continue
           }
-          data = this.getMocData();
+          data = this.getMocData()
         } else {
-          data = await this.getValidatorData({miningKey: key});
+          data = await this.getValidatorData({ miningKey: key })
         }
-        data.address = key;
-        all.push(data);
-      }      
-      resolve(all);
+        data.address = key
+        all.push(data)
+      }
+      resolve(all)
     })
   }
 
-  async getPendingChange({votingKey, miningKey}){
-    miningKey = miningKey || await this.getMiningByVoting(votingKey);
+  async getPendingChange({ votingKey, miningKey }) {
+    miningKey = miningKey || (await this.getMiningByVoting(votingKey))
     if (!miningKey) {
-      helpersGlobal.generateAlert("warning", "Warning!", messages.invalidaVotingKey);
-      return {};
+      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+      return {}
     }
 
-    let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call();
+    let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call()
     let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
     let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''
-    let expirationDate = pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
+    let expirationDate =
+      pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
     return {
       firstName: toAscii(pendingChanges.firstName),
       lastName: toAscii(pendingChanges.lastName),
@@ -161,8 +163,8 @@ export default class Metadata {
   async getAllPendingChanges() {
     let pendingChanges = []
     for (let key of this.miningKeys) {
-      let pendingChange = await this.getPendingChange({miningKey: key})
-      pendingChange.address = key;
+      let pendingChange = await this.getPendingChange({ miningKey: key })
+      pendingChange.address = key
       if (pendingChange.postal_code) {
         pendingChanges.push(pendingChange)
       }
@@ -170,45 +172,52 @@ export default class Metadata {
     return pendingChanges
   }
 
-  async confirmPendingChange({miningKeyToConfirm, senderVotingKey}) {
-    let alreadyConfirmed = await this.metadataInstance.methods.isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey).call();
+  async confirmPendingChange({ miningKeyToConfirm, senderVotingKey }) {
+    let alreadyConfirmed = await this.metadataInstance.methods
+      .isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey)
+      .call()
     console.log(alreadyConfirmed)
-    if(alreadyConfirmed){
-      throw(
-        {message:
-          `You already confirmed this change.`})
+    if (alreadyConfirmed) {
+      throw {
+        message: `You already confirmed this change.`
+      }
     }
-    const miningKeySender = await this.getMiningByVoting(senderVotingKey);
-    if(miningKeySender === miningKeyToConfirm){
-      throw(
-        {message:
-          `You cannot confirm your own changes.\n
-          Please ask other validators to verify your new information.`})
-    }
-    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
-    return await this.metadataInstance.methods.confirmPendingChange(miningKeyToConfirm).send({from: senderVotingKey, gasPrice});
-  }
-
-  async getConfirmations({miningKey}) {
-    return await this.metadataInstance.methods.confirmations(miningKey).call();
-  }
-
-  async getMinThreshold({miningKey}) {
-    let validatorData = await this.metadataInstance.methods.validators(miningKey).call();
-    return validatorData.minThreshold;
-  }
-
-  async finalize({miningKeyToConfirm, senderVotingKey}) {
-    const confirmations = await this.getConfirmations({miningKey: miningKeyToConfirm});
-    const getMinThreshold = await this.getMinThreshold({miningKey: miningKeyToConfirm});
-    if(Number(confirmations[0]) < Number(getMinThreshold)){
-      throw(
-        {message:
-          `There is not enough confimations.\n
-          The minimum threshold to finalize is ${getMinThreshold}.`})
+    const miningKeySender = await this.getMiningByVoting(senderVotingKey)
+    if (miningKeySender === miningKeyToConfirm) {
+      throw {
+        message: `You cannot confirm your own changes.\n
+          Please ask other validators to verify your new information.`
+      }
     }
     const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
-    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({from: senderVotingKey, gasPrice});
+    return await this.metadataInstance.methods
+      .confirmPendingChange(miningKeyToConfirm)
+      .send({ from: senderVotingKey, gasPrice })
   }
-  
+
+  async getConfirmations({ miningKey }) {
+    return await this.metadataInstance.methods.confirmations(miningKey).call()
+  }
+
+  async getMinThreshold({ miningKey }) {
+    let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
+    return validatorData.minThreshold
+  }
+
+  async finalize({ miningKeyToConfirm, senderVotingKey }) {
+    const confirmations = await this.getConfirmations({
+      miningKey: miningKeyToConfirm
+    })
+    const getMinThreshold = await this.getMinThreshold({
+      miningKey: miningKeyToConfirm
+    })
+    if (Number(confirmations[0]) < Number(getMinThreshold)) {
+      throw {
+        message: `There is not enough confimations.\n
+          The minimum threshold to finalize is ${getMinThreshold}.`
+      }
+    }
+    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
+    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({ from: senderVotingKey, gasPrice })
+  }
 }

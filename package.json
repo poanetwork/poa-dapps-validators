@@ -2,22 +2,42 @@
   "name": "poa-dapps-validators",
   "version": "0.2.0",
   "private": true,
-  "homepage": "https://poanetwork.github.io/",
+  "homepage": "https://validators.poa.network",
   "dependencies": {
     "ajv": "^6.5.2",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^7.2.3",
+    "babel-plugin-transform-decorators-legacy": "^1.3.5",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react-app": "^3.0.1",
+    "babel-preset-stage-1": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-runtime": "6.23.0",
+    "eslint": "^4.1.1",
+    "eslint-config-prettier": "2.9.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "eslint-plugin-flowtype": "^2.34.1",
+    "eslint-plugin-import": "^2.6.0",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-prettier": "2.6.0",
+    "eslint-plugin-react": "^7.1.0",
     "gh-pages": "^1.2.0",
-    "moment": "^2.19.3",
+    "moment": "^2.22.2",
     "node-sass-chokidar": "1.3.0",
     "nodemon": "^1.17.5",
-    "npm-run-all": "^4.1.2",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "npm-run-all": "^4.1.3",
+    "prettier": "^1.13.7",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-error-overlay": "^1.0.9",
     "react-places-autocomplete": "^5.4.3",
-    "react-router": "^4.2.0",
-    "react-router-dom": "^4.2.2",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
     "react-select": "^1.2.1",
-    "sweetalert": "^2.0.8",
+    "sweetalert": "^2.1.0",
     "web3": "1.0.0-beta.34"
   },
   "scripts": {
@@ -26,10 +46,32 @@
     "build-css": "node-sass-chokidar src/stylesheets/application.scss -o src/stylesheets --output-style=compressed",
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
     "start-js": "react-scripts start",
-    "start": "npm-run-all -p watch-css start-js",
+    "start": "node scripts/start.js",
     "build-js": "react-scripts build",
-    "build": "npm-run-all build-css build-js",
+    "build": "node scripts/build.js",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "./node_modules/.bin/eslint src"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+      "dependencies"
+    ],
+    "rules": {
+      "no-control-regex": 0,
+      "dependencies/no-cycles": "error",
+      "dependencies/no-unresolved": [
+        "error",
+        {
+          "ignore": [
+            "web3"
+          ]
+        }
+      ]
+    }
   }
 }
