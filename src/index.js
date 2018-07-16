@@ -14,10 +14,7 @@ import helpers from './helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './registerServiceWorker'
 import { Router, Route } from 'react-router-dom'
-
-const errorMsgNoMetamaskAccount = `Your MetaMask is locked.
-Please choose your voting key in MetaMask and reload the page.
-Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`;
+import {messages} from './messages'
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators';
@@ -135,10 +132,9 @@ class AppMainRouter extends Component {
   checkForVotingKey(cb) {
     if (this.state.votingKey && !this.state.loading) {
       return cb();
-    } else {
-      helpers.generateAlert("warning", "Warning!", errorMsgNoMetamaskAccount);
-      return ''
     }
+    helpers.generateAlert("warning", "Warning!", messages.noMetamaskAccount);
+    return '';
   }
   onSetRender() {
     if (!this.state.netId) {
