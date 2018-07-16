@@ -15,20 +15,6 @@
     margin-bottom: 20px;
   }
 
-  &-button {
-    @extend %btn;
-    @extend %btn-new;
-
-    &[disabled] {
-      cursor: default;
-      opacity: 0.7;
-    }
-
-    &.finalize {
-      margin-right: 10px;
-    }
-  }
-
   &-form {
     display: flex;
     justify-content: space-between;
@@ -90,5 +76,29 @@
     &:checked + .radio:after {
       opacity: 1;
     }
+  }
+}
+
+.swal-button.swal-button--confirm,
+.create-keys-button {
+
+  @extend %btn;
+  @extend %btn-new;
+
+  &[disabled] {
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  &:focus,
+  &:active {
+    box-shadow: none;
+  }
+
+}
+
+.create-keys-button {
+  &.finalize {
+    margin-right: 10px;
   }
 }
