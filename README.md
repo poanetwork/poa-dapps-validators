@@ -13,7 +13,7 @@ Validators DApp is built for POA Network based blockchains. It gives an opportun
 
 ## MetaMask plugin setup
 
-* Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/poanetwork/wiki/blob/master/MetaMask-connect.md#connect-to-poa-network-via-metamask))
+* Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/poanetwork/wiki/wiki/POA-Network-on-MetaMask))
 
 Validators DApp is based on [POA Network Governance contracts](https://github.com/poanetwork/poa-network-consensus-contracts)
 
@@ -36,7 +36,7 @@ If you need to change already submitted data you need to repeat previous instruc
 If you are an active validator of POA Network you have an ability to confirm pending changes of personal information from other validators. To do it you need:
 - connect to the corresponding endpoint of POA Network in Metamask
 - select your voting key from accounts in Metamask
-- click **PENDING CHANGES** in the navigation bar. You'll see all pending changes 
+- click **PENDING CHANGES** in the navigation bar. You'll see all pending changes
 - find pending changes card
 - click **Confirm** button
 
