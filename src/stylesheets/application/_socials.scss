@@ -70,3 +70,36 @@
 
   }
 }
+
+.sokol {
+  .socials {
+
+    .socials-i_github {
+      &:before {
+        @include image-2x('#{ $base-images-path }/socials/git-sokol@2x.png');
+        background-image: url('#{ $base-images-path }/socials/git-sokol.png');
+      }
+    }
+
+    .socials-i_telegram {
+      &:before {
+        @include image-2x('#{ $base-images-path }/socials/telegram-sokol@2x.png');
+        background-image: url('#{ $base-images-path }/socials/telegram-sokol.png');
+      }
+    }
+
+    .socials-i_twitter {
+      &:before {
+        @include image-2x('#{ $base-images-path }/socials/tw-sokol@2x.png');
+        background-image: url('#{ $base-images-path }/socials/tw-sokol.png');
+      }
+    }
+
+    .socials-i_poa {
+      &:before {
+        @include image-2x('#{ $base-images-path }/socials/poa-sokol@2x.png');
+        background-image: url('#{ $base-images-path }/socials/poa-sokol.png');
+      }
+    }
+  }
+}

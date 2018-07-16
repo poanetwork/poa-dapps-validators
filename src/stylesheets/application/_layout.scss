@@ -19,6 +19,11 @@
       }
     }
   }
+  &.app-container-open-mobile-menu.sokol {
+    &:before {
+      background-color: rgba(106, 201, 185, .8);
+    }
+  }
 }
 @media screen and (max-width: $mobile-width) {
   #root,

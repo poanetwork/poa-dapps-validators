@@ -2,8 +2,10 @@ import React from 'react'
 import Select from 'react-select'
 import logoBase from './images/logos/logo_validators_dapp@2x.png'
 import logoSokol from './images/logos/logo_sokol@2x.png'
-import menuIcon from './images/icons/icon-menu.svg'
-import menuOpenIcon from './images/icons/icon-close.svg'
+import menuIconBase from './images/icons/icon-menu.svg'
+import menuIconSokol from './images/icons/icon-menu-sokol.svg'
+import menuOpenIconBase from './images/icons/icon-close.svg'
+import menuOpenIconSokol from './images/icons/icon-close-sokol.svg'
 import NavigationLinks from './NavigationLinks';
 import MobileMenuLinks from './MobileMenuLinks';
 
@@ -11,6 +13,8 @@ const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, b
 
   const headerClassName = netId === '77' ? 'sokol' : '';
   const logoImageName = netId === '77' ? logoSokol : logoBase;
+  const menuIcon = netId === '77' ? menuIconSokol : menuIconBase;
+  const menuOpenIcon = netId === '77' ? menuOpenIconSokol : menuOpenIconBase;
 
   let select;
 

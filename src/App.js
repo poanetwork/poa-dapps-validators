@@ -195,9 +195,9 @@ class App extends Component {
     this.setState({form});
   }
   render() {
-    if (!this.isValidVotingKey) {
-      return null;
-    }
+    // if (!this.isValidVotingKey) {
+    //   return null;
+    // }
     const BtnAction = this.state.hasData ? "Update" : "Set";
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="custom-container">

@@ -249,7 +249,7 @@ class AppMainRouter extends Component {
             baseRootPath={ baseRootPath }
             navigationData={ navigationData }
           />
-          <div className={`app-container ${ this.state.showMobileMenu ? 'app-container-open-mobile-menu' : '' }`}>
+          <div className={`app-container ${ this.state.showMobileMenu ? 'app-container-open-mobile-menu' : '' } ${ this.state.netId === '77' ? 'sokol' : '' }`}>
             <div className="container">
               <div className="main-title-container">
                 <span className="main-title">{ this.state.title }</span>

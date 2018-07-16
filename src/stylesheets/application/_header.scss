@@ -107,6 +107,20 @@
     }
   }
 
+  &.sokol {
+    .link-icon {
+      &-all {
+        background-image: url('#{ $base-images-path }/icons/icon-events-sokol.svg');
+      }
+      &-set-metadata {
+        background-image: url('#{ $base-images-path }/icons/icon-status-sokol.svg');
+      }
+      &-pending-changes {
+        background-image: url('#{ $base-images-path }/icons/icon-statistics-sokol.svg');
+      }
+    }
+  }
+
   .mobile-menu {
     display: none;
     @media screen and (max-width: $mobile-width) {
@@ -129,6 +143,14 @@
     @media screen and (max-width: $mobile-width) {
       background-color: $primary-color-darker;
       height: $header-mobile-menu-container-height;
+    }
+  }
+
+  &.sokol {
+    .header-mobile-menu-container {
+      @media screen and (max-width: $mobile-width) {
+        background-color: $secondary-color-darker;
+      }
     }
   }
 
