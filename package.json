@@ -2,7 +2,7 @@
   "name": "poa-dapps-validators",
   "version": "0.2.0",
   "private": true,
-  "homepage": "https://validators.poa.network",
+  "homepage": "https://poanetwork.github.io/",
   "dependencies": {
     "ajv": "^6.5.2",
     "babel-core": "^6.26.3",
