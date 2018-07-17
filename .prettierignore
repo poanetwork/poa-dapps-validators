@@ -4,4 +4,4 @@ config
 public
 scripts
 submodules
-*.js
+
