@@ -1,8 +1,8 @@
 .app-container {
   padding-top: 40px;
   position: relative;
-  z-index: 1;
   &.app-container-open-mobile-menu {
+    z-index: 1;
     &:before {
       background-color: rgba(78, 44, 137, .8);
       bottom: 0;
@@ -39,7 +39,7 @@
 .content {
   @media screen and (max-width: $mobile-width) {
 
-    padding-top: $header-height_mobile;
+    padding-top: $header-height_mobile + $search-container-height;
 
   }
   &.content-menu-open {

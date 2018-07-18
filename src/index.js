@@ -50,6 +50,7 @@ class AppMainRouter extends Component {
     this.onSearch = this.onSearch.bind(this)
     this.onNetworkChange = this.onNetworkChange.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
+    this.getNetIdClass = this.getNetIdClass.bind(this)
 
     this.state = {
       showSearch: true,
@@ -99,8 +100,7 @@ class AppMainRouter extends Component {
       })
   }
   onRouteChange() {
-    const setMetadata = this.rootPath + '/set'
-    this.setTitle()
+    const setMetadata = baseRootPath + '/set'
 
     if (history.location.pathname === setMetadata) {
       this.setState({ showSearch: false })
@@ -110,15 +110,6 @@ class AppMainRouter extends Component {
       }
     } else {
       this.setState({ showSearch: true })
-    }
-  }
-  setTitle() {
-    if (history.location.pathname.includes('/set')) {
-      this.state.title = navigationData[1].title
-    } else if (history.location.pathname.includes('/pending-changes')) {
-      this.state.title = navigationData[2].title
-    } else {
-      this.state.title = navigationData[0].title
     }
   }
   checkForVotingKey(cb) {
@@ -133,7 +124,7 @@ class AppMainRouter extends Component {
       return ''
     }
     return this.checkForVotingKey(() => {
-      return <App web3Config={this.state} />
+      return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
     })
   }
   toggleMobileMenu = () => {
@@ -183,6 +174,7 @@ class AppMainRouter extends Component {
         methodToCall="getAllPendingChanges"
         searchTerm={this.state.searchTerm}
         web3Config={this.state}
+        viewTitle={navigationData[2]['title']}
       >
         <button onClick={this.onFinalize} className="create-keys-button finalize">
           Finalize
@@ -197,8 +189,16 @@ class AppMainRouter extends Component {
     return this.state.loading || this.state.error ? (
       ''
     ) : (
-      <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} />
+      <AllValidators
+        searchTerm={this.state.searchTerm}
+        methodToCall="getAllValidatorsData"
+        web3Config={this.state}
+        viewTitle={navigationData[0]['title']}
+      />
     )
+  }
+  getNetIdClass() {
+    return this.state.netId === '77' ? 'sokol' : ''
   }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
@@ -229,7 +229,11 @@ class AppMainRouter extends Component {
     console.log('v2.09')
 
     const search = this.state.showSearch ? (
-      <input type="search" className="search-input" onChange={this.onSearch} placeholder="Address..." />
+      <div className={`search-container ${this.getNetIdClass()}`}>
+        <div className="container">
+          <input type="search" className="search-input" onChange={this.onSearch} placeholder="Search..." />
+        </div>
+      </div>
     ) : (
       ''
     )
@@ -241,25 +245,20 @@ class AppMainRouter extends Component {
         <section className={`content ${this.state.showMobileMenu ? 'content-menu-open' : ''}`}>
           {loading}
           <Header
+            baseRootPath={baseRootPath}
+            injectedWeb3={this.state.injectedWeb3}
+            navigationData={navigationData}
             netId={this.state.netId}
             onChange={this.onNetworkChange}
-            injectedWeb3={this.state.injectedWeb3}
-            showMobileMenu={this.state.showMobileMenu}
             onMenuToggle={this.toggleMobileMenu}
-            baseRootPath={baseRootPath}
-            navigationData={navigationData}
+            showMobileMenu={this.state.showMobileMenu}
           />
+          {search}
           <div
-            className={`app-container ${this.state.showMobileMenu ? 'app-container-open-mobile-menu' : ''} ${
-              this.state.netId === '77' ? 'sokol' : ''
-            }`}
+            className={`app-container ${
+              this.state.showMobileMenu ? 'app-container-open-mobile-menu' : ''
+            } ${this.getNetIdClass()}`}
           >
-            <div className="container">
-              <div className="main-title-container">
-                <span className="main-title">{this.state.title}</span>
-                {search}
-              </div>
-            </div>
             <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
             <Route exact path={`${baseRootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
             <Route path={`${baseRootPath}/pending-changes`} render={this.onPendingChangesRender} />

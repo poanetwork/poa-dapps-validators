@@ -9,7 +9,7 @@
     right: 0;
     position: fixed;
     top: 0;
-    z-index: 123;
+    z-index: 124;
   }
 
   .container {
@@ -70,10 +70,11 @@
 
   .link {
     color: #fff;
+    font-size: 14px;
     font-weight: 700;
-    line-height: 16px;
-    margin-left: 30px;
-    opacity: 0.8;
+    line-height: 18px;
+    margin-left: 34px;
+    opacity: 0.9;
     text-decoration: none;
     transition: opacity linear 0.1s;
 
@@ -97,26 +98,26 @@
     background-repeat: no-repeat;
 
     &-all {
-      background-image: url('#{ $base-images-path }/icons/icon-events.svg');
+      background-image: url('#{ $base-images-path }/icons/icon-all.svg');
     }
     &-set-metadata {
-      background-image: url('#{ $base-images-path }/icons/icon-status.svg');
+      background-image: url('#{ $base-images-path }/icons/icon-set-metadata.svg');
     }
     &-pending-changes {
-      background-image: url('#{ $base-images-path }/icons/icon-statistics.svg');
+      background-image: url('#{ $base-images-path }/icons/icon-pending-changes.svg');
     }
   }
 
   &.sokol {
     .link-icon {
       &-all {
-        background-image: url('#{ $base-images-path }/icons/icon-events-sokol.svg');
+        background-image: url('#{ $base-images-path }/icons/icon-all-sokol.svg');
       }
       &-set-metadata {
-        background-image: url('#{ $base-images-path }/icons/icon-status-sokol.svg');
+        background-image: url('#{ $base-images-path }/icons/icon-set-metadata-sokol.svg');
       }
       &-pending-changes {
-        background-image: url('#{ $base-images-path }/icons/icon-statistics-sokol.svg');
+        background-image: url('#{ $base-images-path }/icons/icon-pending-changes-sokol.svg');
       }
     }
   }

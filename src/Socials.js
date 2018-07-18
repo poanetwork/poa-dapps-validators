@@ -7,11 +7,11 @@ let Socials = () => {
       title: 'Twitter',
       url: 'https://twitter.com/poanetwork'
     },
-    {
-      icon: 'socials-i_poa',
-      title: 'POA Network',
-      url: 'https://poa.network'
-    },
+    // {
+    //   icon: 'socials-i_poa',
+    //   title: 'POA Network',
+    //   url: 'https://poa.network'
+    // },
     {
       icon: 'socials-i_telegram',
       title: 'Telegram',

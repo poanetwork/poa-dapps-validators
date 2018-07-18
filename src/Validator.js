@@ -51,12 +51,13 @@ class Validator extends Component {
       <div className="validators-i">
         <div className="validators-header">
           <div className="validators-header--address">{indexAndAddress}</div>
+          <div className="validators-header--hint">Wallet Address</div>
           <div>{confirmations}</div>
           <div>{children}</div>
         </div>
         <div className="validators-body">
           <div className="validators-notary left">
-            <p className="validators-title">Notary</p>
+            <p className="validators-title validators-title--notary">Notary</p>
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>Full Name</p>
@@ -79,7 +80,7 @@ class Validator extends Component {
             </div>
           </div>
           <div className="validators-license right">
-            <p className="validators-title">Notary license</p>
+            <p className="validators-title  validators-title--notary-license">Notary license</p>
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>License ID</p>
