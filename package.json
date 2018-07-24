@@ -47,6 +47,7 @@
     "watch-css": "nodemon -e scss -x \"npm run build-css\"",
     "start-js": "react-scripts start",
     "start": "node scripts/start.js",
+    "start-watch": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
     "build": "node scripts/build.js",
     "test": "react-scripts test --env=jsdom",

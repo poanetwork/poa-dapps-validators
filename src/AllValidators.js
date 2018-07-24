@@ -88,10 +88,17 @@ export default class AllValidators extends Component {
     )
     const validatorsCount = isValidatorsPage ? validatorsCountObj : ''
 
+    const titleContainer = (
+      <div className="main-title-container">
+        <span className="main-title">{this.props.viewTitle}</span>
+        {validatorsCount}
+      </div>
+    )
+
     return (
       <div className="container">
         {loading}
-        {validatorsCount}
+        {titleContainer}
         {validators}
       </div>
     )

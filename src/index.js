@@ -1,58 +1,47 @@
+import 'react-select/dist/react-select.css'
+import AllValidators from './AllValidators'
+import App from './App'
+import Footer from './Footer'
+import Header from './Header'
+import KeysManager from './contracts/KeysManager.contract'
+import Loading from './Loading'
+import Metadata from './contracts/Metadata.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import App from './App'
-import registerServiceWorker from './registerServiceWorker'
-import KeysManager from './contracts/KeysManager.contract'
-import Metadata from './contracts/Metadata.contract'
+import createBrowserHistory from 'history/createBrowserHistory'
 import getWeb3, { setWeb3 } from './getWeb3'
 import helpers from './helpers'
-import { messages } from './messages'
-import { Router, Route, NavLink } from 'react-router-dom'
-import createBrowserHistory from 'history/createBrowserHistory'
-import Loading from './Loading'
-import Footer from './Footer'
-import AllValidators from './AllValidators'
-import Select from 'react-select'
-import 'react-select/dist/react-select.css'
 import networkAddresses from './contracts/addresses'
+import registerServiceWorker from './registerServiceWorker'
+import { Router, Route } from 'react-router-dom'
+import { messages } from './messages'
 
 const history = createBrowserHistory()
-
-let Header = ({ netId, onChange, injectedWeb3 }) => {
-  let select
-  let headerClassName = netId === '77' ? 'sokol' : ''
-  const logoClassName = netId === '77' ? 'header-logo-sokol' : 'header-logo'
-  if (!injectedWeb3) {
-    select = (
-      <Select
-        id="netId"
-        value={netId}
-        onChange={onChange}
-        style={{
-          width: '150px'
-        }}
-        wrapperStyle={{
-          width: '150px'
-        }}
-        clearable={false}
-        options={[{ value: '77', label: 'Network: Sokol' }, { value: '99', label: 'Network: Core' }]}
-      />
-    )
+const baseRootPath = '/poa-dapps-validators'
+const navigationData = [
+  {
+    icon: 'link-icon-all',
+    title: 'All',
+    url: baseRootPath
+  },
+  {
+    icon: 'link-icon-set-metadata',
+    title: 'Set Metadata',
+    url: `${baseRootPath}/set`
+  },
+  {
+    icon: 'link-icon-pending-changes',
+    title: 'Pending Changes',
+    url: `${baseRootPath}/pending-changes`
   }
-  return (
-    <header id="header" className={`header ${headerClassName}`}>
-      <div className="container">
-        <a href="/poa-dapps-validators" className={logoClassName} />
-        {select}
-      </div>
-    </header>
-  )
-}
+]
+
 class AppMainRouter extends Component {
   constructor(props) {
     super(props)
-    this.rootPath = '/poa-dapps-validators'
+
     history.listen(this.onRouteChange.bind(this))
+
     this.onSetRender = this.onSetRender.bind(this)
     this.onPendingChangesRender = this.onPendingChangesRender.bind(this)
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
@@ -60,6 +49,9 @@ class AppMainRouter extends Component {
     this.onFinalize = this.onFinalize.bind(this)
     this.onSearch = this.onSearch.bind(this)
     this.onNetworkChange = this.onNetworkChange.bind(this)
+    this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
+    this.getNetIdClass = this.getNetIdClass.bind(this)
+
     this.state = {
       showSearch: true,
       keysManager: null,
@@ -70,7 +62,9 @@ class AppMainRouter extends Component {
       searchTerm: '',
       injectedWeb3: true,
       netId: '',
-      error: false
+      error: false,
+      title: navigationData[0].title,
+      showMobileMenu: false
     }
     getWeb3()
       .then(async web3Config => {
@@ -106,9 +100,11 @@ class AppMainRouter extends Component {
       })
   }
   onRouteChange() {
-    const setMetadata = this.rootPath + '/set'
+    const setMetadata = baseRootPath + '/set'
+
     if (history.location.pathname === setMetadata) {
       this.setState({ showSearch: false })
+
       if (this.state.injectedWeb3 === false) {
         helpers.generateAlert('warning', 'Warning!', 'Metamask was not found')
       }
@@ -128,9 +124,13 @@ class AppMainRouter extends Component {
       return ''
     }
     return this.checkForVotingKey(() => {
-      return <App web3Config={this.state} />
+      return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
     })
   }
+  toggleMobileMenu = () => {
+    this.setState(prevState => ({ showMobileMenu: !prevState.showMobileMenu }))
+  }
+
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault()
     this.checkForVotingKey(async () => {
@@ -174,6 +174,7 @@ class AppMainRouter extends Component {
         methodToCall="getAllPendingChanges"
         searchTerm={this.state.searchTerm}
         web3Config={this.state}
+        viewTitle={navigationData[2]['title']}
       >
         <button onClick={this.onFinalize} className="create-keys-button finalize">
           Finalize
@@ -188,8 +189,16 @@ class AppMainRouter extends Component {
     return this.state.loading || this.state.error ? (
       ''
     ) : (
-      <AllValidators searchTerm={this.state.searchTerm} methodToCall="getAllValidatorsData" web3Config={this.state} />
+      <AllValidators
+        searchTerm={this.state.searchTerm}
+        methodToCall="getAllValidatorsData"
+        web3Config={this.state}
+        viewTitle={navigationData[0]['title']}
+      />
     )
+  }
+  getNetIdClass() {
+    return this.state.netId === '77' ? 'sokol' : ''
   }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
@@ -197,9 +206,11 @@ class AppMainRouter extends Component {
   async onNetworkChange(e) {
     const netId = e.value
     const web3 = setWeb3(netId)
+
     networkAddresses({ netId }).then(async config => {
       const { addresses } = config
       const keysManager = new KeysManager()
+
       await keysManager.init({
         web3,
         netId,
@@ -216,37 +227,43 @@ class AppMainRouter extends Component {
   }
   render() {
     console.log('v2.09')
+
     const search = this.state.showSearch ? (
-      <input type="search" className="search-input" onChange={this.onSearch} />
+      <div className={`search-container ${this.getNetIdClass()}`}>
+        <div className="container">
+          <input type="search" className="search-input" onChange={this.onSearch} placeholder="Search..." />
+        </div>
+      </div>
     ) : (
       ''
     )
+
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
+
     return (
       <Router history={history}>
-        <section className="content">
-          <Header netId={this.state.netId} onChange={this.onNetworkChange} injectedWeb3={this.state.injectedWeb3} />
+        <section className={`content ${this.state.showMobileMenu ? 'content-menu-open' : ''}`}>
           {loading}
-          <div className="nav-container">
-            <div className="container">
-              <div className="nav">
-                <NavLink className="nav-i" exact activeClassName="nav-i_active" to={`${this.rootPath}/`}>
-                  All
-                </NavLink>
-                <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/set`}>
-                  Set metadata
-                </NavLink>
-                <NavLink className="nav-i" activeClassName="nav-i_active" to={`${this.rootPath}/pending-changes`}>
-                  Pending changes
-                </NavLink>
-              </div>
-              {search}
-            </div>
+          <Header
+            baseRootPath={baseRootPath}
+            injectedWeb3={this.state.injectedWeb3}
+            navigationData={navigationData}
+            netId={this.state.netId}
+            onChange={this.onNetworkChange}
+            onMenuToggle={this.toggleMobileMenu}
+            showMobileMenu={this.state.showMobileMenu}
+          />
+          {search}
+          <div
+            className={`app-container ${
+              this.state.showMobileMenu ? 'app-container-open-mobile-menu' : ''
+            } ${this.getNetIdClass()}`}
+          >
+            <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route exact path={`${baseRootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route path={`${baseRootPath}/pending-changes`} render={this.onPendingChangesRender} />
+            <Route path={`${baseRootPath}/set`} render={this.onSetRender} />
           </div>
-          <Route exact path={`${this.rootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
-          <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
-          <Route path={`${this.rootPath}/set`} render={this.onSetRender} />
-          <Route path={`${this.rootPath}/pending-changes`} render={this.onPendingChangesRender} />
           <Footer netId={this.state.netId} />
         </section>
       </Router>

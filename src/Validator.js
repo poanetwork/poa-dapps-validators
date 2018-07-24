@@ -32,9 +32,7 @@ class Validator extends Component {
     const confirmations = showAllValidators ? (
       ''
     ) : (
-      <div className="confirmations">
-        <div>{this.state.confirmation} confirmations</div>
-      </div>
+      <div className="validators-header--confirmations">{this.state.confirmation} confirmations</div>
     )
 
     const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address
@@ -50,13 +48,15 @@ class Validator extends Component {
     return (
       <div className="validators-i">
         <div className="validators-header">
-          <div className="validators-header--address">{indexAndAddress}</div>
-          <div>{confirmations}</div>
-          <div>{children}</div>
+          <div>
+            <div className="validators-header--address">{indexAndAddress}</div>
+            <div className="validators-header--hint">Wallet Address</div>
+          </div>
+          {confirmations}
         </div>
         <div className="validators-body">
           <div className="validators-notary left">
-            <p className="validators-title">Notary</p>
+            <p className="validators-title validators-title--notary">Notary</p>
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>Full Name</p>
@@ -79,7 +79,7 @@ class Validator extends Component {
             </div>
           </div>
           <div className="validators-license right">
-            <p className="validators-title">Notary license</p>
+            <p className="validators-title  validators-title--notary-license">Notary license</p>
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>License ID</p>
@@ -97,6 +97,7 @@ class Validator extends Component {
             </div>
           </div>
         </div>
+        <div className="validators-footer">{children}</div>
       </div>
     )
   }

@@ -1,14 +1,6 @@
 import Web3 from 'web3'
-const POA_CORE = {
-  RPC_URL: 'https://core.poa.network',
-  netIdName: 'CORE',
-  netId: '99'
-}
-const POA_SOKOL = {
-  RPC_URL: 'https://sokol.poa.network',
-  netIdName: 'SOKOL',
-  netId: '77'
-}
+const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
+const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
 let getWeb3 = () => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -35,12 +27,12 @@ let getWeb3 = () => {
               break
             default:
               netIdName = 'ERROR'
-              errorMsg = `You aren't connected to POA Network. 
-                  Please, switch to POA network and refresh the page. 
+              errorMsg = `You aren't connected to POA Network.
+                  Please, switch to POA network and refresh the page.
                   Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`
               console.log('This is an unknown network.', netId)
           }
-          document.title = `${netIdName} - POA validators dApp`
+          document.title = `${netIdName} - POA Validators dApp`
           var defaultAccount = web3.eth.defaultAccount || null
           if (errorMsg !== null) {
             reject({ message: errorMsg })
