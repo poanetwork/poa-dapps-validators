@@ -43,14 +43,10 @@ class App extends Component {
     this.setIsValidVotingKey.call(this)
   }
   async setMetadata() {
-    const currentData = await this.getMetadataContract().getValidatorData({
-      votingKey: this.getVotingKey()
-    })
+    const currentData = await this.getMetadataContract().getValidatorData(this.getMiningKey())
     const hasData = currentData.postal_code ? true : false
     this.defaultValues = currentData
-    const pendingChange = await this.getMetadataContract().getPendingChange({
-      votingKey: this.getVotingKey()
-    })
+    const pendingChange = await this.getMetadataContract().getPendingChange(this.getMiningKey())
     if (Number(pendingChange.minThreshold) > 0) {
       var msg = `
         First Name: <b>${pendingChange.firstName}</b> <br/>
@@ -90,6 +86,9 @@ class App extends Component {
   }
   getVotingKey() {
     return this.props.web3Config.votingKey
+  }
+  getMiningKey() {
+    return this.props.web3Config.miningKey
   }
   checkValidation() {
     const isAfter = moment(this.state.form.expirationDate).isAfter(moment())

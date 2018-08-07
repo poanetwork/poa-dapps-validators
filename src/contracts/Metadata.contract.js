@@ -77,8 +77,7 @@ export default class Metadata {
     }
   }
 
-  async getValidatorData({ votingKey, miningKey }) {
-    miningKey = miningKey || (await this.getMiningByVoting(votingKey))
+  async getValidatorData(miningKey) {
     if (!miningKey) {
       helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
       return {}
@@ -102,16 +101,6 @@ export default class Metadata {
     }
   }
 
-  async getMiningByVoting(votingKey) {
-    let miningKey
-    try {
-      miningKey = await this.metadataInstance.methods.getMiningByVotingKey(votingKey).call()
-    } catch (e) {
-      console.log(e.message)
-    }
-    return miningKey
-  }
-
   async getAllValidatorsData(netId) {
     let all = []
     return new Promise(async (resolve, reject) => {
@@ -125,7 +114,7 @@ export default class Metadata {
           }
           data = this.getMocData()
         } else {
-          data = await this.getValidatorData({ miningKey: key })
+          data = await this.getValidatorData(key)
         }
         data.address = key
         all.push(data)
@@ -134,8 +123,7 @@ export default class Metadata {
     })
   }
 
-  async getPendingChange({ votingKey, miningKey }) {
-    miningKey = miningKey || (await this.getMiningByVoting(votingKey))
+  async getPendingChange(miningKey) {
     if (!miningKey) {
       helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
       return {}
@@ -163,7 +151,7 @@ export default class Metadata {
   async getAllPendingChanges() {
     let pendingChanges = []
     for (let key of this.miningKeys) {
-      let pendingChange = await this.getPendingChange({ miningKey: key })
+      let pendingChange = await this.getPendingChange(key)
       pendingChange.address = key
       if (pendingChange.postal_code) {
         pendingChanges.push(pendingChange)
@@ -172,18 +160,24 @@ export default class Metadata {
     return pendingChanges
   }
 
-  async confirmPendingChange({ miningKeyToConfirm, senderVotingKey }) {
-    let alreadyConfirmed = await this.metadataInstance.methods
-      .isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey)
-      .call()
+  async confirmPendingChange({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
+    let alreadyConfirmed
+    if (this.metadataInstance.methods.isValidatorAlreadyVoted) {
+      alreadyConfirmed = await this.metadataInstance.methods
+        .isValidatorAlreadyVoted(miningKeyToConfirm, senderMiningKey)
+        .call()
+    } else {
+      alreadyConfirmed = await this.metadataInstance.methods
+        .isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey)
+        .call()
+    }
     console.log(alreadyConfirmed)
     if (alreadyConfirmed) {
       throw {
         message: `You already confirmed this change.`
       }
     }
-    const miningKeySender = await this.getMiningByVoting(senderVotingKey)
-    if (miningKeySender === miningKeyToConfirm) {
+    if (senderMiningKey === miningKeyToConfirm) {
       throw {
         message: `You cannot confirm your own changes.\n
           Please ask other validators to verify your new information.`
