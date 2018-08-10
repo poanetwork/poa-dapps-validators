@@ -161,15 +161,12 @@ export default class Metadata {
   }
 
   async confirmPendingChange({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
+    const { methods } = this.metadataInstance
     let alreadyConfirmed
-    if (this.metadataInstance.methods.isValidatorAlreadyVoted) {
-      alreadyConfirmed = await this.metadataInstance.methods
-        .isValidatorAlreadyVoted(miningKeyToConfirm, senderMiningKey)
-        .call()
+    if (methods.isValidatorAlreadyVoted) {
+      alreadyConfirmed = await methods.isValidatorAlreadyVoted(miningKeyToConfirm, senderMiningKey).call()
     } else {
-      alreadyConfirmed = await this.metadataInstance.methods
-        .isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey)
-        .call()
+      alreadyConfirmed = await methods.isAddressAlreadyVoted(miningKeyToConfirm, senderVotingKey).call()
     }
     console.log(alreadyConfirmed)
     if (alreadyConfirmed) {
