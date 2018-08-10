@@ -15,4 +15,7 @@ export default class KeysManager {
   async isVotingActive(votingKey) {
     return await this.keysInstance.methods.isVotingActive(votingKey).call()
   }
+  async miningKeyByVoting(votingKey) {
+    return await this.keysInstance.methods.miningKeyByVoting(votingKey).call()
+  }
 }

@@ -58,6 +58,7 @@ class AppMainRouter extends Component {
       metadataContract: null,
       poaConsensus: null,
       votingKey: null,
+      miningKey: null,
       loading: true,
       searchTerm: '',
       injectedWeb3: true,
@@ -86,6 +87,7 @@ class AppMainRouter extends Component {
         })
         this.setState({
           votingKey: web3Config.defaultAccount,
+          miningKey: await keysManager.miningKeyByVoting(web3Config.defaultAccount),
           keysManager,
           metadataContract,
           loading: false,
@@ -139,7 +141,8 @@ class AppMainRouter extends Component {
       try {
         let result = await this.state.metadataContract[methodToCall]({
           miningKeyToConfirm: miningKey,
-          senderVotingKey: this.state.votingKey
+          senderVotingKey: this.state.votingKey,
+          senderMiningKey: this.state.miningKey
         })
         console.log(result)
         this.setState({ loading: false })
