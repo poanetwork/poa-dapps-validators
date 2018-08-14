@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Validator from './Validator'
 import Loading from './Loading'
+import ProofOfPhycsicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 
 export default class AllValidators extends Component {
   constructor(props) {
@@ -26,13 +27,50 @@ export default class AllValidators extends Component {
         for (let i = 0; i < data.length; i++) {
           data[i].index = i + 1
         }
+        return this.augmentValidatorsWithPoPAAddress(data)
+      })
+      .then(augmentedValidators => {
         this.setState({
-          validators: data,
+          validators: augmentedValidators,
           loading: false,
           reload: false,
           netId
         })
       })
+  }
+  async augmentValidatorsWithPoPAAddress(validators) {
+    const popa = new ProofOfPhycsicalAddress({ web3: this.props.web3Config.metadataContract.web3_10 })
+    const getConfirmedAddressesPromises = validators.map(validator => {
+      return popa.getUserConfirmedAddresses(validator.address)
+    })
+    const confirmedAddresses = await Promise.all(getConfirmedAddressesPromises).then(
+      // Map array of tuples from contract to array of single know UI structure
+      grouppedConfirmedAddressesByValidator => {
+        return grouppedConfirmedAddressesByValidator.map(confirmedAddresses => {
+          // If there is an address in the result, map the first one to a known structure
+          if (confirmedAddresses.length === 0) {
+            return null
+          } else {
+            const address = confirmedAddresses[0]
+            return {
+              fullAddress: `${address.location} ${address.city}`,
+              us_state: address.state,
+              postal_code: address.zip
+            }
+          }
+        })
+      }
+    )
+    // Only augment a validator if PoPA returned a confirmed address
+    const augmentedValidators = validators.map((validator, index) => {
+      let result = validator
+      const confirmedAddressData = confirmedAddresses[index]
+      if (confirmedAddressData) {
+        result = Object.assign(validator, confirmedAddressData)
+      }
+      return result
+    })
+    return augmentedValidators
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.web3Config.netId !== this.state.netId) {
