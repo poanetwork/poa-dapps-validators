@@ -66,11 +66,11 @@ class Validator extends Component {
               </div>
               <div className="validators-table-i">
                 <p>Address</p>
-                <p>{fullAddress}</p>
+                <p className="text-capitalized">{fullAddress}</p>
               </div>
               <div className="validators-table-i">
                 <p>State</p>
-                <p>{us_state}</p>
+                <p className="text-uppercase">{us_state}</p>
               </div>
               <div className="validators-table-i">
                 <p>Zip Code</p>
