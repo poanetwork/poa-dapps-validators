@@ -66,7 +66,11 @@ export default class AllValidators extends Component {
       let result = validator
       const confirmedAddressData = confirmedAddresses[index]
       if (confirmedAddressData) {
+        console.log('confirmed!')
         result = Object.assign(validator, confirmedAddressData)
+        result = Object.assign(validator, {
+          isAddressConfirmed: true
+        })
       }
       return result
     })
@@ -99,6 +103,7 @@ export default class AllValidators extends Component {
       validators.push(
         <Validator
           key={index}
+          isAddressConfirmed={validator.isAddressConfirmed}
           address={validator.address}
           firstName={validator.firstName}
           lastName={validator.lastName}
