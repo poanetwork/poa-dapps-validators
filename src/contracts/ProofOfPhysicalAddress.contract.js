@@ -1,19 +1,19 @@
 import Web3 from 'web3'
 
 // @TODO: copy from https://github.com/poanetwork/poa-popa/blob/master/blockchain/contracts/ProofOfPhysicalAddress.sol
-const ProofOfPhysicalAddressContract = require('./ProofOfPhysicalAddress.json')
+const POPA_CONTRACT_JSON = require('./ProofOfPhysicalAddress.json')
 // @TODO: hardcoded address for "core" network, should be dynamically set
 const POPA_CORE_ADDRESS = '0x03ebcfd4ffc4aefbcb36e4824b6c18494c144493'
 
 export default class ProofOfPhysicalAddress {
   constructor({ web3 }) {
     let web3_10 = new Web3(web3.currentProvider)
-    let abi = ProofOfPhysicalAddressContract.abi
+    let abi = POPA_CONTRACT_JSON.abi
     this.instance = new web3_10.eth.Contract(abi, POPA_CORE_ADDRESS)
 
     this.getAddressesCount = this.getAddressesCount.bind(this)
     this.getUserConfirmedAddresses = this.getUserConfirmedAddresses.bind(this)
-    this.getAdressIndexAndConfirmationStatus = this.getAdressIndexAndConfirmationStatus.bind(this)
+    this.getAddressIndexAndConfirmationStatus = this.getAddressIndexAndConfirmationStatus.bind(this)
     this.getPhysicalAddressesByIndexes = this.getPhysicalAddressesByIndexes.bind(this)
   }
 
@@ -43,7 +43,7 @@ export default class ProofOfPhysicalAddress {
       if (confirmedCount > 0) {
         const submittedCount = await this.getAddressesCount(walletAddress, false)
         // Get an array representing index => isConfirmed
-        const addressConfirmedStatuses = await this.getAdressIndexAndConfirmationStatus(walletAddress, submittedCount)
+        const addressConfirmedStatuses = await this.getAddressIndexAndConfirmationStatus(walletAddress, submittedCount)
         // Convert an array of indexes of confirmed-addresses-only (i.e. [3,7])
         const addressConfirmedIndexes = []
         addressConfirmedStatuses.forEach((isConfirmed, index) => {
@@ -68,7 +68,7 @@ export default class ProofOfPhysicalAddress {
    * @param {Integer} submittedCount
    * @return {Promise}
    */
-  async getAdressIndexAndConfirmationStatus(walletAddress, submittedCount) {
+  async getAddressIndexAndConfirmationStatus(walletAddress, submittedCount) {
     try {
       const promises = []
       for (let i = 0; i < submittedCount; i++) {
@@ -76,7 +76,7 @@ export default class ProofOfPhysicalAddress {
       }
       return await Promise.all(promises)
     } catch (e) {
-      console.log(`Error getAdressIndexAndConfirmationStatus(${walletAddress}, ${submittedCount})`, e)
+      console.log(`Error getAddressIndexAndConfirmationStatus(${walletAddress}, ${submittedCount})`, e)
       throw e
     }
   }

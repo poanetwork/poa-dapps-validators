@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Validator from './Validator'
 import Loading from './Loading'
-import ProofOfPhycsicalAddress from './contracts/ProofOfPhysicalAddress.contract'
+import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 
 export default class AllValidators extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ export default class AllValidators extends Component {
       })
   }
   async augmentValidatorsWithPoPAAddress(validators) {
-    const popa = new ProofOfPhycsicalAddress({ web3: this.props.web3Config.metadataContract.web3_10 })
+    const popa = new ProofOfPhysicalAddress({ web3: this.props.web3Config.metadataContract.web3_10 })
     const getConfirmedAddressesPromises = validators.map(validator => {
       return popa.getUserConfirmedAddresses(validator.address)
     })
