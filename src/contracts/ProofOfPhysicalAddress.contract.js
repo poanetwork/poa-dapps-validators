@@ -41,9 +41,9 @@ export default class ProofOfPhysicalAddress {
 
       let result = []
       if (confirmedCount > 0) {
-        const submittedCount = await this.getAddressesCount(walletAddress, false)
+        const confirmedCount = await this.getAddressesCount(walletAddress, true)
         // Get an array representing index => isConfirmed
-        const addressConfirmedStatuses = await this.getAddressIndexAndConfirmationStatus(walletAddress, submittedCount)
+        const addressConfirmedStatuses = await this.getAddressIndexAndConfirmationStatus(walletAddress, confirmedCount)
         // Convert an array of indexes of confirmed-addresses-only (i.e. [3,7])
         const addressConfirmedIndexes = []
         addressConfirmedStatuses.forEach((isConfirmed, index) => {
