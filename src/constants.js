@@ -1,6 +1,5 @@
 const constants = {}
-// @FIXME: revert back to 'poanetwork' once the PR/proof of concept is approved
-constants.organization = 'unjapones'
+constants.organization = 'poanetwork'
 constants.repoName = 'poa-chain-spec'
 constants.addressesSourceFile = 'contracts.json'
 constants.ABIsSources = {
