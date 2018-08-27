@@ -1,15 +1,15 @@
 import Web3 from 'web3'
-
-// @TODO: copy from https://github.com/poanetwork/poa-popa/blob/master/blockchain/contracts/ProofOfPhysicalAddress.sol
-const POPA_CONTRACT_JSON = require('./ProofOfPhysicalAddress.json')
-// @TODO: hardcoded address for "core" network, should be dynamically set
-const POPA_CORE_ADDRESS = '0x03ebcfd4ffc4aefbcb36e4824b6c18494c144493'
+import helpers from './helpers'
 
 export default class ProofOfPhysicalAddress {
-  constructor({ web3 }) {
+  async init({ web3, netId, addresses }) {
     let web3_10 = new Web3(web3.currentProvider)
-    let abi = POPA_CONTRACT_JSON.abi
-    this.instance = new web3_10.eth.Contract(abi, POPA_CORE_ADDRESS)
+    const { PROOF_OF_PHYSICAL_ADDRESS } = addresses
+    console.log(`popa address: ${PROOF_OF_PHYSICAL_ADDRESS}`)
+
+    const branch = helpers.getBranch(netId)
+    let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
+    this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 
     this.getAddressesCount = this.getAddressesCount.bind(this)
     this.getUserConfirmedAddresses = this.getUserConfirmedAddresses.bind(this)

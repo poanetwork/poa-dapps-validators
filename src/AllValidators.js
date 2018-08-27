@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import Validator from './Validator'
 import Loading from './Loading'
-import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 
 export default class AllValidators extends Component {
   constructor(props) {
     super(props)
     this.getMetadataContract = this.getMetadataContract.bind(this)
+    this.getProofOfPhysicalAddressContract = this.getProofOfPhysicalAddressContract.bind(this)
     this.state = {
       validators: [],
       loading: true
@@ -39,7 +39,7 @@ export default class AllValidators extends Component {
       })
   }
   async augmentValidatorsWithPoPAAddress(validators) {
-    const popa = new ProofOfPhysicalAddress({ web3: this.props.web3Config.metadataContract.web3_10 })
+    const popa = this.getProofOfPhysicalAddressContract()
     const getConfirmedAddressesPromises = validators.map(validator => {
       return popa.getUserConfirmedAddresses(validator.address)
     })
@@ -85,6 +85,9 @@ export default class AllValidators extends Component {
   }
   getMetadataContract() {
     return this.props.web3Config.metadataContract
+  }
+  getProofOfPhysicalAddressContract() {
+    return this.props.web3Config.proofOfPhysicalAddressContract
   }
   render() {
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''

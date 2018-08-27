@@ -4,6 +4,7 @@ import App from './App'
 import Footer from './Footer'
 import Header from './Header'
 import KeysManager from './contracts/KeysManager.contract'
+import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import Loading from './Loading'
 import Metadata from './contracts/Metadata.contract'
 import React, { Component } from 'react'
@@ -85,11 +86,19 @@ class AppMainRouter extends Component {
           netId: web3Config.netId,
           addresses
         })
+        const proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
+        await proofOfPhysicalAddressContract.init({
+          web3: web3Config.web3Instance,
+          netId: web3Config.netId,
+          addresses
+        })
+        console.log(proofOfPhysicalAddressContract)
         this.setState({
           votingKey: web3Config.defaultAccount,
           miningKey: await keysManager.miningKeyByVoting(web3Config.defaultAccount),
           keysManager,
           metadataContract,
+          proofOfPhysicalAddressContract,
           loading: false,
           injectedWeb3: web3Config.injectedWeb3,
           netId: web3Config.netId
