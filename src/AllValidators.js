@@ -40,40 +40,22 @@ export default class AllValidators extends Component {
   }
   async augmentValidatorsWithPoPAAddress(validators) {
     const popa = this.getProofOfPhysicalAddressContract()
-    const getConfirmedAddressesPromises = validators.map(validator => {
-      return popa.getUserConfirmedAddresses(validator.address)
-    })
-    const confirmedAddresses = await Promise.all(getConfirmedAddressesPromises).then(
-      // Map array of tuples from contract to array of single know UI structure
-      grouppedConfirmedAddressesByValidator => {
-        return grouppedConfirmedAddressesByValidator.map(confirmedAddresses => {
-          // If there is an address in the result, map the first one to a known structure
-          if (confirmedAddresses.length === 0) {
-            return null
-          } else {
-            const address = confirmedAddresses[0]
-            return {
-              fullAddress: `${address.location} ${address.city}`,
-              us_state: address.state,
-              postal_code: address.zip
-            }
+    const validatorsWithConfirmAddressEvent = await popa.filterValidatorsWithConfirmAddressEvent(validators)
+    const getConfirmedAddressesPromises = validatorsWithConfirmAddressEvent.map(validator => {
+      return popa.getUserConfirmedAddresses(validator.address).then(confirmedAddresses => {
+        // Only augment a validator if PoPA returned a confirmed address
+        if (confirmedAddresses.length > 0) {
+          const validatorConfirmedAddress = {
+            fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
+            us_state: confirmedAddresses[0].state,
+            postal_code: confirmedAddresses[0].zip,
+            isAddressConfirmed: true
           }
-        })
-      }
-    )
-    // Only augment a validator if PoPA returned a confirmed address
-    const augmentedValidators = validators.map((validator, index) => {
-      let result = validator
-      const confirmedAddressData = confirmedAddresses[index]
-      if (confirmedAddressData) {
-        result = Object.assign(validator, confirmedAddressData)
-        result = Object.assign(validator, {
-          isAddressConfirmed: true
-        })
-      }
-      return result
+          Object.assign(validator, validatorConfirmedAddress)
+        }
+      })
     })
-    return augmentedValidators
+    return Promise.all(getConfirmedAddressesPromises).then(() => validators)
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.web3Config.netId !== this.state.netId) {

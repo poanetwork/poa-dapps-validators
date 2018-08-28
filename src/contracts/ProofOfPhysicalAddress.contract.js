@@ -1,20 +1,40 @@
 import Web3 from 'web3'
 import helpers from './helpers'
 
+const CONFIRM_ADDRESS_EVENT_NAME = 'LogAddressConfirmed'
+
 export default class ProofOfPhysicalAddress {
   async init({ web3, netId, addresses }) {
     let web3_10 = new Web3(web3.currentProvider)
     const { PROOF_OF_PHYSICAL_ADDRESS } = addresses
-    console.log(`popa address: ${PROOF_OF_PHYSICAL_ADDRESS}`)
 
     const branch = helpers.getBranch(netId)
     let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 
+    this.filterValidatorsWithConfirmAddressEvent = this.filterValidatorsWithConfirmAddressEvent.bind(this)
     this.getAddressesCount = this.getAddressesCount.bind(this)
     this.getUserConfirmedAddresses = this.getUserConfirmedAddresses.bind(this)
     this.getAddressIndexAndConfirmationStatus = this.getAddressIndexAndConfirmationStatus.bind(this)
     this.getPhysicalAddressesByIndexes = this.getPhysicalAddressesByIndexes.bind(this)
+    this.getAllEvents = this.getAllEvents.bind(this)
+  }
+
+  /**
+   * Filter the given validators array by leaving only the elements whose wallet address generated,
+   * at least, one PoPA LogAddressConfirmed event.
+   * @param  {Object[]} validatorArray
+   * @return {Object[]}
+   */
+  async filterValidatorsWithConfirmAddressEvent(validatorArray) {
+    const confirmAddressEvents = await this.getAllEvents(CONFIRM_ADDRESS_EVENT_NAME)
+    const validatorArrayWithConfirmedAddress = validatorArray.filter(validator => {
+      const hasConfirmedAddress = confirmAddressEvents.some(
+        confirmAddressEvent => confirmAddressEvent.returnValues.wallet === validator.address
+      )
+      return hasConfirmedAddress
+    })
+    return validatorArrayWithConfirmedAddress
   }
 
   /**
@@ -36,16 +56,14 @@ export default class ProofOfPhysicalAddress {
    * @return {Promise}
    */
   async getUserConfirmedAddresses(walletAddress) {
+    let result = []
     try {
+      // Get an array representing index => isConfirmed
       const confirmedCount = await this.getAddressesCount(walletAddress, true)
-
-      let result = []
       if (confirmedCount > 0) {
-        const confirmedCount = await this.getAddressesCount(walletAddress, true)
-        // Get an array representing index => isConfirmed
         const addressConfirmedStatuses = await this.getAddressIndexAndConfirmationStatus(walletAddress, confirmedCount)
         // Convert an array of indexes of confirmed-addresses-only (i.e. [3,7])
-        const addressConfirmedIndexes = []
+        let addressConfirmedIndexes = []
         addressConfirmedStatuses.forEach((isConfirmed, index) => {
           if (isConfirmed) {
             addressConfirmedIndexes.push(index)
@@ -53,11 +71,10 @@ export default class ProofOfPhysicalAddress {
         })
         result = await this.getPhysicalAddressesByIndexes(walletAddress, addressConfirmedIndexes)
       }
-
-      return result
     } catch (e) {
       console.error(`Error in getUserConfirmedAddresses ${walletAddress}`, e)
-      throw e
+    } finally {
+      return result
     }
   }
 
@@ -70,7 +87,7 @@ export default class ProofOfPhysicalAddress {
    */
   async getAddressIndexAndConfirmationStatus(walletAddress, submittedCount) {
     try {
-      const promises = []
+      let promises = []
       for (let i = 0; i < submittedCount; i++) {
         promises.push(this.instance.methods.userAddressConfirmed(walletAddress, i).call())
       }
@@ -99,5 +116,20 @@ export default class ProofOfPhysicalAddress {
       console.log(`Error getPhysicalAddressesByIndexes(${walletAddress}, ${physicalAddressIndexesArray})`, e)
       throw e
     }
+  }
+
+  /**
+   * Get all event objects, with the given eventName.
+   * @param {String} eventName
+   * @return {Promise}
+   */
+  async getAllEvents(eventName) {
+    let result = []
+    try {
+      result = await this.instance.getPastEvents(eventName, { fromBlock: 0, toBlock: 'latest' })
+    } catch (e) {
+      console.error(e)
+    }
+    return result
   }
 }
