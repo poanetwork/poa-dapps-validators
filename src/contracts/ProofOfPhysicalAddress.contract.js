@@ -9,6 +9,9 @@ export default class ProofOfPhysicalAddress {
     const { PROOF_OF_PHYSICAL_ADDRESS } = addresses
 
     const branch = helpers.getBranch(netId)
+    if (branch !== 'core') {
+      throw new Error(`ProofOfPhysicalAddress contract not deployed network "${branch}"`)
+    }
     let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 

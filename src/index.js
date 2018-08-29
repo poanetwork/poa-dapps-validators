@@ -86,13 +86,17 @@ class AppMainRouter extends Component {
           netId: web3Config.netId,
           addresses
         })
-        const proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
-        await proofOfPhysicalAddressContract.init({
-          web3: web3Config.web3Instance,
-          netId: web3Config.netId,
-          addresses
-        })
-        console.log(proofOfPhysicalAddressContract)
+        let proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
+        try {
+          await proofOfPhysicalAddressContract.init({
+            web3: web3Config.web3Instance,
+            netId: web3Config.netId,
+            addresses
+          })
+        } catch (e) {
+          console.error('Error initializing ProofOfPhysicalAddress', e)
+          proofOfPhysicalAddressContract = null
+        }
         this.setState({
           votingKey: web3Config.defaultAccount,
           miningKey: await keysManager.miningKeyByVoting(web3Config.defaultAccount),

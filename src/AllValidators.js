@@ -40,6 +40,10 @@ export default class AllValidators extends Component {
   }
   async augmentValidatorsWithPoPAAddress(validators) {
     const popa = this.getProofOfPhysicalAddressContract()
+    if (popa === null) {
+      return validators
+    }
+
     const validatorsWithConfirmAddressEvent = await popa.filterValidatorsWithConfirmAddressEvent(validators)
     const getConfirmedAddressesPromises = validatorsWithConfirmAddressEvent.map(validator => {
       return popa.getUserConfirmedAddresses(validator.address).then(confirmedAddresses => {
