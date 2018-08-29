@@ -43,23 +43,28 @@ export default class AllValidators extends Component {
     if (popa === null) {
       return validators
     }
-
-    const validatorsWithConfirmAddressEvent = await popa.filterValidatorsWithConfirmAddressEvent(validators)
-    const getConfirmedAddressesPromises = validatorsWithConfirmAddressEvent.map(validator => {
-      return popa.getUserConfirmedAddresses(validator.address).then(confirmedAddresses => {
-        // Only augment a validator if PoPA returned a confirmed address
-        if (confirmedAddresses.length > 0) {
-          const validatorConfirmedAddress = {
-            fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
-            us_state: confirmedAddresses[0].state,
-            postal_code: confirmedAddresses[0].zip,
-            isAddressConfirmed: true
+    // Until everything is done ok, result will be validators
+    let result = validators
+    try {
+      const getConfirmedAddressesPromises = validators.map(validator => {
+        return popa.getUserConfirmedAddresses(validator.address).then(confirmedAddresses => {
+          let validatorConfirmedAddress = {}
+          if (confirmedAddresses.length > 0) {
+            validatorConfirmedAddress = {
+              fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
+              us_state: confirmedAddresses[0].state,
+              postal_code: confirmedAddresses[0].zip,
+              isAddressConfirmed: true
+            }
           }
-          Object.assign(validator, validatorConfirmedAddress)
-        }
+          return Object.assign({}, validator, validatorConfirmedAddress)
+        })
       })
-    })
-    return Promise.all(getConfirmedAddressesPromises).then(() => validators)
+      result = await Promise.all(getConfirmedAddressesPromises)
+    } catch (e) {
+      console.error('Error while augmenting validators with confirmed address', e)
+    }
+    return result
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.web3Config.netId !== this.state.netId) {
