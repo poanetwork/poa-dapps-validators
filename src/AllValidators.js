@@ -44,27 +44,28 @@ export default class AllValidators extends Component {
       return validators
     }
     // Until everything is done ok, result will be validators
-    let result = validators
+    let augmentedValidators = validators
     try {
-      const getConfirmedAddressesPromises = validators.map(validator => {
-        return popa.getUserConfirmedAddresses(validator.address).then(confirmedAddresses => {
-          let validatorConfirmedAddress = {}
-          if (confirmedAddresses.length > 0) {
-            validatorConfirmedAddress = {
-              fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
-              us_state: confirmedAddresses[0].state,
-              postal_code: confirmedAddresses[0].zip,
-              isAddressConfirmed: true
-            }
+      const validatorsWalletAddresses = validators.map(validator => validator.address)
+      const validatorsConfirmedAddresses = await popa.getConfirmedAddressesOfWalletAddressArray(
+        validatorsWalletAddresses
+      )
+      augmentedValidators = validatorsConfirmedAddresses.map((confirmedAddresses, index) => {
+        let validatorConfirmedAddress = {}
+        if (confirmedAddresses !== null && confirmedAddresses.length > 0) {
+          validatorConfirmedAddress = {
+            fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
+            us_state: confirmedAddresses[0].state,
+            postal_code: confirmedAddresses[0].zip,
+            isAddressConfirmed: true
           }
-          return Object.assign({}, validator, validatorConfirmedAddress)
-        })
+        }
+        return Object.assign({}, validators[index], validatorConfirmedAddress)
       })
-      result = await Promise.all(getConfirmedAddressesPromises)
     } catch (e) {
       console.error('Error while augmenting validators with confirmed address', e)
     }
-    return result
+    return augmentedValidators
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.web3Config.netId !== this.state.netId) {

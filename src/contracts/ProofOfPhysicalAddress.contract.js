@@ -15,7 +15,7 @@ export default class ProofOfPhysicalAddress {
     let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 
-    this.getUserConfirmedAddresses = this.getUserConfirmedAddresses.bind(this)
+    this.getConfirmedAddressesOfWalletAddressArray = this.getConfirmedAddressesOfWalletAddressArray.bind(this)
     this.getAllEvents = this.getAllEvents.bind(this)
     this.getConfirmedAddressesByWalletAddressAndKeccakIdentifierArray = this.getConfirmedAddressesByWalletAddressAndKeccakIdentifierArray.bind(
       this
@@ -23,30 +23,35 @@ export default class ProofOfPhysicalAddress {
   }
 
   /**
-   * Given a walletAddress, return a promise that resolves to an array of result
+   * Given an array of wallet address, return a promise that resolves to an array of result
    * sets of confirmed addresses from PoBA contract.
-   * @param {String} walletAddress
+   * @param {String[]} walletAddressArray
    * @return {Promise}
    */
-  async getUserConfirmedAddresses(walletAddress) {
-    let result = []
+  async getConfirmedAddressesOfWalletAddressArray(walletAddressArray) {
+    let confirmedAddresses = []
     try {
       const confirmAddressEvents = await this.getAllEvents(CONFIRM_ADDRESS_EVENT_NAME)
-      let keccakIdentifiers = confirmAddressEvents
-        .filter(event => event.returnValues.wallet === walletAddress)
-        .map(event => event.returnValues.keccakIdentifier)
-      if (keccakIdentifiers.length > 0) {
-        let physicalAddresses = await this.getConfirmedAddressesByWalletAddressAndKeccakIdentifierArray(
-          walletAddress,
-          keccakIdentifiers
-        )
-        result = physicalAddresses.length > 0 ? physicalAddresses : result
-      }
+      const getConfirmedAddressesPromises = walletAddressArray.map(walletAddress => {
+        let confirmedAddressByWalletAddress = null
+        let keccakIdentifiers = confirmAddressEvents
+          .filter(event => event.returnValues.wallet === walletAddress)
+          .map(event => event.returnValues.keccakIdentifier)
+        if (keccakIdentifiers.length > 0) {
+          confirmedAddressByWalletAddress = this.getConfirmedAddressesByWalletAddressAndKeccakIdentifierArray(
+            walletAddress,
+            keccakIdentifiers
+          ).then(physicalAddresses => {
+            return physicalAddresses.length > 0 ? physicalAddresses : null
+          })
+        }
+        return Promise.resolve(confirmedAddressByWalletAddress)
+      })
+      confirmedAddresses = await Promise.all(getConfirmedAddressesPromises)
     } catch (e) {
-      console.error(`Error in getUserConfirmedAddresses ${walletAddress}`, e)
-    } finally {
-      return result
+      console.error(`Error in getConfirmedAddressesOfWalletAddressArray`, e)
     }
+    return confirmedAddresses
   }
 
   /**
