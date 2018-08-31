@@ -47,20 +47,23 @@ export default class AllValidators extends Component {
     let augmentedValidators = validators
     try {
       const validatorsWalletAddresses = validators.map(validator => validator.address)
-      const validatorsConfirmedAddresses = await popa.getConfirmedAddressesOfWalletAddressArray(
-        validatorsWalletAddresses
-      )
-      augmentedValidators = validatorsConfirmedAddresses.map((confirmedAddresses, index) => {
-        let validatorConfirmedAddress = {}
-        if (confirmedAddresses !== null && confirmedAddresses.length > 0) {
-          validatorConfirmedAddress = {
-            fullAddress: `${confirmedAddresses[0].location} ${confirmedAddresses[0].city}`,
-            us_state: confirmedAddresses[0].state,
-            postal_code: confirmedAddresses[0].zip,
-            isAddressConfirmed: true
+      const validatorsPhysicalAddresses = await popa.getPhysicalAddressesOfWalletAddressArray(validatorsWalletAddresses)
+      augmentedValidators = validatorsPhysicalAddresses.map((physicalAddresses, index) => {
+        let validatorWithPhysicalAddresses = {}
+        if (physicalAddresses !== null && physicalAddresses.length > 0) {
+          let validatorPhysicalAddresses = physicalAddresses.map(physicalAddress => {
+            return {
+              fullAddress: `${physicalAddress.data.location} ${physicalAddress.data.city}`,
+              us_state: physicalAddress.data.state,
+              postal_code: physicalAddress.data.zip,
+              isConfirmed: physicalAddress.isConfirmed === true
+            }
+          })
+          validatorWithPhysicalAddresses = {
+            physicalAddresses: validatorPhysicalAddresses
           }
         }
-        return Object.assign({}, validators[index], validatorConfirmedAddress)
+        return Object.assign({}, validators[index], validatorWithPhysicalAddresses)
       })
     } catch (e) {
       console.error('Error while augmenting validators with confirmed address', e)
@@ -97,7 +100,7 @@ export default class AllValidators extends Component {
       validators.push(
         <Validator
           key={index}
-          isAddressConfirmed={validator.isAddressConfirmed}
+          physicalAddresses={validator.physicalAddresses}
           address={validator.address}
           firstName={validator.firstName}
           lastName={validator.lastName}

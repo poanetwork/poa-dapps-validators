@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ValidatorPhysicalAddresses from './ValidatorPhysicalAddresses'
 
 class Validator extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class Validator extends Component {
 
   render() {
     let {
-      isAddressConfirmed,
+      physicalAddresses,
       address,
       firstName,
       lastName,
@@ -46,7 +47,13 @@ class Validator extends Component {
       </div>
     )
 
-    const validatedByPoaPOPA = 'Confirmed by POA Network - Proof of Physical Address'
+    let allPhysicalAddreses = physicalAddresses || []
+    allPhysicalAddreses.push({
+      fullAddress: fullAddress,
+      us_state: us_state,
+      postal_code: postal_code,
+      isConfirmed: false
+    })
 
     return (
       <div className="validators-i">
@@ -67,33 +74,7 @@ class Validator extends Component {
                   {firstName} {lastName}
                 </p>
               </div>
-              <div className="validators-table-i">
-                <p>Address</p>
-                <p
-                  className={`text-capitalized ${isAddressConfirmed ? 'text-confirmed-field' : ''}`}
-                  title={`${isAddressConfirmed ? validatedByPoaPOPA : ''}`}
-                >
-                  {fullAddress}
-                </p>
-              </div>
-              <div className="validators-table-i">
-                <p>State</p>
-                <p
-                  className={`text-uppercase ${isAddressConfirmed ? 'text-confirmed-field' : ''}`}
-                  title={`${isAddressConfirmed ? validatedByPoaPOPA : ''}`}
-                >
-                  {us_state}
-                </p>
-              </div>
-              <div className="validators-table-i">
-                <p>Zip Code</p>
-                <p
-                  className={`${isAddressConfirmed ? 'text-confirmed-field' : ''}`}
-                  title={`${isAddressConfirmed ? validatedByPoaPOPA : ''}`}
-                >
-                  {postal_code}
-                </p>
-              </div>
+              <ValidatorPhysicalAddresses physicalAddresses={allPhysicalAddreses} />
             </div>
           </div>
           <div className="validators-license right">
