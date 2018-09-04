@@ -47,13 +47,13 @@ class Validator extends Component {
       </div>
     )
 
-    let allPhysicalAddreses = physicalAddresses || []
-    allPhysicalAddreses.push({
+    let metadataUnconfirmedAddresss = {
       fullAddress: fullAddress,
       us_state: us_state,
       postal_code: postal_code,
       isConfirmed: false
-    })
+    }
+    let allPhysicalAddreses = physicalAddresses || [metadataUnconfirmedAddresss]
 
     return (
       <div className="validators-i">

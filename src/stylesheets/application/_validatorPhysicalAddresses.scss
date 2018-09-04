@@ -1,0 +1,31 @@
+.validator-physical-address {
+  display: flex;
+
+  &__title {
+    flex-shrink: 0;
+    padding-right: 10px;
+  }
+
+  &__value {
+    line-height: 20px;
+    margin-bottom: 21px;
+    padding-right: 35px;
+    position: relative;
+
+    .data-icon--confirmed,
+    .data-icon--unconfirmed {
+      position: absolute;
+      right: 0;
+      top: -3px;
+    }
+  }
+}
+
+.validator-physical-address--multiple {
+  display: block;
+
+  .validator-physical-address__title {
+    margin-bottom: 10px;
+    width: 100%;
+  }
+}
