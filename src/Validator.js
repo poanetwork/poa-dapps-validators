@@ -47,13 +47,16 @@ class Validator extends Component {
       </div>
     )
 
-    let metadataUnconfirmedAddresss = {
-      fullAddress: fullAddress,
-      us_state: us_state,
-      postal_code: postal_code,
-      isConfirmed: false
-    }
-    let allPhysicalAddreses = physicalAddresses || [metadataUnconfirmedAddresss]
+    // If the is no physicalAddress array (info from PoPA), use the validator's
+    // metadata to build an array with the corresponding physical address info
+    let allPhysicalAddreses = physicalAddresses || [
+      {
+        fullAddress: fullAddress,
+        us_state: us_state,
+        postal_code: postal_code,
+        isConfirmed: false
+      }
+    ]
 
     return (
       <div className="validators-i">
