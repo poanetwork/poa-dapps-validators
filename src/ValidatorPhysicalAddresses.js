@@ -6,9 +6,7 @@ const ICON_UNCONFIRMED_CLASSNAME = 'data-icon--unconfirmed'
 const ValidatorPhysicalAddress = ({ physicalAddresses }) => {
   const confirmedAddresses = physicalAddresses.filter(a => a.isConfirmed)
   const unconfirmedAddresses = physicalAddresses.filter(a => !a.isConfirmed)
-  const hasConfirmedAddresses = confirmedAddresses.length > 0
-
-  const addresses = hasConfirmedAddresses ? confirmedAddresses : unconfirmedAddresses
+  let addresses = confirmedAddresses.concat(unconfirmedAddresses)
 
   let singleOrMultiple =
     addresses.length > 1 ? 'validator-physical-address--multiple' : 'validator-physical-address--single'
