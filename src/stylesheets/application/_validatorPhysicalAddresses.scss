@@ -7,16 +7,23 @@
   }
 
   &__value {
-    line-height: 20px;
+    display: flex;
+    height: 19px;
+    line-height: 19px;
     margin-bottom: 21px;
-    padding-right: 35px;
-    position: relative;
+    text-align: right;
+    text-transform: capitalize;
+
+    span {
+      flex-grow: 1;
+    }
 
     .data-icon--confirmed,
     .data-icon--unconfirmed {
-      position: absolute;
-      right: 0;
-      top: -3px;
+      flex-shrink: 0;
+      line-height: 1em;
+      margin-left: 10px;
+      margin-top: -2px;
     }
   }
 }
@@ -27,5 +34,9 @@
   .validator-physical-address__title {
     margin-bottom: 15px;
     width: 100%;
+  }
+
+  .validator-physical-address__value {
+    text-align: left;
   }
 }

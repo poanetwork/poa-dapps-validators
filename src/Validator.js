@@ -18,9 +18,6 @@ class Validator extends Component {
       address,
       firstName,
       lastName,
-      fullAddress,
-      us_state,
-      postal_code,
       licenseId,
       expirationDate,
       createdDate,
@@ -47,17 +44,6 @@ class Validator extends Component {
       </div>
     )
 
-    // If the is no physicalAddress array (info from PoPA), use the validator's
-    // metadata to build an array with the corresponding physical address info
-    let allPhysicalAddreses = physicalAddresses || [
-      {
-        fullAddress: fullAddress,
-        us_state: us_state,
-        postal_code: postal_code,
-        isConfirmed: false
-      }
-    ]
-
     return (
       <div className="validators-i">
         <div className="validators-header">
@@ -77,7 +63,7 @@ class Validator extends Component {
                   {firstName} {lastName}
                 </p>
               </div>
-              <ValidatorPhysicalAddresses physicalAddresses={allPhysicalAddreses} />
+              <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} />
             </div>
           </div>
           <div className="validators-license right">

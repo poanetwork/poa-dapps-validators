@@ -23,19 +23,22 @@ const ValidatorPhysicalAddress = ({ physicalAddresses }) => {
 }
 
 const PhysicalAddressValue = ({ addresses }) => {
-  let textAlign = addresses.length > 1 ? 'text-align-left' : 'text-align-right'
-  let physicalAddressValueClassName = `validator-physical-address__value text-capitalized ${textAlign}`
-
   return addresses.map((address, index) => {
-    const iconProps = {
-      className: address.isConfirmed ? ICON_CONFIRMED_CLASSNAME : ICON_UNCONFIRMED_CLASSNAME,
-      title: address.isConfirmed ? ICON_CONFIRMED_TOOLTIP : ICON_UNCONFIRMED_TOOLTIP
+    // Confirmed icon rendered only if address.isConfirmed has a boolean value
+    let confirmedIcon = null
+    if (address.isConfirmed === true || address.isConfirmed === false) {
+      confirmedIcon = (
+        <i
+          className={address.isConfirmed ? ICON_CONFIRMED_CLASSNAME : ICON_UNCONFIRMED_CLASSNAME}
+          title={address.isConfirmed ? ICON_CONFIRMED_TOOLTIP : ICON_UNCONFIRMED_TOOLTIP}
+        />
+      )
     }
+
     return (
-      <p className={physicalAddressValueClassName} key={index}>
-        {`${address.fullAddress} `}
-        <span className="text-whitespace-nowrap">{`${address.us_state.toUpperCase()}, ${address.postal_code}`}</span>
-        <i {...iconProps} />
+      <p className="validator-physical-address__value" key={index}>
+        <span>{`${address.fullAddress} ${address.us_state.toUpperCase()}, ${address.postal_code}`}</span>
+        {confirmedIcon}
       </p>
     )
   })
