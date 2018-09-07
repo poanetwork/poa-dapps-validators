@@ -71,7 +71,7 @@
     width: 48%;
     font-size: 12px;
 
-    @media (max-width: $mobile-width) {
+    @media (max-width: $tablet-width) {
       float: none;
       width: 100%;
     }
