@@ -57,7 +57,8 @@ export default class ProofOfPhysicalAddress {
 
   /**
    * Given a walletAddress and an array of keccakIdentifiers, return a promise that resolves to an array
-   * of the corresponding physical addresses, or an empty array.
+   * of the corresponding confirmed and unconfirmed physical addresses, or an empty array (unregistered
+   * addresses are not included).
    * @param  {String}  walletAddress
    * @param  {String[]}  keccakIdentifierArray
    * @return {Promise}
@@ -71,8 +72,7 @@ export default class ProofOfPhysicalAddress {
           const addressFound = addressStatusTuple[0]
           const addressIndex = addressStatusTuple[1]
           const addressConfirmed = addressStatusTuple[2]
-          // If addressIndex === 0, it also means the address was not found
-          if (addressFound === false || addressIndex === 0) {
+          if (addressFound === false) {
             return null
           } else {
             return {
