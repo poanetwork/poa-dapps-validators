@@ -202,6 +202,9 @@ class App extends Component {
     this.setState({ form })
   }
   render() {
+    const { netId } = this.props.web3Config
+    const classNameHiddenIfNotCoreNetwork = netId !== '99' ? 'display-none' : ''
+
     if (!this.isValidVotingKey) {
       return null
     }
@@ -248,6 +251,11 @@ class App extends Component {
         <button onClick={this.onClick} className="create-keys-button">
           {BtnAction} Metadata
         </button>
+        <p className={`create-keys-address-note ${classNameHiddenIfNotCoreNetwork}`}>
+          <i className="create-keys-address-note__icon-info" />
+          The entered address will be displayed as Unconfirmed and will be used if you don't have Registered Address(es)
+          in PoPA DApp. You have to use PoPA to register and confirm your address(es).
+        </p>
       </div>
     )
 
