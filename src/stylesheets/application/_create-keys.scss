@@ -19,6 +19,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    flex-wrap: wrap;
 
     @media (max-width: $tablet-width) {
       flex-direction: column;
@@ -26,6 +27,7 @@
 
     &-i {
       width: 48%;
+      flex-shrink: 0;
 
       @media (max-width: $tablet-width) {
         width: 100%;
