@@ -264,7 +264,11 @@ class App extends Component {
         <p className={`create-keys-address-note ${classNameHiddenIfNotCoreNetwork}`}>
           <i className="create-keys-address-note__icon-info" />
           The entered address will be displayed as Unconfirmed and will be used if you don't have Registered Address(es)
-          in PoPA DApp. You have to use PoPA to register and confirm your address(es).
+          in{' '}
+          <a href="http://popa.poa.network/" target="_blank" rel="noopener noreferrer">
+            PoPA DApp
+          </a>
+          . You have to use PoPA to register and confirm your address(es).
         </p>
       </div>
     )
