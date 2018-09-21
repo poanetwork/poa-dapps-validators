@@ -37,7 +37,7 @@ const PhysicalAddressValue = ({ addresses }) => {
 
     return (
       <p className="validator-physical-address__value" key={index}>
-        <span>{`${address.fullAddress} ${address.us_state.toUpperCase()}, ${address.postal_code}`}</span>
+        <span>{`${address.fullAddress}, ${address.us_state.toUpperCase()}, ${address.postal_code}`}</span>
         {confirmedIcon}
       </p>
     )
