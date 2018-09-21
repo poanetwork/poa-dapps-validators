@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ValidatorPhysicalAddresses from './ValidatorPhysicalAddresses'
 
 class Validator extends Component {
   constructor(props) {
@@ -13,12 +14,10 @@ class Validator extends Component {
 
   render() {
     let {
+      physicalAddresses,
       address,
       firstName,
       lastName,
-      fullAddress,
-      us_state,
-      postal_code,
       licenseId,
       expirationDate,
       createdDate,
@@ -64,18 +63,7 @@ class Validator extends Component {
                   {firstName} {lastName}
                 </p>
               </div>
-              <div className="validators-table-i">
-                <p>Address</p>
-                <p>{fullAddress}</p>
-              </div>
-              <div className="validators-table-i">
-                <p>State</p>
-                <p>{us_state}</p>
-              </div>
-              <div className="validators-table-i">
-                <p>Zip Code</p>
-                <p>{postal_code}</p>
-              </div>
+              <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} />
             </div>
           </div>
           <div className="validators-license right">

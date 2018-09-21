@@ -5,7 +5,8 @@ constants.addressesSourceFile = 'contracts.json'
 constants.ABIsSources = {
   KeysManager: 'KeysManager.abi.json',
   PoaNetworkConsensus: 'PoaNetworkConsensus.abi.json',
-  ValidatorMetadata: 'ValidatorMetadata.abi.json'
+  ValidatorMetadata: 'ValidatorMetadata.abi.json',
+  ProofOfPhysicalAddress: 'ProofOfPhysicalAddress.abi.json'
 }
 constants.userDeniedTransactionPattern = 'User denied transaction'
 

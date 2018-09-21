@@ -1,6 +1,9 @@
 html,
 body,
-p, h1, h2, h3 {
+p,
+h1,
+h2,
+h3 {
   margin: 0;
   padding: 0;
   font-weight: normal;
@@ -47,4 +50,24 @@ body {
 
 .right {
   float: right;
+}
+
+.text-capitalized {
+  text-transform: capitalize;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.display-none {
+  display: none;
 }

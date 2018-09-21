@@ -1,0 +1,42 @@
+.validator-physical-address {
+  display: flex;
+
+  &__title {
+    flex-shrink: 0;
+    padding-right: 10px;
+  }
+
+  &__value {
+    display: flex;
+    height: 19px;
+    line-height: 19px;
+    margin-bottom: 21px;
+    text-align: right;
+    text-transform: capitalize;
+
+    span {
+      flex-grow: 1;
+    }
+
+    .data-icon--confirmed,
+    .data-icon--unconfirmed {
+      flex-shrink: 0;
+      line-height: 1em;
+      margin-left: 10px;
+      margin-top: -2px;
+    }
+  }
+}
+
+.validator-physical-address--multiple {
+  display: block;
+
+  .validator-physical-address__title {
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  .validator-physical-address__value {
+    text-align: left;
+  }
+}

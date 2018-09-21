@@ -202,6 +202,9 @@ class App extends Component {
     this.setState({ form })
   }
   render() {
+    const { netId } = this.props.web3Config
+    const classNameHiddenIfNotCoreNetwork = netId !== '99' ? 'display-none' : ''
+
     if (!this.isValidVotingKey) {
       return null
     }
@@ -224,10 +227,16 @@ class App extends Component {
           <div className="create-keys-form-i">
             <label htmlFor="first-name">First name</label>
             <input type="text" id="firstName" value={this.state.form.firstName} onChange={this.onChangeFormField} />
-            <label htmlFor="address">Address</label>
-            <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
-            <label htmlFor="zip">Zip code</label>
-            <input type="text" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField} />
+          </div>
+          <div className="create-keys-form-i">
+            <label htmlFor="last-name">Last name</label>
+            <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField} />
+          </div>
+          <div className="create-keys-form-i">
+            <label htmlFor="licenseId">License id</label>
+            <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField} />
+          </div>
+          <div className="create-keys-form-i">
             <label htmlFor="expirationDate">License expiration</label>
             <input
               type="date"
@@ -237,17 +246,30 @@ class App extends Component {
             />
           </div>
           <div className="create-keys-form-i">
-            <label htmlFor="last-name">Last name</label>
-            <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField} />
+            <label htmlFor="address">Address</label>
+            <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
+          </div>
+          <div className="create-keys-form-i">
             <label htmlFor="state">State</label>
             <input type="text" id="us_state" value={this.state.form.us_state} onChange={this.onChangeFormField} />
-            <label htmlFor="licenseId">License id</label>
-            <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField} />
+          </div>
+          <div className="create-keys-form-i">
+            <label htmlFor="zip">Zip code</label>
+            <input type="text" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField} />
           </div>
         </form>
         <button onClick={this.onClick} className="create-keys-button">
           {BtnAction} Metadata
         </button>
+        <p className={`create-keys-address-note ${classNameHiddenIfNotCoreNetwork}`}>
+          <i className="create-keys-address-note__icon-info" />
+          The entered address will be displayed as Unconfirmed and will be used if you don't have Registered Address(es)
+          in{' '}
+          <a href="http://popa.poa.network/" target="_blank" rel="noopener noreferrer">
+            PoPA DApp
+          </a>
+          . You have to use PoPA to register and confirm your address(es).
+        </p>
       </div>
     )
 

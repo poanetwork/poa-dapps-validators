@@ -71,7 +71,7 @@
     width: 48%;
     font-size: 12px;
 
-    @media (max-width: $mobile-width) {
+    @media (max-width: $tablet-width) {
       float: none;
       width: 100%;
     }
@@ -129,5 +129,30 @@
 
   &-val {
     font-weight: 700;
+  }
+}
+
+// Icon that represents unconfirmed/confirmed validator's data
+%data-icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  display: inline-block;
+  height: 24px;
+  vertical-align: middle;
+  width: 24px;
+}
+
+.data-icon {
+  &--unconfirmed {
+    @extend %data-icon;
+    background-color: #e5e5e5;
+    background-image: url('/images/unconfirmed.svg');
+  }
+
+  &--confirmed {
+    @extend %data-icon;
+    background-color: #60db97;
+    background-image: url('/images/confirmed.svg');
   }
 }
