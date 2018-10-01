@@ -7,6 +7,7 @@ export default class AllValidators extends Component {
     super(props)
     this.getMetadataContract = this.getMetadataContract.bind(this)
     this.getProofOfPhysicalAddressContract = this.getProofOfPhysicalAddressContract.bind(this)
+    this.getKeysManagerContract = this.getKeysManagerContract.bind(this)
     this.state = {
       validators: [],
       loading: true
@@ -46,8 +47,26 @@ export default class AllValidators extends Component {
       if (popa === null) {
         throw new Error(`ProofOfPhysicalAddress not deployed in the current network`)
       }
-      const validatorsWalletAddresses = validators.map(validator => validator.address)
-      const validatorsPhysicalAddresses = await popa.getPhysicalAddressesOfWalletAddressArray(validatorsWalletAddresses)
+
+      // Get each validator voting key, default to its mining key if no voting key (Master of Ceremony case)
+      let validatorsVotingOrMiningKeys = await Promise.all(
+        validators.map((validator, index) =>
+          this.getKeysManagerContract()
+            .getVotingByMining(validator.address)
+            .then(votingKey => {
+              const isNotVotingKey =
+                votingKey === '0x0000000000000000000000000000000000000000' ||
+                votingKey === '0x00' ||
+                votingKey === '0x0' ||
+                votingKey === '0x'
+              return isNotVotingKey ? validators[index].address : votingKey
+            })
+        )
+      )
+
+      const validatorsPhysicalAddresses = await popa.getPhysicalAddressesOfWalletAddressArray(
+        validatorsVotingOrMiningKeys
+      )
       augmentedValidators = validatorsPhysicalAddresses.map((physicalAddresses, index) => {
         const validator = validators[index]
         let validatorPhysicalAddresses
@@ -106,6 +125,9 @@ export default class AllValidators extends Component {
   }
   getProofOfPhysicalAddressContract() {
     return this.props.web3Config.proofOfPhysicalAddressContract
+  }
+  getKeysManagerContract() {
+    return this.props.web3Config.keysManager
   }
   render() {
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
