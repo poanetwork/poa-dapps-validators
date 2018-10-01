@@ -10,10 +10,11 @@ import NavigationLinks from './NavigationLinks'
 import MobileMenuLinks from './MobileMenuLinks'
 
 const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, baseRootPath, navigationData }) => {
-  const headerClassName = netId === '77' ? 'sokol' : ''
-  const logoImageName = netId === '77' ? logoSokol : logoBase
-  const menuIcon = netId === '77' ? menuIconSokol : menuIconBase
-  const menuOpenIcon = netId === '77' ? menuOpenIconSokol : menuOpenIconBase
+  const isTestnet = netId === '77' || netId === '79'
+  const headerClassName = isTestnet ? 'sokol' : ''
+  const logoImageName = isTestnet ? logoSokol : logoBase
+  const menuIcon = isTestnet ? menuIconSokol : menuIconBase
+  const menuOpenIcon = isTestnet ? menuOpenIconSokol : menuOpenIconBase
 
   let select
 

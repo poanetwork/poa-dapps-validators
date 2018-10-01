@@ -214,7 +214,8 @@ class AppMainRouter extends Component {
     )
   }
   getNetIdClass() {
-    return this.state.netId === '77' ? 'sokol' : ''
+    const netId = this.state.netId
+    return netId === '77' || netId === '79' ? 'sokol' : ''
   }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })

@@ -15,8 +15,14 @@ export default web3Config => {
     case '77':
       branch = 'sokol'
       break
+    case '79':
+      branch = 'dai-test'
+      break
     case '99':
       branch = 'core'
+      break
+    case '100':
+      branch = 'dai'
       break
     default:
       branch = 'core'

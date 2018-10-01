@@ -3,7 +3,8 @@ import moment from 'moment'
 import Socials from './Socials'
 
 const Footer = ({ netId }) => {
-  const footerClassName = netId === '77' ? 'sokol' : ''
+  const isTestnet = netId === '77' || netId === '79'
+  const footerClassName = isTestnet ? 'sokol' : ''
 
   return (
     <footer className={`footer ${footerClassName}`}>

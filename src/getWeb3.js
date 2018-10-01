@@ -1,6 +1,8 @@
 import Web3 from 'web3'
 const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
 const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
+const POA_DAI = { RPC_URL: 'https://dai.poa.network', netIdName: 'DAI', netId: '100' }
+const POA_DAI_TEST = { RPC_URL: 'https://dai-test.poa.network', netIdName: 'DAI-TEST', netId: '79' }
 let getWeb3 = () => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -17,9 +19,17 @@ let getWeb3 = () => {
           let netIdName
           console.log('netId', netId)
           switch (netId) {
+            case '100':
+              netIdName = 'Dai'
+              console.log('This is Dai', netId)
+              break
             case '99':
               netIdName = 'Core'
               console.log('This is Core', netId)
+              break
+            case '79':
+              netIdName = 'Dai-Test'
+              console.log('This is Dai-Test', netId)
               break
             case '77':
               netIdName = 'Sokol'
@@ -51,7 +61,16 @@ let getWeb3 = () => {
       } else {
         // Fallback to localhost if no web3 injection.
 
-        const network = window.location.host.indexOf('sokol') !== -1 ? POA_SOKOL : POA_CORE
+        let network
+        if (window.location.host.indexOf('sokol') !== -1) {
+          network = POA_SOKOL
+        } else if (window.location.host.indexOf('dai-test') !== -1) {
+          network = POA_DAI_TEST
+        } else if (window.location.host.indexOf('dai') !== -1) {
+          network = POA_DAI
+        } else {
+          network = POA_CORE
+        }
 
         document.title = `${network.netIdName} - POA validators dApp`
         const provider = new Web3.providers.HttpProvider(network.RPC_URL)
@@ -78,8 +97,14 @@ const setWeb3 = netId => {
     case '77':
       network = POA_SOKOL
       break
+    case '79':
+      network = POA_DAI_TEST
+      break
     case '99':
       network = POA_CORE
+      break
+    case '100':
+      network = POA_DAI
       break
     default:
       network = POA_CORE
