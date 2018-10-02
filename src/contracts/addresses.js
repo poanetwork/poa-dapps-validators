@@ -1,3 +1,4 @@
+import { constants } from '../constants'
 import helpers from './helpers'
 import helpersGlobal from '../helpers'
 import messages from '../messages'
@@ -12,11 +13,17 @@ export default web3Config => {
   let branch
 
   switch (web3Config.netId) {
-    case '77':
+    case constants.NETID_SOKOL:
       branch = 'sokol'
       break
-    case '99':
+    case constants.NETID_DAI_TEST:
+      branch = 'dai-test'
+      break
+    case constants.NETID_CORE:
       branch = 'core'
+      break
+    case constants.NETID_DAI:
+      branch = 'dai'
       break
     default:
       branch = 'core'

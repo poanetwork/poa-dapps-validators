@@ -1,9 +1,10 @@
 import React from 'react'
 import moment from 'moment'
 import Socials from './Socials'
+import { isTestnet } from './helpers'
 
 const Footer = ({ netId }) => {
-  const footerClassName = netId === '77' ? 'sokol' : ''
+  const footerClassName = isTestnet(netId) ? 'sokol' : ''
 
   return (
     <footer className={`footer ${footerClassName}`}>

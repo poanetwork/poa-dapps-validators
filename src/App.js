@@ -203,7 +203,7 @@ class App extends Component {
   }
   render() {
     const { netId } = this.props.web3Config
-    const classNameHiddenIfNotCoreNetwork = netId !== '99' ? 'display-none' : ''
+    const classNameHiddenIfNotCoreNetwork = netId !== constants.NETID_CORE ? 'display-none' : ''
 
     if (!this.isValidVotingKey) {
       return null
