@@ -15,42 +15,41 @@ export default class ProofOfPhysicalAddress {
     let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 
-    this.getPhysicalAddressesOfWalletAddressArray = this.getPhysicalAddressesOfWalletAddressArray.bind(this)
+    this.getPhysicalAddressesOfWalletAddress = this.getPhysicalAddressesOfWalletAddress.bind(this)
     this.getAllEvents = this.getAllEvents.bind(this)
+    this.getAllAddressRegisteredEvents = this.getAllAddressRegisteredEvents.bind(this)
     this.getPhysicalAddressesByWalletAddressAndKeccakIdentifierArray = this.getPhysicalAddressesByWalletAddressAndKeccakIdentifierArray.bind(
       this
     )
   }
 
   /**
-   * Given a wallet address array, return a promise that resolves to an array of physical addresses from
-   * PoPA contract.
-   * @param {String[]} walletAddressArray
+   * Given a wallet address, return a promise that resolves to an array of physical addresses from PoPA contract or null.
+   * If a cached registeredAddressEvents is provided, it will be used to get the corresponding keccakIdentifiers from it.
+   * @param {String} walletAddress
+   * @param {Object[]} registeredAddressEvents (optional)
    * @return {Promise}
    */
-  async getPhysicalAddressesOfWalletAddressArray(walletAddressArray) {
-    let result = []
+  async getPhysicalAddressesOfWalletAddress(walletAddress, registeredAddressEvents) {
+    let result = null
     try {
-      const registeredAddressEvents = await this.getAllEvents(REGISTER_ADDRESS_EVENT_NAME)
-      const allPhysicalAddressesPromises = walletAddressArray.map(walletAddress => {
-        let physicalAddresses = null
-        let keccakIdentifiers = registeredAddressEvents
-          .filter(event => event.returnValues.wallet === walletAddress)
-          .map(event => event.returnValues.keccakIdentifier)
+      if (!registeredAddressEvents) {
+        registeredAddressEvents = await this.getAllEvents(REGISTER_ADDRESS_EVENT_NAME)
+      }
 
-        if (keccakIdentifiers.length > 0) {
-          physicalAddresses = this.getPhysicalAddressesByWalletAddressAndKeccakIdentifierArray(
-            walletAddress,
-            keccakIdentifiers
-          ).then(physicalAddresses => {
-            return physicalAddresses.length > 0 ? physicalAddresses : null
-          })
-        }
-        return Promise.resolve(physicalAddresses)
-      })
-      result = await Promise.all(allPhysicalAddressesPromises)
+      let keccakIdentifiers = registeredAddressEvents
+        .filter(event => event.returnValues.wallet === walletAddress)
+        .map(event => event.returnValues.keccakIdentifier)
+
+      if (keccakIdentifiers.length > 0) {
+        let physicalAddresses = await this.getPhysicalAddressesByWalletAddressAndKeccakIdentifierArray(
+          walletAddress,
+          keccakIdentifiers
+        )
+        result = physicalAddresses.length > 0 ? physicalAddresses : result
+      }
     } catch (e) {
-      console.error(`Error in getPhysicalAddressesOfWalletAddressArray`, e)
+      console.error(`Error in getPhysicalAddressesOfWalletAddress`, e)
     }
     return result
   }
@@ -103,5 +102,13 @@ export default class ProofOfPhysicalAddress {
       console.error(e)
     }
     return result
+  }
+
+  /**
+   * Get all addressRegistered event objects.
+   * @return {Promise}
+   */
+  async getAllAddressRegisteredEvents() {
+    return this.getAllEvents(REGISTER_ADDRESS_EVENT_NAME)
   }
 }

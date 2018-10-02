@@ -48,10 +48,11 @@ export default class AllValidators extends Component {
         throw new Error(`ProofOfPhysicalAddress not deployed in the current network`)
       }
 
-      // Get each validator voting key, default to its mining key if no voting key (Master of Ceremony case)
-      let validatorsVotingOrMiningKeys = await Promise.all(
-        validators.map((validator, index) =>
-          this.getKeysManagerContract()
+      // Get each validator's voting & mining key array (if voting key is present set it as the 1st element)
+      let validatorsVotingAndMiningKeys = await Promise.all(
+        validators.map((validator, index) => {
+          const miningKey = validators[index].address
+          return this.getKeysManagerContract()
             .getVotingByMining(validator.address)
             .then(votingKey => {
               const isNotVotingKey =
@@ -59,14 +60,25 @@ export default class AllValidators extends Component {
                 votingKey === '0x00' ||
                 votingKey === '0x0' ||
                 votingKey === '0x'
-              return isNotVotingKey ? validators[index].address : votingKey
+              return isNotVotingKey ? [miningKey] : [votingKey, miningKey]
             })
-        )
+        })
       )
 
-      const validatorsPhysicalAddresses = await popa.getPhysicalAddressesOfWalletAddressArray(
-        validatorsVotingOrMiningKeys
-      )
+      // Get PoPA physical address of validator using voting & mining array
+      const addressRegisteredEvents = await popa.getAllAddressRegisteredEvents()
+      const getValidatorsPhysicalAddressesPromises = validatorsVotingAndMiningKeys.map(validatorKeys => {
+        return popa
+          .getPhysicalAddressesOfWalletAddress(validatorKeys[0], addressRegisteredEvents)
+          .then(getPhysicalAddressesResult => {
+            // If addresses not found and the keys array has an extra element, retry the fetch and return its result
+            return getPhysicalAddressesResult === null && validatorKeys.length > 1
+              ? popa.getPhysicalAddressesOfWalletAddress(validatorKeys[1], addressRegisteredEvents)
+              : getPhysicalAddressesResult
+          })
+      })
+      const validatorsPhysicalAddresses = await Promise.all(getValidatorsPhysicalAddressesPromises)
+
       augmentedValidators = validatorsPhysicalAddresses.map((physicalAddresses, index) => {
         const validator = validators[index]
         let validatorPhysicalAddresses
