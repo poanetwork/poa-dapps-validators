@@ -8,13 +8,15 @@ import menuOpenIconBase from './images/icons/icon-close.svg'
 import menuOpenIconSokol from './images/icons/icon-close-sokol.svg'
 import NavigationLinks from './NavigationLinks'
 import MobileMenuLinks from './MobileMenuLinks'
+import { constants } from './constants'
+import { isTestnet } from './helpers'
 
 const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, baseRootPath, navigationData }) => {
-  const isTestnet = netId === '77' || netId === '79'
-  const headerClassName = isTestnet ? 'sokol' : ''
-  const logoImageName = isTestnet ? logoSokol : logoBase
-  const menuIcon = isTestnet ? menuIconSokol : menuIconBase
-  const menuOpenIcon = isTestnet ? menuOpenIconSokol : menuOpenIconBase
+  const thisIsTestnet = isTestnet(netId)
+  const headerClassName = thisIsTestnet ? 'sokol' : ''
+  const logoImageName = thisIsTestnet ? logoSokol : logoBase
+  const menuIcon = thisIsTestnet ? menuIconSokol : menuIconBase
+  const menuOpenIcon = thisIsTestnet ? menuOpenIconSokol : menuOpenIconBase
 
   let select
 
@@ -31,7 +33,10 @@ const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, b
           width: '150px'
         }}
         clearable={false}
-        options={[{ value: '77', label: 'Network: Sokol' }, { value: '99', label: 'Network: Core' }]}
+        options={[
+          { value: constants.NETID_SOKOL, label: 'Network: Sokol' },
+          { value: constants.NETID_CORE, label: 'Network: Core' }
+        ]}
       />
     )
   }

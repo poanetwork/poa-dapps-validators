@@ -25,13 +25,13 @@ function getABI(branch, contract) {
 
 function getBranch(netId) {
   switch (netId) {
-    case '77':
+    case constants.NETID_SOKOL:
       return 'sokol'
-    case '79':
+    case constants.NETID_DAI_TEST:
       return 'dai-test'
-    case '99':
+    case constants.NETID_CORE:
       return 'core'
-    case '100':
+    case constants.NETID_DAI:
       return 'dai'
     default:
       return 'core'

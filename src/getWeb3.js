@@ -1,8 +1,11 @@
 import Web3 from 'web3'
-const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: '99' }
-const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: '77' }
-const POA_DAI = { RPC_URL: 'https://dai.poa.network', netIdName: 'DAI', netId: '100' }
-const POA_DAI_TEST = { RPC_URL: 'https://dai-test.poa.network', netIdName: 'DAI-TEST', netId: '79' }
+import { constants } from './constants'
+
+const POA_CORE = { RPC_URL: 'https://core.poa.network', netIdName: 'CORE', netId: constants.NETID_CORE }
+const POA_SOKOL = { RPC_URL: 'https://sokol.poa.network', netIdName: 'SOKOL', netId: constants.NETID_SOKOL }
+const POA_DAI = { RPC_URL: 'https://dai.poa.network', netIdName: 'DAI', netId: constants.NETID_DAI }
+const POA_DAI_TEST = { RPC_URL: 'https://dai-test.poa.network', netIdName: 'DAI-TEST', netId: constants.NETID_DAI_TEST }
+
 let getWeb3 = () => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -19,19 +22,19 @@ let getWeb3 = () => {
           let netIdName
           console.log('netId', netId)
           switch (netId) {
-            case '100':
+            case constants.NETID_DAI:
               netIdName = 'Dai'
               console.log('This is Dai', netId)
               break
-            case '99':
+            case constants.NETID_CORE:
               netIdName = 'Core'
               console.log('This is Core', netId)
               break
-            case '79':
+            case constants.NETID_DAI_TEST:
               netIdName = 'Dai-Test'
               console.log('This is Dai-Test', netId)
               break
-            case '77':
+            case constants.NETID_SOKOL:
               netIdName = 'Sokol'
               console.log('This is Sokol', netId)
               break
@@ -94,16 +97,16 @@ let getWeb3 = () => {
 const setWeb3 = netId => {
   let network
   switch (netId) {
-    case '77':
+    case constants.NETID_SOKOL:
       network = POA_SOKOL
       break
-    case '79':
+    case constants.NETID_DAI_TEST:
       network = POA_DAI_TEST
       break
-    case '99':
+    case constants.NETID_CORE:
       network = POA_CORE
       break
-    case '100':
+    case constants.NETID_DAI:
       network = POA_DAI
       break
     default:

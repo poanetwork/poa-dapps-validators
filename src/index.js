@@ -16,6 +16,7 @@ import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './registerServiceWorker'
 import { Router, Route } from 'react-router-dom'
 import { messages } from './messages'
+import { constants } from './constants'
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators'
@@ -215,7 +216,7 @@ class AppMainRouter extends Component {
   }
   getNetIdClass() {
     const netId = this.state.netId
-    return netId === '77' || netId === '79' ? 'sokol' : ''
+    return netId === constants.NETID_SOKOL || netId === constants.NETID_DAI_TEST ? 'sokol' : ''
   }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
