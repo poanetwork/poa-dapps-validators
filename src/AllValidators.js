@@ -7,6 +7,7 @@ export default class AllValidators extends Component {
     super(props)
     this.getMetadataContract = this.getMetadataContract.bind(this)
     this.getProofOfPhysicalAddressContract = this.getProofOfPhysicalAddressContract.bind(this)
+    this.getKeysManagerContract = this.getKeysManagerContract.bind(this)
     this.state = {
       validators: [],
       loading: true
@@ -46,8 +47,38 @@ export default class AllValidators extends Component {
       if (popa === null) {
         throw new Error(`ProofOfPhysicalAddress not deployed in the current network`)
       }
-      const validatorsWalletAddresses = validators.map(validator => validator.address)
-      const validatorsPhysicalAddresses = await popa.getPhysicalAddressesOfWalletAddressArray(validatorsWalletAddresses)
+
+      // Get each validator's voting & mining key array (if voting key is present set it as the 1st element)
+      let validatorsVotingAndMiningKeys = await Promise.all(
+        validators.map((validator, index) => {
+          const miningKey = validators[index].address
+          return this.getKeysManagerContract()
+            .getVotingByMining(validator.address)
+            .then(votingKey => {
+              const isNotVotingKey =
+                votingKey === '0x0000000000000000000000000000000000000000' ||
+                votingKey === '0x00' ||
+                votingKey === '0x0' ||
+                votingKey === '0x'
+              return isNotVotingKey ? [miningKey] : [votingKey, miningKey]
+            })
+        })
+      )
+
+      // Get PoPA physical address of validator using voting & mining array
+      const addressRegisteredEvents = await popa.getAllAddressRegisteredEvents()
+      const getValidatorsPhysicalAddressesPromises = validatorsVotingAndMiningKeys.map(validatorKeys => {
+        return popa
+          .getPhysicalAddressesOfWalletAddress(validatorKeys[0], addressRegisteredEvents)
+          .then(getPhysicalAddressesResult => {
+            // If addresses not found and the keys array has an extra element, retry the fetch and return its result
+            return getPhysicalAddressesResult === null && validatorKeys.length > 1
+              ? popa.getPhysicalAddressesOfWalletAddress(validatorKeys[1], addressRegisteredEvents)
+              : getPhysicalAddressesResult
+          })
+      })
+      const validatorsPhysicalAddresses = await Promise.all(getValidatorsPhysicalAddressesPromises)
+
       augmentedValidators = validatorsPhysicalAddresses.map((physicalAddresses, index) => {
         const validator = validators[index]
         let validatorPhysicalAddresses
@@ -106,6 +137,9 @@ export default class AllValidators extends Component {
   }
   getProofOfPhysicalAddressContract() {
     return this.props.web3Config.proofOfPhysicalAddressContract
+  }
+  getKeysManagerContract() {
+    return this.props.web3Config.keysManager
   }
   render() {
     const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
