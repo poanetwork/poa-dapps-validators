@@ -1,18 +1,19 @@
 import Web3 from 'web3'
 import helpers from './helpers'
+import { constants } from '../constants'
 
 const REGISTER_ADDRESS_EVENT_NAME = 'LogAddressRegistered'
 
 export default class ProofOfPhysicalAddress {
   async init({ web3, netId, addresses }) {
-    let web3_10 = new Web3(web3.currentProvider)
+    const web3_10 = new Web3(web3.currentProvider)
     const { PROOF_OF_PHYSICAL_ADDRESS } = addresses
 
-    const branch = helpers.getBranch(netId)
+    const branch = constants.NETWORKS[netId].BRANCH
     if (branch !== 'core') {
       throw new Error(`ProofOfPhysicalAddress contract not deployed on network "${branch}"`)
     }
-    let proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
+    const proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3_10.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 
     this.getPhysicalAddressesOfWalletAddress = this.getPhysicalAddressesOfWalletAddress.bind(this)

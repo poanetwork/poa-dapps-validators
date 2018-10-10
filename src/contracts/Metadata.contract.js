@@ -4,6 +4,7 @@ import moment from 'moment'
 import helpers from './helpers'
 import helpersGlobal from '../helpers'
 import { messages } from '../messages'
+import { constants } from '../constants'
 
 var toAscii = function(hex) {
   var str = '',
@@ -25,9 +26,8 @@ export default class Metadata {
     this.web3_10 = new Web3(web3.currentProvider)
     const { METADATA_ADDRESS, MOC } = addresses
     console.log('Metadata contract Address: ', METADATA_ADDRESS)
-    const branch = helpers.getBranch(netId)
 
-    let MetadataAbi = await helpers.getABI(branch, 'ValidatorMetadata')
+    const MetadataAbi = await helpers.getABI(constants.NETWORKS[netId].BRANCH, 'ValidatorMetadata')
 
     this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS)
     this.MOC_ADDRESS = MOC

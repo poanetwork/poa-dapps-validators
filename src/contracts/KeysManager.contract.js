@@ -1,4 +1,5 @@
 import Web3 from 'web3'
+import { constants } from '../constants'
 import helpers from './helpers'
 
 export default class KeysManager {
@@ -6,9 +7,8 @@ export default class KeysManager {
     let web3_10 = new Web3(web3.currentProvider)
     const { KEYS_MANAGER_ADDRESS } = addresses
     console.log('Keys Manager address ', KEYS_MANAGER_ADDRESS)
-    const branch = helpers.getBranch(netId)
 
-    let KeysManagerAbi = await helpers.getABI(branch, 'KeysManager')
+    let KeysManagerAbi = await helpers.getABI(constants.NETWORKS[netId].BRANCH, 'KeysManager')
 
     this.keysInstance = new web3_10.eth.Contract(KeysManagerAbi, KEYS_MANAGER_ADDRESS)
   }

@@ -10,25 +10,7 @@ import messages from '../messages'
 }*/
 
 export default web3Config => {
-  let branch
-
-  switch (web3Config.netId) {
-    case constants.NETID_SOKOL:
-      branch = 'sokol'
-      break
-    case constants.NETID_DAI_TEST:
-      branch = 'dai-test'
-      break
-    case constants.NETID_CORE:
-      branch = 'core'
-      break
-    case constants.NETID_DAI:
-      branch = 'dai'
-      break
-    default:
-      branch = 'core'
-      break
-  }
+  const branch = constants.NETWORKS[web3Config.netId].BRANCH
   return new Promise((resolve, reject) => {
     fetch(helpers.addressesURL(branch))
       .then(response => {

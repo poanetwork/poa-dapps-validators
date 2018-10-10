@@ -75,38 +75,15 @@ class AppMainRouter extends Component {
       })
       .then(async config => {
         const { web3Config, addresses } = config
-        const keysManager = new KeysManager()
-        await keysManager.init({
+        await this.loadContracts({
           web3: web3Config.web3Instance,
           netId: web3Config.netId,
           addresses
         })
-        const metadataContract = new Metadata()
-        await metadataContract.init({
-          web3: web3Config.web3Instance,
-          netId: web3Config.netId,
-          addresses
-        })
-        let proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
-        try {
-          await proofOfPhysicalAddressContract.init({
-            web3: web3Config.web3Instance,
-            netId: web3Config.netId,
-            addresses
-          })
-        } catch (e) {
-          console.error('Error initializing ProofOfPhysicalAddress', e)
-          proofOfPhysicalAddressContract = null
-        }
         this.setState({
           votingKey: web3Config.defaultAccount,
-          miningKey: await keysManager.miningKeyByVoting(web3Config.defaultAccount),
-          keysManager,
-          metadataContract,
-          proofOfPhysicalAddressContract,
-          loading: false,
-          injectedWeb3: web3Config.injectedWeb3,
-          netId: web3Config.netId
+          miningKey: await this.state.keysManager.miningKeyByVoting(web3Config.defaultAccount),
+          injectedWeb3: web3Config.injectedWeb3
         })
       })
       .catch(error => {
@@ -114,6 +91,38 @@ class AppMainRouter extends Component {
         this.setState({ loading: false, error: true })
         helpers.generateAlert('error', 'Error!', error.message)
       })
+  }
+  async loadContracts({ web3, netId, addresses }) {
+    const keysManager = new KeysManager()
+    await keysManager.init({
+      web3,
+      netId,
+      addresses
+    })
+    const metadataContract = new Metadata()
+    await metadataContract.init({
+      web3,
+      netId,
+      addresses
+    })
+    let proofOfPhysicalAddressContract = new ProofOfPhysicalAddress()
+    try {
+      await proofOfPhysicalAddressContract.init({
+        web3,
+        netId,
+        addresses
+      })
+    } catch (e) {
+      console.error('Error initializing ProofOfPhysicalAddress', e)
+      proofOfPhysicalAddressContract = null
+    }
+    this.setState({
+      keysManager,
+      metadataContract,
+      proofOfPhysicalAddressContract,
+      loading: false,
+      netId
+    })
   }
   onRouteChange() {
     const setMetadata = baseRootPath + '/set'
@@ -215,32 +224,24 @@ class AppMainRouter extends Component {
     )
   }
   getNetIdClass() {
-    const netId = this.state.netId
-    return netId === constants.NETID_SOKOL || netId === constants.NETID_DAI_TEST ? 'sokol' : ''
+    const { netId } = this.state
+    if (netId in constants.NETWORKS) {
+      return constants.NETWORKS[netId].TESTNET ? 'sokol' : ''
+    }
+    return ''
   }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
   }
   async onNetworkChange(e) {
+    this.setState({ loading: true })
+
     const netId = e.value
     const web3 = setWeb3(netId)
 
     networkAddresses({ netId }).then(async config => {
       const { addresses } = config
-      const keysManager = new KeysManager()
-
-      await keysManager.init({
-        web3,
-        netId,
-        addresses
-      })
-      const metadataContract = new Metadata()
-      await metadataContract.init({
-        web3,
-        netId,
-        addresses
-      })
-      this.setState({ netId: e.value, keysManager, metadataContract })
+      await this.loadContracts({ web3, netId, addresses })
     })
   }
   render() {
