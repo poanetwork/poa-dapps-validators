@@ -2,14 +2,6 @@ import Web3 from 'web3'
 import { netIdByName } from './helpers'
 import { constants } from './constants'
 
-let getNetId = web3 => {
-  return new Promise(function(resolve, reject) {
-    web3.version.getNetwork((err, netId) => {
-      resolve(netId)
-    })
-  })
-}
-
 let getWeb3 = () => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -18,7 +10,7 @@ let getWeb3 = () => {
 
       // Checking if Web3 has been injected by the browser (Mist/MetaMask)
       if (window.ethereum) {
-        web3 = new window.Web3(window.ethereum)
+        web3 = new Web3(window.ethereum)
         console.log('Injected web3 detected.')
         try {
           await window.ethereum.enable()
@@ -27,7 +19,7 @@ let getWeb3 = () => {
           return
         }
       } else if (window.web3) {
-        web3 = new window.Web3(window.web3.currentProvider)
+        web3 = new Web3(window.web3.currentProvider)
         console.log('Injected web3 detected.')
       }
 
@@ -38,7 +30,7 @@ let getWeb3 = () => {
       let defaultAccount = null
 
       if (web3) {
-        netId = await getNetId(web3)
+        netId = await web3.eth.net.getId()
         console.log('netId', netId)
 
         if (!(netId in constants.NETWORKS)) {

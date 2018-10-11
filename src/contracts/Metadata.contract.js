@@ -1,5 +1,4 @@
 import PoaConsensus from './PoaConsensus.contract'
-import Web3 from 'web3'
 import moment from 'moment'
 import helpers from './helpers'
 import helpersGlobal from '../helpers'
@@ -23,18 +22,20 @@ var toAscii = function(hex) {
 
 export default class Metadata {
   async init({ web3, netId, addresses }) {
-    this.web3_10 = new Web3(web3.currentProvider)
+    this.web3 = web3
+    this.gasPrice = web3.utils.toWei('2', 'gwei')
+
     const { METADATA_ADDRESS, MOC } = addresses
     console.log('Metadata contract Address: ', METADATA_ADDRESS)
 
     const MetadataAbi = await helpers.getABI(constants.NETWORKS[netId].BRANCH, 'ValidatorMetadata')
 
-    this.metadataInstance = new this.web3_10.eth.Contract(MetadataAbi, METADATA_ADDRESS)
+    this.metadataInstance = new web3.eth.Contract(MetadataAbi, METADATA_ADDRESS)
     this.MOC_ADDRESS = MOC
     this.addresses = addresses
 
     const poaInstance = new PoaConsensus()
-    await poaInstance.init({ web3: this.web3_10, netId, addresses })
+    await poaInstance.init({ web3, netId, addresses })
     this.mocRemoved = await poaInstance.isMasterOfCeremonyRemoved()
     this.miningKeys = await poaInstance.getValidators()
   }
@@ -50,16 +51,15 @@ export default class Metadata {
     hasData
   }) {
     let methodToCall = hasData ? 'changeRequest' : 'createMetadata'
-    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
     return await this.metadataInstance.methods[methodToCall](
-      this.web3_10.utils.fromAscii(firstName),
-      this.web3_10.utils.fromAscii(lastName),
-      this.web3_10.utils.fromAscii(licenseId),
+      this.web3.utils.fromAscii(firstName),
+      this.web3.utils.fromAscii(lastName),
+      this.web3.utils.fromAscii(licenseId),
       fullAddress,
-      this.web3_10.utils.fromAscii(state),
-      this.web3_10.utils.fromAscii(zipcode),
+      this.web3.utils.fromAscii(state),
+      this.web3.utils.fromAscii(zipcode),
       expirationDate
-    ).send({ from: votingKey, gasPrice })
+    ).send({ from: votingKey, gasPrice: this.gasPrice })
   }
 
   getMocData() {
@@ -180,10 +180,9 @@ export default class Metadata {
           Please ask other validators to verify your new information.`
       }
     }
-    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
     return await this.metadataInstance.methods
       .confirmPendingChange(miningKeyToConfirm)
-      .send({ from: senderVotingKey, gasPrice })
+      .send({ from: senderVotingKey, gasPrice: this.gasPrice })
   }
 
   async getConfirmations({ miningKey }) {
@@ -208,7 +207,8 @@ export default class Metadata {
           The minimum threshold to finalize is ${getMinThreshold}.`
       }
     }
-    const gasPrice = this.web3_10.utils.toWei('2', 'gwei')
-    return await this.metadataInstance.methods.finalize(miningKeyToConfirm).send({ from: senderVotingKey, gasPrice })
+    return await this.metadataInstance.methods
+      .finalize(miningKeyToConfirm)
+      .send({ from: senderVotingKey, gasPrice: this.gasPrice })
   }
 }

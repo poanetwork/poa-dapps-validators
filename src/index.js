@@ -75,7 +75,7 @@ class AppMainRouter extends Component {
       })
       .then(async config => {
         const { web3Config, addresses } = config
-        await this.loadContracts({
+        await this.initContracts({
           web3: web3Config.web3Instance,
           netId: web3Config.netId,
           addresses
@@ -92,7 +92,7 @@ class AppMainRouter extends Component {
         helpers.generateAlert('error', 'Error!', error.message)
       })
   }
-  async loadContracts({ web3, netId, addresses }) {
+  async initContracts({ web3, netId, addresses }) {
     const keysManager = new KeysManager()
     await keysManager.init({
       web3,
@@ -241,12 +241,10 @@ class AppMainRouter extends Component {
 
     networkAddresses({ netId }).then(async config => {
       const { addresses } = config
-      await this.loadContracts({ web3, netId, addresses })
+      await this.initContracts({ web3, netId, addresses })
     })
   }
   render() {
-    console.log('v2.09')
-
     const search = this.state.showSearch ? (
       <div className={`search-container ${this.getNetIdClass()}`}>
         <div className="container">

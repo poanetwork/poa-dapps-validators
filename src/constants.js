@@ -25,7 +25,7 @@ constants.NETWORKS = {
   },
   '79': {
     NAME: 'Dai-Test',
-    RPC: 'https://dai-test.poa.network',
+    RPC: 'http://40.112.48.125',
     BRANCH: 'dai-test',
     TESTNET: true
   },
