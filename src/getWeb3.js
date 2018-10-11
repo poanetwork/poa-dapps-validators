@@ -44,7 +44,9 @@ let getWeb3 = () => {
           console.log(`This is ${netIdName}`)
         }
 
-        defaultAccount = web3.eth.defaultAccount || null
+        const accounts = await web3.eth.getAccounts()
+
+        defaultAccount = accounts[0] || null
       } else {
         // Fallback to localhost if no web3 injection.
 
