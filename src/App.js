@@ -152,7 +152,7 @@ class App extends Component {
       const isValid = await this.getKeysManager().isVotingActive(votingKey)
       console.log(isValid)
       if (isValid) {
-        // add loading screen
+        //   // add loading screen
         await this.sendTxToContract()
       } else {
         this.setState({ loading: false })
@@ -203,7 +203,7 @@ class App extends Component {
   }
   render() {
     const { netId } = this.props.web3Config
-    const classNameHiddenIfNotCoreNetwork = netId !== helpers.netIdByName('core') ? 'display-none' : ''
+    const classNameHiddenIfNotCoreNetwork = netId !== constants.NETID_CORE ? 'display-none' : ''
 
     if (!this.isValidVotingKey) {
       return null

@@ -9,20 +9,16 @@ import menuOpenIconSokol from './images/icons/icon-close-sokol.svg'
 import NavigationLinks from './NavigationLinks'
 import MobileMenuLinks from './MobileMenuLinks'
 import { constants } from './constants'
+import { isTestnet } from './helpers'
 
 const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, baseRootPath, navigationData }) => {
-  const thisIsTestnet = netId in constants.NETWORKS && constants.NETWORKS[netId].TESTNET
+  const thisIsTestnet = isTestnet(netId)
   const headerClassName = thisIsTestnet ? 'sokol' : ''
   const logoImageName = thisIsTestnet ? logoSokol : logoBase
   const menuIcon = thisIsTestnet ? menuIconSokol : menuIconBase
   const menuOpenIcon = thisIsTestnet ? menuOpenIconSokol : menuOpenIconBase
 
   let select
-  let options = []
-
-  for (const _netId in constants.NETWORKS) {
-    options.push({ value: _netId, label: `Network: ${constants.NETWORKS[_netId].NAME}` })
-  }
 
   if (!injectedWeb3) {
     select = (
@@ -37,7 +33,10 @@ const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, b
           width: '150px'
         }}
         clearable={false}
-        options={options}
+        options={[
+          { value: constants.NETID_SOKOL, label: 'Network: Sokol' },
+          { value: constants.NETID_CORE, label: 'Network: Core' }
+        ]}
       />
     )
   }
