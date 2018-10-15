@@ -23,26 +23,10 @@ function getABI(branch, contract) {
   })
 }
 
-function getBranch(netId) {
-  switch (netId) {
-    case constants.NETID_SOKOL:
-      return 'sokol'
-    case constants.NETID_DAI_TEST:
-      return 'dai-test'
-    case constants.NETID_CORE:
-      return 'core'
-    case constants.NETID_DAI:
-      return 'dai'
-    default:
-      return 'core'
-  }
-}
-
 const helpers = {
   addressesURL,
   ABIURL,
-  getABI,
-  getBranch
+  getABI
 }
 
 export default helpers
