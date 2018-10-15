@@ -11,17 +11,11 @@ function generateAlert(icon, title, msg) {
   })
 }
 
-function netIdByName(netName) {
-  const netNameLowerCase = netName.toLowerCase()
-  for (let netId in constants.NETWORKS) {
-    if (constants.NETWORKS[netId].NAME.toLowerCase() === netNameLowerCase) {
-      return netId
-    }
-  }
-  return null
+function isTestnet(netId) {
+  return netId === constants.NETID_SOKOL || netId === constants.NETID_DAI_TEST
 }
 
 module.exports = {
   generateAlert,
-  netIdByName
+  isTestnet
 }
