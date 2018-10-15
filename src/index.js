@@ -20,6 +20,8 @@ import { constants } from './constants'
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators'
+const setMetadataPath = `${baseRootPath}/set`
+const pendingChangesPath = `${baseRootPath}/pending-changes`
 const navigationData = [
   {
     icon: 'link-icon-all',
@@ -29,12 +31,12 @@ const navigationData = [
   {
     icon: 'link-icon-set-metadata',
     title: 'Set Metadata',
-    url: `${baseRootPath}/set`
+    url: setMetadataPath
   },
   {
     icon: 'link-icon-pending-changes',
     title: 'Pending Changes',
-    url: `${baseRootPath}/pending-changes`
+    url: pendingChangesPath
   }
 ]
 
@@ -55,7 +57,7 @@ class AppMainRouter extends Component {
     this.getNetIdClass = this.getNetIdClass.bind(this)
 
     this.state = {
-      showSearch: true,
+      showSearch: history.location.pathname !== setMetadataPath,
       keysManager: null,
       metadataContract: null,
       poaConsensus: null,
@@ -125,9 +127,7 @@ class AppMainRouter extends Component {
     })
   }
   onRouteChange() {
-    const setMetadata = baseRootPath + '/set'
-
-    if (history.location.pathname === setMetadata) {
+    if (history.location.pathname === setMetadataPath) {
       this.setState({ showSearch: false })
 
       if (this.state.injectedWeb3 === false) {
@@ -145,12 +145,10 @@ class AppMainRouter extends Component {
     return ''
   }
   onSetRender() {
-    if (!this.state.netId) {
-      return ''
+    if (!this.state.votingKey) {
+      return '' // prevent rendering if the keys are not loaded yet
     }
-    return this.checkForVotingKey(() => {
-      return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
-    })
+    return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
   }
   toggleMobileMenu = () => {
     this.setState(prevState => ({ showMobileMenu: !prevState.showMobileMenu }))
@@ -277,9 +275,9 @@ class AppMainRouter extends Component {
             } ${this.getNetIdClass()}`}
           >
             <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route exact path={`${baseRootPath}/`} render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route path={`${baseRootPath}/pending-changes`} render={this.onPendingChangesRender} />
-            <Route path={`${baseRootPath}/set`} render={this.onSetRender} />
+            <Route exact path={baseRootPath} render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route path={pendingChangesPath} render={this.onPendingChangesRender} />
+            <Route path={setMetadataPath} render={this.onSetRender} />
           </div>
           <Footer netId={this.state.netId} />
         </section>
