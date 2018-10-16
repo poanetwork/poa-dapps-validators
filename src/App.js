@@ -183,7 +183,7 @@ class App extends Component {
         console.error(error.message)
         let errDescription
         if (error.message.includes(constants.userDeniedTransactionPattern))
-          errDescription = `Error: User ${constants.userDeniedTransactionPattern}`
+          errDescription = `Error: ${constants.userDeniedTransactionPattern}`
         else errDescription = error.message
         this.setState({ loading: false })
         var msg = `
