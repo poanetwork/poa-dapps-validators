@@ -179,6 +179,10 @@ export default class Metadata {
         message: `You cannot confirm your own changes.\n
           Please ask other validators to verify your new information.`
       }
+    } else if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
+      throw {
+        message: messages.invalidaVotingKey
+      }
     }
     return await this.metadataInstance.methods
       .confirmPendingChange(miningKeyToConfirm)
@@ -194,13 +198,18 @@ export default class Metadata {
     return validatorData.minThreshold
   }
 
-  async finalize({ miningKeyToConfirm, senderVotingKey }) {
+  async finalize({ miningKeyToConfirm, senderVotingKey, senderMiningKey }) {
     const confirmations = await this.getConfirmations({
       miningKey: miningKeyToConfirm
     })
     const getMinThreshold = await this.getMinThreshold({
       miningKey: miningKeyToConfirm
     })
+    if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
+      throw {
+        message: messages.invalidaVotingKey
+      }
+    }
     if (Number(confirmations[0]) < Number(getMinThreshold)) {
       throw {
         message: `There is not enough confimations.\n
