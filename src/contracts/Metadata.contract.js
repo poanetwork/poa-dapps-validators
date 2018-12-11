@@ -23,6 +23,7 @@ var toAscii = function(hex) {
 export default class Metadata {
   async init({ web3, netId, addresses }) {
     this.web3 = web3
+    this.netId = Number(netId)
     this.gasPrice = web3.utils.toWei('2', 'gwei')
 
     const { METADATA_ADDRESS, MOC } = addresses
@@ -47,11 +48,13 @@ export default class Metadata {
     state,
     zipcode,
     expirationDate,
+    contactEmail,
+    isCompany,
     votingKey,
     hasData
   }) {
-    let methodToCall = hasData ? 'changeRequest' : 'createMetadata'
-    return await this.metadataInstance.methods[methodToCall](
+    const methodToCall = hasData ? 'changeRequest' : 'createMetadata'
+    let input = [
       this.web3.utils.fromAscii(firstName),
       this.web3.utils.fromAscii(lastName),
       this.web3.utils.fromAscii(licenseId),
@@ -59,7 +62,15 @@ export default class Metadata {
       this.web3.utils.fromAscii(state),
       this.web3.utils.fromAscii(zipcode),
       expirationDate
-    ).send({ from: votingKey, gasPrice: this.gasPrice })
+    ]
+    if (this.netId === helpersGlobal.netIdByName('dai')) {
+      input.push(this.web3.utils.fromAscii(contactEmail))
+      input.push(isCompany)
+    }
+    return await this.metadataInstance.methods[methodToCall](...input).send({
+      from: votingKey,
+      gasPrice: this.gasPrice
+    })
   }
 
   getMocData() {
@@ -73,7 +84,9 @@ export default class Metadata {
       expirationDate: '2021-07-23',
       licenseId: '2206724',
       us_state: 'CA',
-      postal_code: '94404'
+      postal_code: '94404',
+      contactEmail: '',
+      isCompany: false
     }
   }
 
@@ -88,6 +101,14 @@ export default class Metadata {
     let updatedDate = validatorData.updatedDate > 0 ? moment.unix(validatorData.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate =
       validatorData.expirationDate > 0 ? moment.unix(validatorData.expirationDate).format('YYYY-MM-DD') : ''
+    let contactEmail
+    if (validatorData.hasOwnProperty('contactEmail')) {
+      contactEmail = toAscii(validatorData.contactEmail)
+    }
+    let isCompany
+    if (validatorData.hasOwnProperty('isCompany')) {
+      isCompany = validatorData.isCompany
+    }
     return {
       firstName: toAscii(validatorData.firstName),
       lastName: toAscii(validatorData.lastName),
@@ -97,7 +118,9 @@ export default class Metadata {
       expirationDate,
       licenseId: toAscii(validatorData.licenseId),
       us_state: toAscii(validatorData.state),
-      postal_code: toAscii(validatorData.zipcode)
+      postal_code: toAscii(validatorData.zipcode),
+      contactEmail,
+      isCompany
     }
   }
 
@@ -134,6 +157,14 @@ export default class Metadata {
     let updatedDate = pendingChanges.updatedDate > 0 ? moment.unix(pendingChanges.updatedDate).format('YYYY-MM-DD') : ''
     let expirationDate =
       pendingChanges.expirationDate > 0 ? moment.unix(pendingChanges.expirationDate).format('YYYY-MM-DD') : ''
+    let contactEmail
+    if (pendingChanges.hasOwnProperty('contactEmail')) {
+      contactEmail = toAscii(pendingChanges.contactEmail)
+    }
+    let isCompany
+    if (pendingChanges.hasOwnProperty('isCompany')) {
+      isCompany = pendingChanges.isCompany
+    }
     return {
       firstName: toAscii(pendingChanges.firstName),
       lastName: toAscii(pendingChanges.lastName),
@@ -144,7 +175,9 @@ export default class Metadata {
       licenseId: toAscii(pendingChanges.licenseId),
       us_state: toAscii(pendingChanges.state),
       postal_code: toAscii(pendingChanges.zipcode),
-      minThreshold: pendingChanges.minThreshold
+      minThreshold: pendingChanges.minThreshold,
+      contactEmail,
+      isCompany
     }
   }
 
@@ -153,7 +186,7 @@ export default class Metadata {
     for (let key of this.miningKeys) {
       let pendingChange = await this.getPendingChange(key)
       pendingChange.address = key
-      if (pendingChange.postal_code) {
+      if (pendingChange.createdDate) {
         pendingChanges.push(pendingChange)
       }
     }

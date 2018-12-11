@@ -15,7 +15,7 @@ function netIdByName(netName) {
   const netNameLowerCase = netName.toLowerCase()
   for (let netId in constants.NETWORKS) {
     if (constants.NETWORKS[netId].NAME.toLowerCase() === netNameLowerCase) {
-      return netId
+      return Number(netId)
     }
   }
   return null
