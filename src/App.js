@@ -242,7 +242,7 @@ class App extends Component {
     const classNameHiddenIfNotary = !isCompany ? 'display-none' : ''
 
     if (!this.isValidVotingKey) {
-      //return null
+      return null
     }
 
     const BtnAction = this.state.hasData ? 'Update' : 'Set'

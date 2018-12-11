@@ -43,6 +43,8 @@ class Validator extends Component {
       ''
     )
 
+    const fullName = isCompany ? firstName : `${firstName} ${lastName}`
+
     const physicalAddressesDiv = !isCompany ? <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} /> : ''
 
     const contactEmailDiv = isCompany ? (
@@ -96,9 +98,7 @@ class Validator extends Component {
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>Full Name</p>
-                <p>
-                  {firstName} {lastName}
-                </p>
+                <p>{fullName}</p>
               </div>
               {physicalAddressesDiv}
               {contactEmailDiv}
