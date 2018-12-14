@@ -21,7 +21,9 @@ function netIdByName(netName) {
   return null
 }
 
-module.exports = {
+const helpers = {
   generateAlert,
   netIdByName
 }
+
+export default helpers

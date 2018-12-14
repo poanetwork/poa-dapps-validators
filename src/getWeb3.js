@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { netIdByName } from './helpers'
+import helpers from './helpers'
 import { constants } from './constants'
 
 let getWeb3 = () => {
@@ -54,13 +54,13 @@ let getWeb3 = () => {
         console.error('Metamask not found')
 
         if (window.location.host.indexOf('sokol') !== -1) {
-          netId = netIdByName('sokol')
+          netId = helpers.netIdByName('sokol')
         } else if (window.location.host.indexOf('dai-test') !== -1) {
-          netId = netIdByName('dai-test')
+          netId = helpers.netIdByName('dai-test')
         } else if (window.location.host.indexOf('dai') !== -1) {
-          netId = netIdByName('dai')
+          netId = helpers.netIdByName('dai')
         } else {
-          netId = netIdByName('core')
+          netId = helpers.netIdByName('core')
         }
 
         const network = constants.NETWORKS[netId]
