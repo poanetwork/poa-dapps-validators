@@ -32,7 +32,9 @@ export default class Metadata {
     const MetadataAbi = await helpers.getABI(constants.NETWORKS[netId].BRANCH, 'ValidatorMetadata')
 
     this.metadataInstance = new web3.eth.Contract(MetadataAbi, METADATA_ADDRESS)
-    this.MOC_ADDRESS = MOC
+    if (MOC) {
+      this.MOC_ADDRESS = MOC
+    }
     this.addresses = addresses
 
     const poaInstance = new PoaConsensus()
@@ -128,7 +130,7 @@ export default class Metadata {
     let all = []
     return new Promise(async (resolve, reject) => {
       console.log(this.miningKeys)
-      const mocAddressLowercase = this.MOC_ADDRESS.toLowerCase()
+      const mocAddressLowercase = this.MOC_ADDRESS ? this.MOC_ADDRESS.toLowerCase() : ''
       for (let key of this.miningKeys) {
         let data
         if (key.toLowerCase() === mocAddressLowercase) {
