@@ -56,6 +56,9 @@ export default class Metadata {
     hasData
   }) {
     const methodToCall = hasData ? 'changeRequest' : 'createMetadata'
+    if (isCompany && isNaN(expirationDate)) {
+      expirationDate = 0
+    }
     let input = [
       this.web3.utils.fromAscii(firstName),
       this.web3.utils.fromAscii(lastName),
