@@ -67,6 +67,7 @@
   }
 
   &-notary,
+  &-company,
   &-license {
     width: 48%;
     font-size: 12px;
@@ -74,6 +75,16 @@
     @media (max-width: $tablet-width) {
       float: none;
       width: 100%;
+    }
+  }
+
+  &-company {
+    &.right {
+      .validators-title {
+        @media (max-width: $tablet-width) {
+          display: none;
+        }
+      }
     }
   }
 
@@ -96,6 +107,9 @@
 
     &--notary {
       background-image: url('#{ $base-images-path }/icons/icon-notary.svg');
+    }
+    &--company {
+      background-image: url('#{ $base-images-path }/icons/icon-company.svg');
     }
     &--notary-license {
       background-image: url('#{ $base-images-path }/icons/icon-notary-license.svg');

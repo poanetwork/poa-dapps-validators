@@ -20,28 +20,67 @@ class Validator extends Component {
       lastName,
       licenseId,
       expirationDate,
+      contactEmail,
+      isCompany,
       createdDate,
       updatedDate,
       index,
       children
     } = this.props
 
+    const validatorsLeftClass = isCompany ? 'validators-company' : 'validators-notary'
+    const validatorsRightClass = isCompany ? 'validators-company' : 'validators-license'
+    const iconLeftClass = isCompany ? 'validators-title--company' : 'validators-title--notary'
+    const iconRightClass = !isCompany ? 'validators-title--notary-license' : ''
+
     const showAllValidators = this.props.methodToCall === 'getAllValidatorsData'
 
-    const confirmations = showAllValidators ? (
-      ''
-    ) : (
+    const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address
+
+    const confirmationsDiv = !showAllValidators ? (
       <div className="validators-header--confirmations">{this.state.confirmation} confirmations</div>
+    ) : (
+      ''
     )
 
-    const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address
-    const pendingChangeDate = !updatedDate ? (
-      ''
+    const fullName = isCompany ? firstName : `${firstName} ${lastName}`
+
+    const physicalAddressesDiv = !isCompany ? <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} /> : ''
+
+    const contactEmailDiv = isCompany ? (
+      <div className="validators-table-i">
+        <p>Contact E-mail</p>
+        <p>{contactEmail}</p>
+      </div>
     ) : (
+      ''
+    )
+
+    const licenseIdDiv = !isCompany ? (
+      <div className="validators-table-i">
+        <p>License ID</p>
+        <p>{licenseId}</p>
+      </div>
+    ) : (
+      ''
+    )
+
+    const licenseExpirationDiv = !isCompany ? (
+      <div className="validators-table-i">
+        <p>License Expiration</p>
+        <p>{expirationDate}</p>
+      </div>
+    ) : (
+      ''
+    )
+
+    const pendingChangeDateDiv = updatedDate ? (
       <div className="validators-table-i">
         <p>Pending Change Date</p>
         <p>{updatedDate}</p>
       </div>
+    ) : (
+      ''
     )
 
     return (
@@ -51,37 +90,30 @@ class Validator extends Component {
             <div className="validators-header--address">{indexAndAddress}</div>
             <div className="validators-header--hint">Wallet Address</div>
           </div>
-          {confirmations}
+          {confirmationsDiv}
         </div>
         <div className="validators-body">
-          <div className="validators-notary left">
-            <p className="validators-title validators-title--notary">Notary</p>
+          <div className={`${validatorsLeftClass} left`}>
+            <p className={`validators-title ${iconLeftClass}`}>{isCompany ? 'Company' : 'Notary'}</p>
             <div className="validators-table">
               <div className="validators-table-i">
                 <p>Full Name</p>
-                <p>
-                  {firstName} {lastName}
-                </p>
+                <p>{fullName}</p>
               </div>
-              <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} />
+              {physicalAddressesDiv}
+              {contactEmailDiv}
             </div>
           </div>
-          <div className="validators-license right">
-            <p className="validators-title  validators-title--notary-license">Notary license</p>
+          <div className={`${validatorsRightClass} right`}>
+            <p className={`validators-title ${iconRightClass}`}>{!isCompany ? 'Notary license' : ''}</p>
             <div className="validators-table">
-              <div className="validators-table-i">
-                <p>License ID</p>
-                <p>{licenseId}</p>
-              </div>
-              <div className="validators-table-i">
-                <p>License Expiration</p>
-                <p>{expirationDate}</p>
-              </div>
+              {licenseIdDiv}
+              {licenseExpirationDiv}
               <div className="validators-table-i">
                 <p>Miner Creation Date</p>
                 <p>{createdDate}</p>
               </div>
-              {pendingChangeDate}
+              {pendingChangeDateDiv}
             </div>
           </div>
         </div>

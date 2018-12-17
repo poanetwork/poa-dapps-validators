@@ -55,8 +55,6 @@ let getWeb3 = () => {
 
         if (window.location.host.indexOf('sokol') !== -1) {
           netId = helpers.netIdByName('sokol')
-        } else if (window.location.host.indexOf('dai-test') !== -1) {
-          netId = helpers.netIdByName('dai-test')
         } else if (window.location.host.indexOf('dai') !== -1) {
           netId = helpers.netIdByName('dai')
         } else {

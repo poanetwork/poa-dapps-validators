@@ -6,6 +6,7 @@ import Loading from './Loading'
 import { messages } from './messages'
 import helpers from './helpers'
 import { constants } from './constants'
+import emailValidator from 'email-validator'
 
 class App extends Component {
   constructor(props) {
@@ -31,7 +32,9 @@ class App extends Component {
         us_state: '',
         firstName: '',
         lastName: '',
-        licenseId: ''
+        licenseId: '',
+        contactEmail: '',
+        isCompany: false
       },
       hasData: false
     }
@@ -44,19 +47,27 @@ class App extends Component {
   }
   async setMetadata() {
     const currentData = await this.getMetadataContract().getValidatorData(this.getMiningKey())
-    const hasData = currentData.postal_code ? true : false
+    const hasData = currentData.createdDate ? true : false
     this.defaultValues = currentData
     const pendingChange = await this.getMetadataContract().getPendingChange(this.getMiningKey())
     if (Number(pendingChange.minThreshold) > 0) {
-      var msg = `
-        First Name: <b>${pendingChange.firstName}</b> <br/>
-        Last Name: <b>${pendingChange.lastName}</b> <br/>
-        Full Address: <b>${pendingChange.fullAddress}</b> <br/>
-        Expiration Date: <b>${pendingChange.expirationDate}</b> <br />
-        License ID: <b>${pendingChange.licenseId}</b> <br/>
-        US state: <b>${pendingChange.us_state}</b> <br/>
-        Zip Code: <b>${pendingChange.postal_code}</b> <br/>
-      `
+      let msg
+      if (pendingChange.isCompany) {
+        msg = `
+          Full name: <b>${pendingChange.firstName}</b> <br/>
+          Contact E-mail: <b>${pendingChange.contactEmail}</b> <br/>
+        `
+      } else {
+        msg = `
+          First Name: <b>${pendingChange.firstName}</b> <br/>
+          Last Name: <b>${pendingChange.lastName}</b> <br/>
+          Full Address: <b>${pendingChange.fullAddress}</b> <br/>
+          Expiration Date: <b>${pendingChange.expirationDate}</b> <br />
+          License ID: <b>${pendingChange.licenseId}</b> <br/>
+          US state: <b>${pendingChange.us_state}</b> <br/>
+          Zip Code: <b>${pendingChange.postal_code}</b> <br/>
+        `
+      }
       helpers.generateAlert('warning', 'You have pending changes!', msg)
     }
     this.setState({
@@ -67,7 +78,9 @@ class App extends Component {
         us_state: currentData.us_state,
         firstName: currentData.firstName,
         lastName: currentData.lastName,
-        licenseId: currentData.licenseId
+        licenseId: currentData.licenseId,
+        contactEmail: currentData.contactEmail,
+        isCompany: currentData.isCompany
       },
       hasData
     })
@@ -91,20 +104,34 @@ class App extends Component {
     return this.props.web3Config.miningKey
   }
   checkValidation() {
-    const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
-    let keys = Object.keys(this.state.form)
-    keys.forEach(key => {
-      if (!this.state.form[key]) {
+    if (this.state.form.isCompany) {
+      if (!this.state.form.firstName) {
         this.setState({ loading: false })
-        helpers.generateAlert('warning', 'Warning!', `${key} cannot be empty`)
+        helpers.generateAlert('warning', 'Warning!', `Full name cannot be empty`)
         return false
       }
-    })
-    if (isAfter) {
+      if (!emailValidator.validate(this.state.form.contactEmail)) {
+        this.setState({ loading: false })
+        helpers.generateAlert('warning', 'Warning!', `Contact E-mail is invalid`)
+        return false
+      }
     } else {
-      this.setState({ loading: false })
-      helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
-      return false
+      const keys = Object.keys(this.state.form)
+      keys.forEach(key => {
+        if (!this.state.form[key]) {
+          if (key !== 'contactEmail' && key !== 'isCompany') {
+            this.setState({ loading: false })
+            helpers.generateAlert('warning', 'Warning!', `${key} cannot be empty`)
+            return false
+          }
+        }
+      })
+      const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
+      if (!isAfter) {
+        this.setState({ loading: false })
+        helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
+        return false
+      }
     }
     return true
   }
@@ -152,7 +179,6 @@ class App extends Component {
       const isValid = await this.getKeysManager().isVotingActive(votingKey)
       console.log(isValid)
       if (isValid) {
-        // add loading screen
         await this.sendTxToContract()
       } else {
         this.setState({ loading: false })
@@ -171,6 +197,8 @@ class App extends Component {
         state: this.state.form.us_state,
         zipcode: this.state.form.postal_code,
         expirationDate: moment(this.state.form.expirationDate).unix(),
+        contactEmail: this.state.form.contactEmail,
+        isCompany: this.state.form.isCompany,
         votingKey: this.getVotingKey(),
         hasData: this.state.hasData
       })
@@ -187,27 +215,37 @@ class App extends Component {
         else errDescription = error.message
         this.setState({ loading: false })
         var msg = `
-        Something went wrong!<br/><br/>
-        ${errDescription}
-      `
+          Something went wrong!<br/><br/>
+          ${errDescription}
+        `
         helpers.generateAlert('error', 'Error!', msg)
       })
   }
   onChangeFormField(event) {
     const field = event.target.id
-    const value = event.target.value
     let form = this.state.form
-
-    form[field] = value
+    if (field === 'isNotary') {
+      form.isCompany = false
+    } else if (field === 'isCompany') {
+      form.isCompany = true
+    } else {
+      form[field] = event.target.value
+    }
     this.setState({ form })
   }
+
   render() {
-    const { netId } = this.props.web3Config
+    const netId = Number(this.props.web3Config.netId)
+    const { isCompany } = this.state.form
+
     const classNameHiddenIfNotCoreNetwork = netId !== helpers.netIdByName('core') ? 'display-none' : ''
+    const classNameHiddenIfCompany = isCompany ? 'display-none' : ''
+    const classNameHiddenIfNotary = !isCompany ? 'display-none' : ''
 
     if (!this.isValidVotingKey) {
       return null
     }
+
     const BtnAction = this.state.hasData ? 'Update' : 'Set'
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="custom-container">
@@ -221,22 +259,53 @@ class App extends Component {
       id: 'address'
     }
     let loader = this.state.loading ? <Loading /> : ''
+
+    const isDaiNetwork = netId === helpers.netIdByName('dai')
+
     let createKeyBtn = (
       <div className="create-keys">
         <form className="create-keys-form">
+          <div className={`create-keys-form-is-company ${!isDaiNetwork ? 'display-none' : ''}`}>
+            <input
+              type="radio"
+              name="isCompanyRadio"
+              id="isNotary"
+              checked={!isCompany}
+              onChange={this.onChangeFormField}
+            />
+            <label htmlFor="isNotary">I'm a notary</label>
+            <input
+              type="radio"
+              name="isCompanyRadio"
+              id="isCompany"
+              checked={isCompany}
+              onChange={this.onChangeFormField}
+            />
+            <label htmlFor="isCompany">I'm a company</label>
+          </div>
+
           <div className="create-keys-form-i">
-            <label htmlFor="first-name">First name</label>
+            <label htmlFor="firstName">{isCompany ? 'Full name' : 'First name'}</label>
             <input type="text" id="firstName" value={this.state.form.firstName} onChange={this.onChangeFormField} />
           </div>
-          <div className="create-keys-form-i">
-            <label htmlFor="last-name">Last name</label>
+          <div className={`create-keys-form-i ${classNameHiddenIfNotary}`}>
+            <label htmlFor="contactEmail">Contact E-mail</label>
+            <input
+              type="text"
+              id="contactEmail"
+              value={this.state.form.contactEmail}
+              onChange={this.onChangeFormField}
+            />
+          </div>
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
+            <label htmlFor="lastName">Last name</label>
             <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField} />
           </div>
-          <div className="create-keys-form-i">
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
             <label htmlFor="licenseId">License id</label>
             <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField} />
           </div>
-          <div className="create-keys-form-i">
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
             <label htmlFor="expirationDate">License expiration</label>
             <input
               type="date"
@@ -245,15 +314,15 @@ class App extends Component {
               onChange={this.onChangeFormField}
             />
           </div>
-          <div className="create-keys-form-i">
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
             <label htmlFor="address">Address</label>
             <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
           </div>
-          <div className="create-keys-form-i">
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
             <label htmlFor="state">State</label>
             <input type="text" id="us_state" value={this.state.form.us_state} onChange={this.onChangeFormField} />
           </div>
-          <div className="create-keys-form-i">
+          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
             <label htmlFor="zip">Zip code</label>
             <input type="text" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField} />
           </div>

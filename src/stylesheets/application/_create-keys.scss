@@ -25,6 +25,27 @@
       flex-direction: column;
     }
 
+    &-is-company {
+      width: 100%;
+      margin-bottom: 20px;
+
+      input[type="radio"] {
+        display: inline!important;
+        width: auto;
+        height: auto;
+      }
+
+      label {
+        display: inline-block!important;
+        vertical-align: top;
+        margin-right: 16px;
+
+        @media (max-width: $tablet-width) {
+          vertical-align: middle;
+        }
+      }
+    }
+
     &-i {
       width: 48%;
       flex-shrink: 0;

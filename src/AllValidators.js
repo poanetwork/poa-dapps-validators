@@ -167,6 +167,8 @@ export default class AllValidators extends Component {
           postal_code={validator.postal_code}
           licenseId={validator.licenseId}
           expirationDate={validator.expirationDate}
+          contactEmail={validator.contactEmail}
+          isCompany={validator.isCompany}
           createdDate={validator.createdDate}
           updatedDate={validator.updatedDate}
           index={validator.index}
