@@ -6,6 +6,7 @@ import Loading from './Loading'
 import { messages } from './messages'
 import helpers from './helpers'
 import { constants } from './constants'
+import emailValidator from 'email-validator'
 
 class App extends Component {
   constructor(props) {
@@ -109,9 +110,9 @@ class App extends Component {
         helpers.generateAlert('warning', 'Warning!', `Full name cannot be empty`)
         return false
       }
-      if (!this.state.form.contactEmail) {
+      if (!emailValidator.validate(this.state.form.contactEmail)) {
         this.setState({ loading: false })
-        helpers.generateAlert('warning', 'Warning!', `Contact E-mail cannot be empty`)
+        helpers.generateAlert('warning', 'Warning!', `Contact E-mail is invalid`)
         return false
       }
     } else {
@@ -125,12 +126,12 @@ class App extends Component {
           }
         }
       })
-    }
-    const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
-    if (!isAfter) {
-      this.setState({ loading: false })
-      helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
-      return false
+      const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
+      if (!isAfter) {
+        this.setState({ loading: false })
+        helpers.generateAlert('warning', 'Warning!', 'Expiration date should be valid')
+        return false
+      }
     }
     return true
   }
