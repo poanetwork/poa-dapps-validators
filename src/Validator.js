@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import ValidatorPhysicalAddresses from './ValidatorPhysicalAddresses'
+import helpers from './helpers'
 
 class Validator extends Component {
   constructor(props) {
@@ -25,8 +26,13 @@ class Validator extends Component {
       createdDate,
       updatedDate,
       index,
-      children
+      children,
+      netId
     } = this.props
+
+    if (netId === helpers.netIdByName('dai') && !createdDate) {
+      isCompany = true
+    }
 
     const validatorsLeftClass = isCompany ? 'validators-company' : 'validators-notary'
     const validatorsRightClass = isCompany ? 'validators-company' : 'validators-license'

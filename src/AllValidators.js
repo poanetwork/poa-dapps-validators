@@ -174,6 +174,7 @@ export default class AllValidators extends Component {
           index={validator.index}
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
+          netId={this.state.netId}
         >
           {childrenWithProps}
         </Validator>
