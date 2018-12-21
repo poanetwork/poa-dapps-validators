@@ -34,7 +34,7 @@ class App extends Component {
         lastName: '',
         licenseId: '',
         contactEmail: '',
-        isCompany: false
+        isCompany: Number(this.props.web3Config.netId) === helpers.netIdByName('dai')
       },
       hasData: false
     }
@@ -80,7 +80,7 @@ class App extends Component {
         lastName: currentData.lastName,
         licenseId: currentData.licenseId,
         contactEmail: currentData.contactEmail,
-        isCompany: currentData.isCompany
+        isCompany: hasData ? currentData.isCompany : this.state.form.isCompany
       },
       hasData
     })
