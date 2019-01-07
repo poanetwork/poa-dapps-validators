@@ -1,5 +1,5 @@
 import helpers from './helpers'
-import { constants } from '../constants'
+import { constants } from '../utils/constants'
 
 const REGISTER_ADDRESS_EVENT_NAME = 'LogAddressRegistered'
 

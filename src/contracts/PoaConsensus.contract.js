@@ -1,5 +1,5 @@
 import helpers from './helpers'
-import { constants } from '../constants'
+import { constants } from '../utils/constants'
 
 export default class PoaConsensus {
   async init({ web3, netId, addresses }) {

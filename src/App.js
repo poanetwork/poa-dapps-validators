@@ -1,16 +1,18 @@
-import React, { Component } from 'react'
-import './stylesheets/application.css'
+import Loading from './components/Loading'
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete'
-import moment from 'moment'
-import Loading from './Loading'
-import { messages } from './messages'
-import helpers from './helpers'
-import { constants } from './constants'
+import React, { Component } from 'react'
 import emailValidator from 'email-validator'
+import helpers from './utils/helpers'
+import moment from 'moment'
+import { constants } from './utils/constants'
+import { messages } from './utils/messages'
+
+import './assets/stylesheets/index.css'
 
 class App extends Component {
   constructor(props) {
     super(props)
+
     this.checkValidation = this.checkValidation.bind(this)
     this.onClick = this.onClick.bind(this)
     this.onChangeFormField = this.onChangeFormField.bind(this)
