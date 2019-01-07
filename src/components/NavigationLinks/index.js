@@ -1,13 +1,25 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { NavigationIcon } from '../NavigationIcon'
+import { constants } from '../../utils/constants'
 
-const NavigationLinks = ({ navigationData, baseRootPath }) => {
-  return navigationData.map((item, index) => (
-    <NavLink activeClassName="active" className="link" exact key={index} to={item.url}>
-      <i className={`link-icon ${item.icon}`} />
-      <span className="link-text">{item.title}</span>
-    </NavLink>
-  ))
+export const NavigationLinks = ({ networkBranch }) => {
+  return (
+    <div className="nl-NavigationLinks">
+      {constants.navigationData.map((item, index) =>
+        item.disabled ? null : (
+          <NavLink
+            activeClassName="active"
+            className={`nl-NavigationLinks_Link nl-NavigationLinks_Link-${networkBranch}`}
+            exact
+            key={index}
+            to={item.url}
+          >
+            <NavigationIcon networkBranch={networkBranch} icon={item.icon} />
+            <span className={`nl-NavigationLinks_Text nl-NavigationLinks_Text-${networkBranch}`}>{item.title}</span>
+          </NavLink>
+        )
+      )}
+    </div>
+  )
 }
-
-export default NavigationLinks

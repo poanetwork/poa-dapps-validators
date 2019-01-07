@@ -7,8 +7,14 @@
 }
 
 .sw-MainTitle_Content {
-  @include content-layout-width();
-  min-height: fit-content;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 }
 
 .sw-MainTitle_Text {
@@ -16,4 +22,14 @@
   font-size: 24px;
   line-height: 38px;
   min-height: fit-content;
+}
+
+.sw-MainTitle_ExtraText {
+  color: #333;
+  font-size: 14px;
+  line-height: 38px;
+
+  strong {
+    font-weight: 700;
+  }
 }

@@ -1,10 +1,6 @@
-import 'react-select/dist/react-select.css'
-import AllValidators from './components/AllValidators/index'
+import AllValidators from './components/AllValidators'
 import App from './App'
-import Footer from './components/Footer'
-import Header from './components/Header'
 import KeysManager from './contracts/KeysManager.contract'
-import Loading from './components/Loading'
 import Metadata from './contracts/Metadata.contract'
 import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
@@ -14,9 +10,17 @@ import getWeb3, { setWeb3 } from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
+import { BaseLoader } from './components/BaseLoader'
+import { Footer } from './components/Footer'
+import { Header } from './components/Header'
+import { Loading } from './components/Loading'
 import { Router, Route } from 'react-router-dom'
+import { SearchBar } from './components/SearchBar'
 import { constants } from './utils/constants'
+import { getNetworkBranch } from './utils/utils'
 import { messages } from './utils/messages'
+
+import 'react-select/dist/react-select.css'
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators'
@@ -144,16 +148,9 @@ class AppMainRouter extends Component {
     helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
     return ''
   }
-  onSetRender() {
-    if (!this.state.votingKey) {
-      return '' // prevent rendering if the keys are not loaded yet
-    }
-    return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
-  }
   toggleMobileMenu = () => {
     this.setState(prevState => ({ showMobileMenu: !prevState.showMobileMenu }))
   }
-
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault()
     this.checkForVotingKey(async () => {
@@ -190,9 +187,7 @@ class AppMainRouter extends Component {
     })
   }
   onPendingChangesRender() {
-    return this.state.loading || this.state.error ? (
-      ''
-    ) : (
+    return this.state.loading || this.state.error ? null : (
       <AllValidators
         ref="AllValidatorsRef"
         methodToCall="getAllPendingChanges"
@@ -214,10 +209,10 @@ class AppMainRouter extends Component {
       ''
     ) : (
       <AllValidators
-        searchTerm={this.state.searchTerm}
         methodToCall="getAllValidatorsData"
-        web3Config={this.state}
+        searchTerm={this.state.searchTerm}
         viewTitle={navigationData[0]['title']}
+        web3Config={this.state}
       />
     )
   }
@@ -242,46 +237,50 @@ class AppMainRouter extends Component {
       await this.initContracts({ web3, netId, addresses })
     })
   }
+  getValidatorsNetworkBranch = () => {
+    return this.state.netId ? getNetworkBranch(this.state.netId) : null
+  }
+  onSetRender() {
+    if (!this.state.votingKey) {
+      return null // prevent rendering if the keys are not loaded yet
+    }
+    return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
+  }
   render() {
-    const search = this.state.showSearch ? (
-      <div className={`search-container ${this.getNetIdClass()}`}>
-        <div className="container">
-          <input type="search" className="search-input" onChange={this.onSearch} placeholder="Search..." />
-        </div>
-      </div>
-    ) : (
-      ''
-    )
+    const networkBranch = this.getValidatorsNetworkBranch()
 
-    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
-
-    return (
+    return networkBranch ? (
       <Router history={history}>
-        <section className={`content ${this.state.showMobileMenu ? 'content-menu-open' : ''}`}>
-          {loading}
+        <div
+          className={`lo-App ${!this.state.showSearch ? 'lo-App-no-search-bar' : ''} ${
+            this.state.showMobileMenu ? 'lo-App-menu-open' : ''
+          }`}
+        >
+          {/* TODO: I think this should go */}
+          {/* {this.state.loading ? <Loading networkBranch={networkBranch} /> : null} */}
           <Header
             baseRootPath={baseRootPath}
-            injectedWeb3={this.state.injectedWeb3}
-            navigationData={navigationData}
-            netId={this.state.netId}
+            networkBranch={networkBranch}
             onChange={this.onNetworkChange}
             onMenuToggle={this.toggleMobileMenu}
             showMobileMenu={this.state.showMobileMenu}
           />
-          {search}
-          <div
-            className={`app-container ${
-              this.state.showMobileMenu ? 'app-container-open-mobile-menu' : ''
-            } ${this.getNetIdClass()}`}
+          {this.state.showSearch ? <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} /> : null}
+          <section
+            className={`lo-App_Content lo-App_Content-${networkBranch} ${
+              this.state.showMobileMenu ? 'lo-App_Content-mobile-menu-open' : ''
+            }`}
           >
             <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
             <Route exact path={baseRootPath} render={this.onAllValidatorsRender} web3Config={this.state} />
             <Route path={pendingChangesPath} render={this.onPendingChangesRender} />
             <Route path={setMetadataPath} render={this.onSetRender} />
-          </div>
-          <Footer netId={this.state.netId} />
-        </section>
+          </section>
+          <Footer baseRootPath={baseRootPath} networkBranch={networkBranch} />
+        </div>
       </Router>
+    ) : (
+      <BaseLoader />
     )
   }
 }

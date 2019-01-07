@@ -9,6 +9,25 @@ constants.ABIsSources = {
   ProofOfPhysicalAddress: 'ProofOfPhysicalAddress.abi.json'
 }
 constants.userDeniedTransactionPattern = 'User denied transaction'
+constants.rootPath = '/poa-dapps-validators'
+
+constants.navigationData = [
+  {
+    icon: 'all',
+    title: 'All',
+    url: constants.rootPath
+  },
+  {
+    icon: 'set',
+    title: 'Set Metadata',
+    url: `${constants.rootPath}/set`
+  },
+  {
+    icon: 'pending',
+    title: 'Pending Changes',
+    url: `${constants.rootPath}/pending-changes`
+  }
+]
 
 constants.NETWORKS = {
   '77': {

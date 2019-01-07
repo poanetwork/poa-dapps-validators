@@ -1,72 +1,20 @@
 import React from 'react'
-import Select from 'react-select'
-import logoBase from '../../assets/images/logos/logo_validators_dapp@2x.png'
-import logoSokol from '../../assets/images/logos/logo_sokol@2x.png'
-import menuIconBase from '../../assets/images/icons/icon-menu.svg'
-import menuIconSokol from '../../assets/images/icons/icon-menu-sokol.svg'
-import menuOpenIconBase from '../../assets/images/icons/icon-close.svg'
-import menuOpenIconSokol from '../../assets/images/icons/icon-close-sokol.svg'
-import NavigationLinks from '../NavigationLinks'
-import MobileMenuLinks from '../MobileMenuLinks'
-import { constants } from '../../utils/constants'
+import { IconMobileMenu } from '../IconMobileMenu'
+import { Logo } from '../Logo'
+import { MobileMenuLinks } from '../MobileMenuLinks'
+import { NavigationLinks } from '../NavigationLinks'
 
-const Header = ({ netId, onChange, injectedWeb3, showMobileMenu, onMenuToggle, baseRootPath, navigationData }) => {
-  const thisIsTestnet = netId in constants.NETWORKS && constants.NETWORKS[netId].TESTNET
-  const headerClassName = thisIsTestnet ? 'sokol' : ''
-  const logoImageName = thisIsTestnet ? logoSokol : logoBase
-  const menuIcon = thisIsTestnet ? menuIconSokol : menuIconBase
-  const menuOpenIcon = thisIsTestnet ? menuOpenIconSokol : menuOpenIconBase
-
-  let select
-  let options = []
-
-  for (const _netId in constants.NETWORKS) {
-    options.push({ value: _netId, label: `Network: ${constants.NETWORKS[_netId].NAME}` })
-  }
-
-  if (!injectedWeb3) {
-    select = (
-      <Select
-        id="netId"
-        value={netId}
-        onChange={onChange}
-        style={{
-          width: '150px'
-        }}
-        wrapperStyle={{
-          width: '150px'
-        }}
-        clearable={false}
-        options={options}
-      />
-    )
-  }
+export const Header = ({ baseRootPath = '', networkBranch = undefined, onMenuToggle, showMobileMenu = false }) => {
   return (
-    <header id="header" className={`header ${headerClassName}`}>
-      {showMobileMenu && (
-        <div className="header-mobile-menu-container">
-          {<MobileMenuLinks onMenuToggle={onMenuToggle} navigationData={navigationData} />}
+    <header className={`sw-Header sw-Header-${networkBranch} ${showMobileMenu ? 'sw-Header-menu-open' : ''}`}>
+      {showMobileMenu ? <MobileMenuLinks networkBranch={networkBranch} onClick={onMenuToggle} /> : null}
+      <div className="sw-Header_Content">
+        <Logo networkBranch={networkBranch} href={baseRootPath} />
+        <div className="sw-Header_Links">
+          <NavigationLinks networkBranch={networkBranch} />
         </div>
-      )}
-      <div className="container">
-        <a className="header-logo-a" href={baseRootPath}>
-          <img className="header-logo" src={logoImageName} alt="" />
-        </a>
-        <div className="links-container">
-          <NavigationLinks navigationData={navigationData} />
-        </div>
-        <div className="mobile-menu">
-          <img
-            alt=""
-            className={showMobileMenu ? 'mobile-menu-open-icon' : 'mobile-menu-icon'}
-            onClick={onMenuToggle}
-            src={showMobileMenu ? menuOpenIcon : menuIcon}
-          />
-        </div>
-        {select}
+        <IconMobileMenu networkBranch={networkBranch} isOpen={showMobileMenu} onClick={onMenuToggle} />
       </div>
     </header>
   )
 }
-
-export default Header

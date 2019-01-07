@@ -1,9 +1,10 @@
-import Loading from './components/Loading'
 import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete'
 import React, { Component } from 'react'
 import emailValidator from 'email-validator'
 import helpers from './utils/helpers'
 import moment from 'moment'
+import { Loading } from './components/Loading'
+import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
 import { messages } from './utils/messages'
 
@@ -177,9 +178,7 @@ class App extends Component {
     const isFormValid = this.checkValidation()
     if (isFormValid) {
       const votingKey = this.getVotingKey()
-      console.log('voting', votingKey)
       const isValid = await this.getKeysManager().isVotingActive(votingKey)
-      console.log(isValid)
       if (isValid) {
         await this.sendTxToContract()
       } else {
@@ -205,12 +204,10 @@ class App extends Component {
         hasData: this.state.hasData
       })
       .then(receipt => {
-        console.log(receipt)
         this.setState({ loading: false })
         helpers.generateAlert('success', 'Congratulations!', 'Your metadata was sent!')
       })
       .catch(error => {
-        console.error(error.message)
         let errDescription
         if (error.message.includes(constants.userDeniedTransactionPattern))
           errDescription = `Error: ${constants.userDeniedTransactionPattern}`
@@ -239,7 +236,6 @@ class App extends Component {
   render() {
     const netId = Number(this.props.web3Config.netId)
     const { isCompany } = this.state.form
-
     const classNameHiddenIfNotCoreNetwork = netId !== helpers.netIdByName('core') ? 'display-none' : ''
     const classNameHiddenIfCompany = isCompany ? 'display-none' : ''
     const classNameHiddenIfNotary = !isCompany ? 'display-none' : ''
@@ -345,16 +341,11 @@ class App extends Component {
     )
 
     let content = createKeyBtn
-    const titleContainer = (
-      <div className="main-title-container no-search-on-top">
-        <span className="main-title">{this.props.viewTitle}</span>
-      </div>
-    )
 
     return (
-      <div className="container">
+      <div className="vld-App">
         {loader}
-        {titleContainer}
+        <MainTitle text={this.props.viewTitle} />
         {content}
       </div>
     )

@@ -1,30 +1,30 @@
 import React from 'react'
-import { constants } from '../../utils/constants'
+import xDaiLogo from './xdai.svg'
+import poaLogo from './core.svg'
+import sokolLogo from './sokol.svg'
 
-const styles = netId => {
-  const core = {
-    backgroundColor: 'rgba(78,44,137, 0.9)'
-  }
-  const sokol = {
-    backgroundColor: 'rgba(47, 109, 99, 0.8)'
-  }
-
-  if (netId in constants.NETWORKS) {
-    return constants.NETWORKS[netId].TESTNET ? sokol : core
-  }
-
-  return core
+const getLogoSrc = networkBranch => {
+  return (
+    {
+      core: poaLogo,
+      sokol: sokolLogo,
+      dai: xDaiLogo
+    }[networkBranch] || poaLogo
+  )
 }
-const Loading = ({ netId }) => (
-  <div className="loading-container" style={styles(netId)}>
-    <div className="loading">
-      <div className="loading-i" />
-      <div className="loading-i" />
-      <div className="loading-i" />
-      <div className="loading-i" />
-      <div className="loading-i" />
-      <div className="loading-i" />
+
+export const Loading = ({ networkBranch }) => {
+  return (
+    <div className={`ld-Loading ld-Loading-${networkBranch}`}>
+      <img className={`ld-Loading_Image ld-Loading_Image-${networkBranch}`} src={getLogoSrc(networkBranch)} alt="" />
+      <div className="ld-Loading_Animation">
+        <div className="ld-Loading_AnimationItem" />
+        <div className="ld-Loading_AnimationItem" />
+        <div className="ld-Loading_AnimationItem" />
+        <div className="ld-Loading_AnimationItem" />
+        <div className="ld-Loading_AnimationItem" />
+        <div className="ld-Loading_AnimationItem" />
+      </div>
     </div>
-  </div>
-)
-export default Loading
+  )
+}

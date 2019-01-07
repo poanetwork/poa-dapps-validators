@@ -1,7 +1,8 @@
 /* eslint-disable no-unexpected-multiline */
 import React, { Component } from 'react'
 import Validator from '../Validator'
-import Loading from '../Loading'
+import { Loading } from '../Loading'
+import { MainTitle } from '../MainTitle'
 
 export default class AllValidators extends Component {
   constructor(props) {
@@ -182,25 +183,16 @@ export default class AllValidators extends Component {
       )
     }
     const isValidatorsPage = this.props.methodToCall === 'getAllValidatorsData'
-    const validatorsCountObj = (
-      <div className="validators-count">
-        <span className="validators-count-label">Total number of validators: </span>
-        <span className="validators-count-val">{this.state.validators.length}</span>
-      </div>
-    )
-    const validatorsCount = isValidatorsPage ? validatorsCountObj : ''
+    const validatorsCount = isValidatorsPage
+      ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
+      : ''
 
-    const titleContainer = (
-      <div className="main-title-container">
-        <span className="main-title">{this.props.viewTitle}</span>
-        {validatorsCount}
-      </div>
-    )
-
-    return (
-      <div className="container">
+    return this.state.loading ? (
+      <Loading netId={this.state.netId} />
+    ) : (
+      <div className="vl-AllValidators">
         {loading}
-        {titleContainer}
+        <MainTitle text={this.props.viewTitle} extraText={validatorsCount} />
         {validators}
       </div>
     )

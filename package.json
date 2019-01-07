@@ -83,7 +83,8 @@
     "eject": "react-scripts eject",
     "lint": "./node_modules/.bin/eslint src",
     "predeploy": "npm run build",
-    "start": "npm-run-all -p watch-css start-js",
+    "start": "npm-run-all -p watch-css start-default",
+    "start-default": "node scripts/start.js",
     "start-js": "react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "watch-css": "nodemon -e scss -x \"npm run build-css\""

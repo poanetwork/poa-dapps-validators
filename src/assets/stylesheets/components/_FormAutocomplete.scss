@@ -1,6 +1,0 @@
-input[type="text"] {
-    .frm-FormAutocomplete & {
-        @include form-element-base-style();
-        height: $input-height;
-    }
-}

@@ -54,3 +54,7 @@
         }
     }
 }
+
+.vld-App {
+    @include content-layout-width();
+}
