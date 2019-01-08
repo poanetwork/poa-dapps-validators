@@ -14,7 +14,7 @@ import { BaseLoader } from './components/BaseLoader'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Loading } from './components/Loading'
-import { Router, Route } from 'react-router-dom'
+import { Router, Route, Redirect } from 'react-router-dom'
 import { SearchBar } from './components/SearchBar'
 import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
@@ -68,6 +68,7 @@ class AppMainRouter extends Component {
       votingKey: null,
       miningKey: null,
       loading: true,
+      childLoading: true,
       searchTerm: '',
       injectedWeb3: true,
       netId: '',
@@ -189,11 +190,12 @@ class AppMainRouter extends Component {
   onPendingChangesRender() {
     return this.state.loading || this.state.error ? null : (
       <AllValidators
-        ref="AllValidatorsRef"
         methodToCall="getAllPendingChanges"
+        onLoadingChange={this.onChildLoadingChange}
+        ref="AllValidatorsRef"
         searchTerm={this.state.searchTerm}
-        web3Config={this.state}
         viewTitle={navigationData[2]['title']}
+        web3Config={this.state}
       >
         <button onClick={this.onFinalize} className="create-keys-button finalize">
           Finalize
@@ -205,11 +207,10 @@ class AppMainRouter extends Component {
     )
   }
   onAllValidatorsRender() {
-    return this.state.loading || this.state.error ? (
-      ''
-    ) : (
+    return this.state.loading || this.state.error ? null : (
       <AllValidators
         methodToCall="getAllValidatorsData"
+        onLoadingChange={this.onChildLoadingChange}
         searchTerm={this.state.searchTerm}
         viewTitle={navigationData[0]['title']}
         web3Config={this.state}
@@ -246,6 +247,12 @@ class AppMainRouter extends Component {
     }
     return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
   }
+  onChildLoadingChange = (isLoading = true) => {
+    if (!isLoading) {
+      this.setState({ childLoading: false })
+    }
+  }
+
   render() {
     const networkBranch = this.getValidatorsNetworkBranch()
 
@@ -256,8 +263,7 @@ class AppMainRouter extends Component {
             this.state.showMobileMenu ? 'lo-App-menu-open' : ''
           }`}
         >
-          {/* TODO: I think this should go */}
-          {/* {this.state.loading ? <Loading networkBranch={networkBranch} /> : null} */}
+          {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null}
           <Header
             baseRootPath={baseRootPath}
             networkBranch={networkBranch}
@@ -271,10 +277,20 @@ class AppMainRouter extends Component {
               this.state.showMobileMenu ? 'lo-App_Content-mobile-menu-open' : ''
             }`}
           >
-            <Route exact path="/" render={this.onAllValidatorsRender} web3Config={this.state} />
+            <Route
+              exact
+              path={`/`}
+              render={props => (
+                <Redirect
+                  to={{
+                    pathname: baseRootPath
+                  }}
+                />
+              )}
+            />
             <Route exact path={baseRootPath} render={this.onAllValidatorsRender} web3Config={this.state} />
-            <Route path={pendingChangesPath} render={this.onPendingChangesRender} />
-            <Route path={setMetadataPath} render={this.onSetRender} />
+            <Route exact path={pendingChangesPath} render={this.onPendingChangesRender} />
+            <Route exact path={setMetadataPath} render={this.onSetRender} />
           </section>
           <Footer baseRootPath={baseRootPath} networkBranch={networkBranch} />
         </div>

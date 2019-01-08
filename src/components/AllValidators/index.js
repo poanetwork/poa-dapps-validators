@@ -1,7 +1,6 @@
 /* eslint-disable no-unexpected-multiline */
 import React, { Component } from 'react'
 import Validator from '../Validator'
-import { Loading } from '../Loading'
 import { MainTitle } from '../MainTitle'
 
 export default class AllValidators extends Component {
@@ -20,7 +19,9 @@ export default class AllValidators extends Component {
     const { props } = this
     const { web3Config } = props
     const { netId } = web3Config
+
     this.setState({ loading: true, netId: netId })
+    this.props.onLoadingChange(this.state.loading)
   }
   async getValidatorsData() {
     const netId = this.props.web3Config.netId
@@ -39,6 +40,7 @@ export default class AllValidators extends Component {
           reload: false,
           netId
         })
+        this.props.onLoadingChange(this.state.loading)
       })
   }
   async augmentValidatorsWithPhysicalAddress(validators) {
@@ -144,7 +146,6 @@ export default class AllValidators extends Component {
     return this.props.web3Config.keysManager
   }
   render() {
-    const loading = this.state.loading ? <Loading netId={this.state.netId} /> : ''
     const filtered = this.state.validators.filter((validator, index) => {
       return Object.values(validator).some(val =>
         String(val)
@@ -187,11 +188,8 @@ export default class AllValidators extends Component {
       ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
       : ''
 
-    return this.state.loading ? (
-      <Loading netId={this.state.netId} />
-    ) : (
+    return (
       <div className="vl-AllValidators">
-        {loading}
         <MainTitle text={this.props.viewTitle} extraText={validatorsCount} />
         {validators}
       </div>
