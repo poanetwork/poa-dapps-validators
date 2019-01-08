@@ -1,0 +1,188 @@
+
+.vl-Validator {
+  border-radius: 5px;
+  border: 1px solid $base-border-color;
+  margin-bottom: 20px;
+  padding: 15px;
+  text-align: left;
+
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 30px;
+    padding: 20px 30px;
+  }
+}
+
+.vl-Validator_Header {
+  border-bottom: 1px solid $base-border-color;
+  color: #333333;
+  display: block;
+  font-size: 18px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: normal;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  padding: 0 0 15px;
+  text-align: left;
+
+  @media (min-width: $breakpoint-md) {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.vl-Validator_HeaderAddress {
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+.vl-Validator_HeaderHint {
+  color: #777;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.vl-Validator_HeaderConfirmations {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding-top: 15px;
+
+  @media (min-width: $breakpoint-md) {
+    padding-top: 0;
+  }
+}
+
+.vl-Validator_Body {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+  }
+}
+
+.vl-Validator_Column {
+  float: none;
+  width: 100%;
+  font-size: 12px;
+
+  @media (min-width: $breakpoint-md) {
+    width: 50%;
+
+    &:first-child {
+      padding-right: 10px;
+    }
+
+    &:nth-child(2) {
+      padding-left: 10px;
+    }
+  }
+}
+
+.vl-Validator_Footer {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  padding-top: 20px;
+  width: 100%;
+}
+
+.vl-Validator_Title {
+  background-position: 0 50%;
+  background-repeat: no-repeat;
+  background-size: contain;
+  color: #333;
+  font-size: 16px;
+  font-weight: 700;
+  height: 24px;
+  line-height: 24px;
+  margin: 15px 0;
+  padding: 0 0 0 35px;
+  text-align: left;
+
+  @media (min-width: $breakpoint-md) {
+    margin: 0 0 20px 0;
+  }
+
+  &#{ & }-notary {
+    background-image: url('#{ $base-images-path }/icons/icon-notary.svg');
+  }
+
+  &#{ & }-company {
+    background-image: url('#{ $base-images-path }/icons/icon-company.svg');
+  }
+
+  &#{ & }-notary-license {
+    background-image: url('#{ $base-images-path }/icons/icon-notary-license.svg');
+  }
+}
+
+.vl-Validator_Table {
+
+}
+
+.vl-Validator_TableRow {
+  color: #333;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: space-between;
+  line-height: 1.2;
+  padding: 20px;
+
+  &:nth-child(odd) {
+    background-color: #f7f7f7;
+  }
+}
+
+.vl-Validator_TableCol {
+  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 15px 0 0;
+
+  &:last-child {
+    margin: 0;
+  }
+}
+
+// .validators-count {
+//   color: #333;
+//   font-size: 14px;
+//   line-height: 38px;
+//   margin-bottom: 0;
+
+//   &-val {
+//     font-weight: 700;
+//   }
+// }
+
+// Icon that represents unconfirmed/confirmed validator's data
+%data-icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  display: inline-block;
+  height: 24px;
+  vertical-align: middle;
+  width: 24px;
+}
+
+.data-icon {
+  &--unconfirmed {
+    @extend %data-icon;
+    background-color: #e5e5e5;
+    background-image: url('/images/unconfirmed.svg');
+  }
+
+  &--confirmed {
+    @extend %data-icon;
+    background-color: #60db97;
+    background-image: url('/images/confirmed.svg');
+  }
+}

@@ -34,96 +34,85 @@ class Validator extends Component {
       isCompany = true
     }
 
-    const validatorsLeftClass = isCompany ? 'validators-company' : 'validators-notary'
-    const validatorsRightClass = isCompany ? 'validators-company' : 'validators-license'
-    const iconLeftClass = isCompany ? 'validators-title--company' : 'validators-title--notary'
-    const iconRightClass = !isCompany ? 'validators-title--notary-license' : ''
-
+    const iconLeftClass = isCompany ? 'vl-Validator_Title-company' : 'vl-Validator_Title-notary'
+    const iconRightClass = !isCompany ? 'vl-Validator_Title-notary-license' : ''
     const showAllValidators = this.props.methodToCall === 'getAllValidatorsData'
-
     const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address
-
     const confirmationsDiv = !showAllValidators ? (
       <div className="validators-header--confirmations">{this.state.confirmation} confirmations</div>
     ) : (
       ''
     )
-
     const fullName = isCompany ? firstName : `${firstName} ${lastName}`
-
     const physicalAddressesDiv = !isCompany ? <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} /> : ''
-
     const contactEmailDiv = isCompany ? (
-      <div className="validators-table-i">
-        <p>Contact E-mail</p>
-        <p>{contactEmail}</p>
+      <div className="vl-Validator_TableRow">
+        <p className="vl-Validator_TableCol">Contact E-mail</p>
+        <p className="vl-Validator_TableCol">{contactEmail}</p>
       </div>
     ) : (
       ''
     )
-
     const licenseIdDiv = !isCompany ? (
-      <div className="validators-table-i">
-        <p>License ID</p>
-        <p>{licenseId}</p>
+      <div className="vl-Validator_TableRow">
+        <p className="vl-Validator_TableCol">License ID</p>
+        <p className="vl-Validator_TableCol">{licenseId}</p>
       </div>
     ) : (
       ''
     )
-
     const licenseExpirationDiv = !isCompany ? (
-      <div className="validators-table-i">
-        <p>License Expiration</p>
-        <p>{expirationDate}</p>
+      <div className="vl-Validator_TableRow">
+        <p className="vl-Validator_TableCol">License Expiration</p>
+        <p className="vl-Validator_TableCol">{expirationDate}</p>
       </div>
     ) : (
       ''
     )
-
     const pendingChangeDateDiv = updatedDate ? (
-      <div className="validators-table-i">
-        <p>Pending Change Date</p>
-        <p>{updatedDate}</p>
+      <div className="vl-Validator_TableRow">
+        <p className="vl-Validator_TableCol">Pending Change Date</p>
+        <p className="vl-Validator_TableCol">{updatedDate}</p>
       </div>
     ) : (
       ''
     )
 
     return (
-      <div className="validators-i">
-        <div className="validators-header">
+      <div className="vl-Validator">
+        <div className="vl-Validator_Header">
           <div>
-            <div className="validators-header--address">{indexAndAddress}</div>
-            <div className="validators-header--hint">Wallet Address</div>
+            <div className="vl-Validator_HeaderAddress">{indexAndAddress}</div>
+            <div className="vl-Validator_HeaderHint">Wallet Address</div>
           </div>
           {confirmationsDiv}
         </div>
-        <div className="validators-body">
-          <div className={`${validatorsLeftClass} left`}>
-            <p className={`validators-title ${iconLeftClass}`}>{isCompany ? 'Company' : 'Notary'}</p>
-            <div className="validators-table">
-              <div className="validators-table-i">
-                <p>Full Name</p>
-                <p>{fullName}</p>
+        <div className="vl-Validator_Body">
+          <div className={`vl-Validator_Column`}>
+            <h3 className={`vl-Validator_Title ${iconLeftClass}`}>{isCompany ? 'Company' : 'Notary'}</h3>
+            <div className="vl-Validator_Table">
+              <div className="vl-Validator_TableRow">
+                <p className="vl-Validator_TableCol">Full Name</p>
+                <p className="vl-Validator_TableCol">{fullName}</p>
               </div>
               {physicalAddressesDiv}
               {contactEmailDiv}
             </div>
           </div>
-          <div className={`${validatorsRightClass} right`}>
-            <p className={`validators-title ${iconRightClass}`}>{!isCompany ? 'Notary license' : ''}</p>
-            <div className="validators-table">
+          <div className={`vl-Validator_Column`}>
+            <h3 className={`vl-Validator_Title ${iconRightClass}`}>{!isCompany ? 'Notary license' : ''}</h3>
+            <div className="vl-Validator_Table">
               {licenseIdDiv}
               {licenseExpirationDiv}
-              <div className="validators-table-i">
-                <p>Miner Creation Date</p>
-                <p>{createdDate}</p>
+              <div className="vl-Validator_TableRow">
+                <p className="vl-Validator_TableCol">Miner Creation Date</p>
+                <p className="vl-Validator_TableCol">{createdDate}</p>
               </div>
               {pendingChangeDateDiv}
             </div>
           </div>
         </div>
-        <div className="validators-footer">{children}</div>
+        {children ? <div className="vl-Validator_Footer">{children}</div> : null}
       </div>
     )
   }
