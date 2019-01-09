@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import ValidatorPhysicalAddresses from '../ValidatorPhysicalAddresses'
 import helpers from '../../utils/helpers'
+import { PhysicalAddressValue } from '../PhysicalAddressValue'
+import { ValidatorDataPair } from '../ValidatorDataPair'
 
 class Validator extends Component {
   constructor(props) {
@@ -34,81 +35,50 @@ class Validator extends Component {
       isCompany = true
     }
 
-    const iconLeftClass = isCompany ? 'vl-Validator_Title-company' : 'vl-Validator_Title-notary'
-    const iconRightClass = !isCompany ? 'vl-Validator_Title-notary-license' : ''
     const showAllValidators = this.props.methodToCall === 'getAllValidatorsData'
     const indexAndAddress = showAllValidators ? `#${index}. ${address}` : address
-    const confirmationsDiv = !showAllValidators ? (
-      <div className="validators-header--confirmations">{this.state.confirmation} confirmations</div>
-    ) : (
-      ''
-    )
     const fullName = isCompany ? firstName : `${firstName} ${lastName}`
-    const physicalAddressesDiv = !isCompany ? <ValidatorPhysicalAddresses physicalAddresses={physicalAddresses} /> : ''
-    const contactEmailDiv = isCompany ? (
-      <div className="vl-Validator_TableRow">
-        <p className="vl-Validator_TableCol">Contact E-mail</p>
-        <p className="vl-Validator_TableCol">{contactEmail}</p>
-      </div>
-    ) : (
-      ''
-    )
-    const licenseIdDiv = !isCompany ? (
-      <div className="vl-Validator_TableRow">
-        <p className="vl-Validator_TableCol">License ID</p>
-        <p className="vl-Validator_TableCol">{licenseId}</p>
-      </div>
-    ) : (
-      ''
-    )
-    const licenseExpirationDiv = !isCompany ? (
-      <div className="vl-Validator_TableRow">
-        <p className="vl-Validator_TableCol">License Expiration</p>
-        <p className="vl-Validator_TableCol">{expirationDate}</p>
-      </div>
-    ) : (
-      ''
-    )
-    const pendingChangeDateDiv = updatedDate ? (
-      <div className="vl-Validator_TableRow">
-        <p className="vl-Validator_TableCol">Pending Change Date</p>
-        <p className="vl-Validator_TableCol">{updatedDate}</p>
-      </div>
-    ) : (
-      ''
-    )
+    const titleFirstColumn = isCompany ? 'Company' : 'Notary'
+    const titleSecondColumn = isCompany ? '' : 'Notary license'
+    const confirmedAddresses = physicalAddresses.filter(a => a.isConfirmed)
+    const unconfirmedAddresses = physicalAddresses.filter(a => !a.isConfirmed)
+    const addresses = confirmedAddresses.concat(unconfirmedAddresses)
 
     return (
       <div className="vl-Validator">
         <div className="vl-Validator_Header">
-          <div>
+          <div className="vl-Validator_AddressAndHint">
             <div className="vl-Validator_HeaderAddress">{indexAndAddress}</div>
             <div className="vl-Validator_HeaderHint">Wallet Address</div>
           </div>
-          {confirmationsDiv}
+          {showAllValidators ? null : (
+            <div className="vl-Validator_HeaderConfirmations">{this.state.confirmation} confirmations</div>
+          )}
         </div>
         <div className="vl-Validator_Body">
           <div className={`vl-Validator_Column`}>
-            <h3 className={`vl-Validator_Title ${iconLeftClass}`}>{isCompany ? 'Company' : 'Notary'}</h3>
-            <div className="vl-Validator_Table">
-              <div className="vl-Validator_TableRow">
-                <p className="vl-Validator_TableCol">Full Name</p>
-                <p className="vl-Validator_TableCol">{fullName}</p>
-              </div>
-              {physicalAddressesDiv}
-              {contactEmailDiv}
+            <h3
+              className={`vl-Validator_Title ${isCompany ? 'vl-Validator_Title-company' : 'vl-Validator_Title-notary'}`}
+            >
+              {titleFirstColumn}
+            </h3>
+            <div className="vl-Validator_InfoList">
+              <ValidatorDataPair data={['Full Name', fullName]} />
+              {isCompany ? null : (
+                <ValidatorDataPair data={['Address', <PhysicalAddressValue addresses={addresses} />]} />
+              )}
+              {isCompany ? <ValidatorDataPair data={['Contact E-mail', contactEmail]} /> : null}
             </div>
           </div>
           <div className={`vl-Validator_Column`}>
-            <h3 className={`vl-Validator_Title ${iconRightClass}`}>{!isCompany ? 'Notary license' : ''}</h3>
-            <div className="vl-Validator_Table">
-              {licenseIdDiv}
-              {licenseExpirationDiv}
-              <div className="vl-Validator_TableRow">
-                <p className="vl-Validator_TableCol">Miner Creation Date</p>
-                <p className="vl-Validator_TableCol">{createdDate}</p>
-              </div>
-              {pendingChangeDateDiv}
+            <h3 className={`vl-Validator_Title ${isCompany ? '' : 'vl-Validator_Title-notary-license'}`}>
+              {titleSecondColumn}
+            </h3>
+            <div className="vl-Validator_InfoList">
+              {isCompany ? null : <ValidatorDataPair data={['License ID', licenseId]} />}
+              {isCompany ? null : <ValidatorDataPair data={['License Expiration', expirationDate]} />}
+              <ValidatorDataPair data={['Miner Creation Date', createdDate]} />
+              {updatedDate ? <ValidatorDataPair data={['Pending Change Date', updatedDate]} /> : null}
             </div>
           </div>
         </div>

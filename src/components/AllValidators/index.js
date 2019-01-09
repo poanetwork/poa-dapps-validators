@@ -160,24 +160,24 @@ export default class AllValidators extends Component {
       })
       validators.push(
         <Validator
-          key={index}
-          physicalAddresses={validator.physicalAddresses}
           address={validator.address}
-          firstName={validator.firstName}
-          lastName={validator.lastName}
-          fullAddress={validator.fullAddress}
-          us_state={validator.us_state}
-          postal_code={validator.postal_code}
-          licenseId={validator.licenseId}
-          expirationDate={validator.expirationDate}
           contactEmail={validator.contactEmail}
-          isCompany={validator.isCompany}
           createdDate={validator.createdDate}
-          updatedDate={validator.updatedDate}
+          expirationDate={validator.expirationDate}
+          firstName={validator.firstName}
+          fullAddress={validator.fullAddress}
           index={validator.index}
+          isCompany={validator.isCompany}
+          key={index}
+          lastName={validator.lastName}
+          licenseId={validator.licenseId}
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
           netId={this.state.netId}
+          physicalAddresses={validator.physicalAddresses}
+          postal_code={validator.postal_code}
+          updatedDate={validator.updatedDate}
+          us_state={validator.us_state}
         >
           {childrenWithProps}
         </Validator>

@@ -83,12 +83,12 @@
         font-family="Nunito"
         font-size="14"
         font-weight="400"
-        x="48"
+        x="52"
         y="26"
     >Validators&#32;App</text>
     <path
         fill="#333"
         fill-rule="evenodd"
-        d="M170 9a1 1 0 0 1 1 1v24a1 1 0 0 1-2 0V10a1 1 0 0 1 1-1z"
+        d="M160 9a1 1 0 0 1 1 1v24a1 1 0 0 1-2 0V10a1 1 0 0 1 1-1z"
     />
 </svg>
