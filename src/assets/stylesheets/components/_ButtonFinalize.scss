@@ -1,0 +1,40 @@
+$sw-ButtonFinalize-bg-color: #f21b57;
+
+.sw-ButtonFinalize {
+    align-items: center;
+    background-color: $sw-ButtonFinalize-bg-color;
+    border-radius: 5px;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    height: 42px;
+    justify-content: space-between;
+    line-height: 42px;
+    outline: none;
+    padding: 0 15px;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: 0.15s background-color;
+
+    &:active,
+    &:hover {
+        background-color: darken($sw-ButtonFinalize-bg-color, 10%);
+    }
+
+    &#{ & }[disabled] {
+        &,
+        &:active,
+        &:hover {
+            cursor: default;
+            background-color: #f0f0f0 !important;
+            color: #333;
+        }
+    }
+}
+
+.sw-ButtonFinalize_Text {
+    margin-right: 50px;
+}

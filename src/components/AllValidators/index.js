@@ -187,7 +187,6 @@ export default class AllValidators extends Component {
     const validatorsCount = isValidatorsPage
       ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
       : ''
-
     return (
       <div className="vl-AllValidators">
         <MainTitle text={this.props.viewTitle} extraText={validatorsCount} />

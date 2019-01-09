@@ -85,10 +85,15 @@
 
 .vl-Validator_Footer {
   display: flex;
+  flex-direction: column;
   flex-grow: 1;
-  justify-content: center;
   padding-top: 20px;
   width: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
 }
 
 .vl-Validator_Title {

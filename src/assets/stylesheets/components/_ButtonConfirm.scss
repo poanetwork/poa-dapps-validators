@@ -1,0 +1,68 @@
+.sw-ButtonConfirm {
+    align-items: center;
+    border-radius: 5px;
+    border: 0;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    font-weight: 700;
+    height: 42px;
+    justify-content: space-between;
+    line-height: 42px;
+    outline: none;
+    padding: 0 15px;
+    text-decoration: none;
+    text-transform: capitalize;
+    transition: 0.15s background-color;
+
+    &#{ & }-core {
+        background-color: $poa-purple;
+
+        &:active,
+        &:hover {
+            background-color: darken($poa-purple, 10%);
+        }
+    }
+
+    &#{ & }-sokol {
+        background-color: $sokol-cyan;
+
+        &:active,
+        &:hover {
+            background-color: darken($sokol-cyan, 10%);
+        }
+    }
+
+    &#{ & }-dai {
+        background-color: $xdai-orange;
+
+        &:active,
+        &:hover {
+            background-color: darken($xdai-orange, 10%);
+        }
+    }
+
+    &#{ & }[disabled] {
+        &,
+        &:active,
+        &:hover {
+            cursor: default;
+            background-color: #f0f0f0 !important;
+            color: #333;
+        }
+    }
+
+    .vl-Validator_Footer & {
+        margin-top: 15px;
+
+        @media (min-width: $breakpoint-md) {
+            margin-left: 15px;
+            margin-top: 0;
+        }
+    }
+}
+
+.sw-ButtonConfirm_Text {
+    margin-right: 50px;
+}

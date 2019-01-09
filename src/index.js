@@ -11,6 +11,8 @@ import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
 import { BaseLoader } from './components/BaseLoader'
+import { ButtonConfirm } from './components/ButtonConfirm'
+import { ButtonFinalize } from './components/ButtonFinalize'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Loading } from './components/Loading'
@@ -188,6 +190,7 @@ class AppMainRouter extends Component {
     })
   }
   onPendingChangesRender() {
+    const networkBranch = this.getValidatorsNetworkBranch()
     return this.state.loading || this.state.error ? null : (
       <AllValidators
         methodToCall="getAllPendingChanges"
@@ -197,12 +200,8 @@ class AppMainRouter extends Component {
         viewTitle={navigationData[2]['title']}
         web3Config={this.state}
       >
-        <button onClick={this.onFinalize} className="create-keys-button finalize">
-          Finalize
-        </button>
-        <button onClick={this.onConfirmPendingChange} className="create-keys-button">
-          Confirm
-        </button>
+        <ButtonFinalize networkBranch={networkBranch} onClick={this.onFinalize} />
+        <ButtonConfirm networkBranch={networkBranch} onClick={this.onConfirmPendingChange} />
       </AllValidators>
     )
   }
