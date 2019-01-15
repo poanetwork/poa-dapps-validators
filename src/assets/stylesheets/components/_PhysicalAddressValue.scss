@@ -36,7 +36,16 @@
   }
 
   &#{ & }-confirmed {
-    background-color: #60db97;
     background-image: url('/images/confirmed.svg');
+  }
+
+  &#{ & }-confirmed#{ & }-core {
+    background-color: $poa-purple;
+  }
+  &#{ & }-confirmed#{ & }-sokol {
+    background-color: $sokol-cyan;
+  }
+  &#{ & }-confirmed#{ & }-xdai {
+    background-color: $xdai-orange;
   }
 }

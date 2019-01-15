@@ -1,16 +1,17 @@
 import React from 'react'
 
-export const PhysicalAddressValue = ({ addresses }) => {
+export const PhysicalAddressValue = ({ addresses, networkBranch = '' }) => {
   return addresses.map((address, index) => {
     let confirmedIcon = null
 
     if (address.isConfirmed === true || address.isConfirmed === false) {
+      const statusIcon = address.isConfirmed ? 'confirmed' : 'unconfirmed'
+      const statusIconTitleText = address.isConfirmed ? 'Confirmed Address' : 'Unconfirmed Address'
+
       confirmedIcon = (
         <i
-          className={`vl-PhysicalAddressValue_Icon ${
-            address.isConfirmed ? 'vl-PhysicalAddressValue_Icon-confirmed' : 'vl-PhysicalAddressValue_Icon-unconfirmed'
-          }`}
-          title={address.isConfirmed ? 'Confirmed Address' : 'Unconfirmed Address'}
+          className={`vl-PhysicalAddressValue_Icon vl-PhysicalAddressValue_Icon-${statusIcon} vl-PhysicalAddressValue_Icon-${networkBranch}`}
+          title={statusIconTitleText}
         />
       )
     }

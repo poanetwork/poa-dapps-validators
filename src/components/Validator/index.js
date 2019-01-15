@@ -67,7 +67,9 @@ class Validator extends Component {
             <div className="vl-Validator_InfoList">
               <ValidatorDataPair data={['Full Name', fullName]} />
               {isCompany ? null : (
-                <ValidatorDataPair data={['Address', <PhysicalAddressValue addresses={addresses} />]} />
+                <ValidatorDataPair
+                  data={['Address', <PhysicalAddressValue networkBranch={networkBranch} addresses={addresses} />]}
+                />
               )}
               {isCompany ? <ValidatorDataPair data={['Contact E-mail', contactEmail]} /> : null}
             </div>
