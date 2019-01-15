@@ -97,10 +97,10 @@ export default class Metadata {
   }
 
   async getValidatorData(miningKey) {
-    if (!miningKey) {
-      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-      return {}
-    }
+    // if (!miningKey) {
+    //   helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+    //   return {}
+    // }
 
     let validatorData = await this.metadataInstance.methods.validators(miningKey).call()
     let createdDate = validatorData.createdDate > 0 ? moment.unix(validatorData.createdDate).format('YYYY-MM-DD') : ''
@@ -153,10 +153,10 @@ export default class Metadata {
   }
 
   async getPendingChange(miningKey) {
-    if (!miningKey) {
-      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-      return {}
-    }
+    // if (!miningKey) {
+    //   helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+    //   return {}
+    // }
 
     let pendingChanges = await this.metadataInstance.methods.pendingChanges(miningKey).call()
     let createdDate = pendingChanges.createdDate > 0 ? moment.unix(pendingChanges.createdDate).format('YYYY-MM-DD') : ''
@@ -219,9 +219,9 @@ export default class Metadata {
           Please ask other validators to verify your new information.`
       }
     } else if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
-      throw {
-        message: messages.invalidaVotingKey
-      }
+      // throw {
+      //   message: messages.invalidaVotingKey
+      // }
     }
     return await this.metadataInstance.methods
       .confirmPendingChange(miningKeyToConfirm)
@@ -244,11 +244,11 @@ export default class Metadata {
     const getMinThreshold = await this.getMinThreshold({
       miningKey: miningKeyToConfirm
     })
-    if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
-      throw {
-        message: messages.invalidaVotingKey
-      }
-    }
+    // if (senderMiningKey === '0x0000000000000000000000000000000000000000') {
+    //   throw {
+    //     message: messages.invalidaVotingKey
+    //   }
+    // }
     if (Number(confirmations[0]) < Number(getMinThreshold)) {
       throw {
         message: `There is not enough confimations.\n

@@ -1,0 +1,63 @@
+.key-CreateKeysAddressNote {
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    font-size: 14px;
+    line-height: 24px;
+    margin: 50px 0 40px 0;
+    padding: 30px 47px 28px 62px;
+    position: relative;
+
+    &#{ & }-core {
+        border-color: $poa-purple;
+        color: $poa-purple;
+
+        a {
+            color: $poa-purple;
+        }
+    }
+
+    &#{ & }-sokol {
+        border-color: $sokol-cyan;
+        color: $sokol-cyan;
+
+        a {
+            color: $sokol-cyan;
+        }
+    }
+
+    &#{ & }-dai {
+        border-color: $xdai-menu-icon-color;
+        color: $xdai-menu-icon-color;
+
+        a {
+            color: $xdai-menu-icon-color;
+            text-decoration: underline;
+
+            &:hover {
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+.key-CreateKeysAddressNote_InfoIcon {
+    background-repeat: no-repeat;
+    height: 18px;
+    left: 34px;
+    position: absolute;
+    top: 30px;
+    width: 10px;
+
+    &#{ & }-core {
+        background-image: url('#{ $base-images-path }/CreateKeysAddressNote/core.svg');
+    }
+
+    &#{ & }-sokol {
+        background-image: url('#{ $base-images-path }/CreateKeysAddressNote/sokol.svg');
+    }
+
+    &#{ & }-dai {
+        background-image: url('#{ $base-images-path }/CreateKeysAddressNote/xdai.svg');
+    }
+}

@@ -1,13 +1,17 @@
-import PlacesAutocomplete, { geocodeByAddress } from 'react-places-autocomplete'
 import React, { Component } from 'react'
 import emailValidator from 'email-validator'
 import helpers from './utils/helpers'
 import moment from 'moment'
+import { ButtonConfirm } from './components/ButtonConfirm'
+import { CreateKeysAddressNote } from './components/CreateKeysAddressNote'
+import { FormAutocomplete } from './components/FormAutocomplete'
+import { FormInput } from './components/FormInput'
+import { FormRadioButton } from './components/FormRadioButton'
 import { Loading } from './components/Loading'
 import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
+import { geocodeByAddress } from 'react-places-autocomplete'
 import { messages } from './utils/messages'
-
 import './assets/stylesheets/index.css'
 
 class App extends Component {
@@ -89,10 +93,12 @@ class App extends Component {
     })
   }
   async setIsValidVotingKey() {
-    this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
-    if (!this.isValidVotingKey) {
-      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-    }
+    //TODO: UNDO THIS
+    this.isValidVotingKey = true
+    // this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
+    // if (!this.isValidVotingKey) {
+    //   helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+    // }
   }
   getKeysManager() {
     return this.props.web3Config.keysManager
@@ -174,18 +180,23 @@ class App extends Component {
     }
   }
   async onClick() {
-    this.setState({ loading: true })
-    const isFormValid = this.checkValidation()
+    //TODO: UNDO THIS
+    this.setState({ loading: false })
+    const isFormValid = true
+    // this.setState({ loading: true })
+    // const isFormValid = this.checkValidation()
     if (isFormValid) {
-      const votingKey = this.getVotingKey()
-      const isValid = await this.getKeysManager().isVotingActive(votingKey)
-      if (isValid) {
-        await this.sendTxToContract()
-      } else {
-        this.setState({ loading: false })
-        helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-        return
-      }
+      //TODO: UNDO THIS
+      const votingKey = '0x1234567890'
+      // const votingKey = this.getVotingKey()
+      // const isValid = await this.getKeysManager().isVotingActive(votingKey)
+      // if (isValid) {
+      //   await this.sendTxToContract()
+      // } else {
+      //   this.setState({ loading: false })
+      //   helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+      //   return
+      // }
     }
   }
   async sendTxToContract() {
@@ -234,19 +245,17 @@ class App extends Component {
   }
 
   render() {
-    const netId = Number(this.props.web3Config.netId)
-    const { isCompany } = this.state.form
-    const classNameHiddenIfNotCoreNetwork = netId !== helpers.netIdByName('core') ? 'display-none' : ''
-    const classNameHiddenIfCompany = isCompany ? 'display-none' : ''
-    const classNameHiddenIfNotary = !isCompany ? 'display-none' : ''
-
     if (!this.isValidVotingKey) {
       return null
     }
 
-    const BtnAction = this.state.hasData ? 'Update' : 'Set'
+    const netId = Number(this.props.web3Config.netId)
+    const { isCompany } = this.state.form
+    const { networkBranch } = this.props
+    const hideNote = netId !== helpers.netIdByName('core')
+    const isDaiNetwork = netId === helpers.netIdByName('dai')
     const AutocompleteItem = ({ formattedSuggestion }) => (
-      <div className="custom-container">
+      <div className="vld-App_FormAutocompleteItem">
         <strong>{formattedSuggestion.mainText}</strong> <small>{formattedSuggestion.secondaryText}</small>
       </div>
     )
@@ -256,97 +265,103 @@ class App extends Component {
       onChange: this.onChangeAutoComplete,
       id: 'address'
     }
-    let loader = this.state.loading ? <Loading /> : ''
 
-    const isDaiNetwork = netId === helpers.netIdByName('dai')
-
-    let createKeyBtn = (
-      <div className="create-keys">
-        <form className="create-keys-form">
-          <div className={`create-keys-form-is-company ${!isDaiNetwork ? 'display-none' : ''}`}>
-            <input
-              type="radio"
-              name="isCompanyRadio"
-              id="isNotary"
-              checked={!isCompany}
-              onChange={this.onChangeFormField}
-            />
-            <label htmlFor="isNotary">I'm a notary</label>
-            <input
-              type="radio"
-              name="isCompanyRadio"
-              id="isCompany"
-              checked={isCompany}
-              onChange={this.onChangeFormField}
-            />
-            <label htmlFor="isCompany">I'm a company</label>
-          </div>
-
-          <div className="create-keys-form-i">
-            <label htmlFor="firstName">{isCompany ? 'Full name' : 'First name'}</label>
-            <input type="text" id="firstName" value={this.state.form.firstName} onChange={this.onChangeFormField} />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfNotary}`}>
-            <label htmlFor="contactEmail">Contact E-mail</label>
-            <input
-              type="text"
-              id="contactEmail"
-              value={this.state.form.contactEmail}
-              onChange={this.onChangeFormField}
-            />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="lastName">Last name</label>
-            <input type="text" id="lastName" value={this.state.form.lastName} onChange={this.onChangeFormField} />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="licenseId">License id</label>
-            <input type="text" id="licenseId" value={this.state.form.licenseId} onChange={this.onChangeFormField} />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="expirationDate">License expiration</label>
-            <input
-              type="date"
-              id="expirationDate"
-              value={this.state.form.expirationDate}
-              onChange={this.onChangeFormField}
-            />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="address">Address</label>
-            <PlacesAutocomplete onSelect={this.onSelect} inputProps={inputProps} autocompleteItem={AutocompleteItem} />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="state">State</label>
-            <input type="text" id="us_state" value={this.state.form.us_state} onChange={this.onChangeFormField} />
-          </div>
-          <div className={`create-keys-form-i ${classNameHiddenIfCompany}`}>
-            <label htmlFor="zip">Zip code</label>
-            <input type="text" id="postal_code" value={this.state.form.postal_code} onChange={this.onChangeFormField} />
-          </div>
-        </form>
-        <button onClick={this.onClick} className="create-keys-button">
-          {BtnAction} Metadata
-        </button>
-        <p className={`create-keys-address-note ${classNameHiddenIfNotCoreNetwork}`}>
-          <i className="create-keys-address-note__icon-info" />
-          The entered address will be displayed as Unconfirmed and will be used if you don't have Registered Address(es)
-          in{' '}
-          <a href="https://popa.poa.network/" target="_blank" rel="noopener noreferrer">
-            PoPA DApp
-          </a>
-          . You have to use PoPA to register and confirm your address(es).
-        </p>
-      </div>
-    )
-
-    let content = createKeyBtn
+    //TODO: UNDO THIS
+    // let loader = this.state.loading ? <Loading /> : ''
+    let loader = null
 
     return (
       <div className="vld-App">
         {loader}
         <MainTitle text={constants.navigationData[1].title} />
-        {content}
+        {isDaiNetwork ? (
+          <div className="vld-App_RadioButtons">
+            <FormRadioButton
+              checked={isCompany}
+              id="isCompany"
+              name="isCompanyRadio"
+              networkBranch={networkBranch}
+              onChange={this.onChangeFormField}
+              text="I'm a company"
+            />
+            <FormRadioButton
+              checked={!isCompany}
+              id="isNotary"
+              name="isCompanyRadio"
+              networkBranch={networkBranch}
+              onChange={this.onChangeFormField}
+              text="I'm a notary"
+            />
+          </div>
+        ) : null}
+        <form className="vld-App_Form">
+          <FormInput
+            id="firstName"
+            onChange={this.onChangeFormField}
+            title={isCompany ? 'Full name' : 'First name'}
+            value={this.state.form.firstName}
+          />
+          {isCompany ? (
+            <FormInput
+              id="contactEmail"
+              onChange={this.onChangeFormField}
+              title="Contact E-mail"
+              type="email"
+              value={this.state.form.contactEmail}
+            />
+          ) : null}
+          {isCompany ? null : (
+            <FormInput
+              id="lastName"
+              onChange={this.onChangeFormField}
+              title="Last name"
+              value={this.state.form.lastName}
+            />
+          )}
+          {isCompany ? null : (
+            <FormInput
+              id="licenseId"
+              onChange={this.onChangeFormField}
+              title="License id"
+              value={this.state.form.licenseId}
+            />
+          )}
+          {isCompany ? null : (
+            <FormInput
+              id="expirationDate"
+              onChange={this.onChangeFormField}
+              title="License expiration"
+              type="date"
+              value={this.state.form.expirationDate}
+            />
+          )}
+          {isCompany ? null : (
+            <FormAutocomplete
+              autocompleteItem={AutocompleteItem}
+              id="address"
+              inputProps={inputProps}
+              onSelect={this.onSelect}
+              title="Address"
+            />
+          )}
+          {isCompany ? null : (
+            <FormInput id="us_state" onChange={this.onChangeFormField} title="State" value={this.state.form.us_state} />
+          )}
+          {isCompany ? null : (
+            <FormInput
+              id="postal_code"
+              onChange={this.onChangeFormField}
+              title="Zip code"
+              value={this.state.form.postal_code}
+            />
+          )}
+        </form>
+        <ButtonConfirm
+          networkBranch={networkBranch}
+          text={` ${this.state.hasData ? 'Update' : 'Set'} Metadata`}
+          onClick={this.onClick}
+        />
+        {hideNote ? null : <CreateKeysAddressNote networkBranch={networkBranch} />}
       </div>
     )
   }

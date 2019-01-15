@@ -202,14 +202,15 @@ class AppMainRouter extends Component {
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
   }
-  getValidatorsNetworkBranch = () => {
+  getValidatorsNetworkBranch() {
     return this.state.netId ? getNetworkBranch(this.state.netId) : null
   }
   onSetRender() {
-    if (!this.state.votingKey) {
-      return null // prevent rendering if the keys are not loaded yet
-    }
-    return <App web3Config={this.state} />
+    const networkBranch = this.getValidatorsNetworkBranch()
+
+    return <App networkBranch={networkBranch} web3Config={this.state} />
+    //TODO: UNDO THIS
+    // return !this.state.votingKey ? null : <App web3Config={this.state} networkBranch={networkBranch} />
   }
   onChildLoadingChange = (isLoading = true) => {
     if (!isLoading) {
@@ -223,11 +224,12 @@ class AppMainRouter extends Component {
     return networkBranch ? (
       <Router history={history}>
         <div
-          className={`lo-App ${!this.state.showSearch ? 'lo-App-no-search-bar' : ''} ${
-            this.state.showMobileMenu ? 'lo-App-menu-open' : ''
+          className={`lo-AppMainRouter ${!this.state.showSearch ? 'lo-AppMainRouter-no-search-bar' : ''} ${
+            this.state.showMobileMenu ? 'lo-AppMainRouter-menu-open' : ''
           }`}
         >
-          {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null}
+          {/* TODO: UNDO THIS */}
+          {/* {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null} */}
           <Header
             baseRootPath={baseRootPath}
             networkBranch={networkBranch}
@@ -236,8 +238,8 @@ class AppMainRouter extends Component {
           />
           {this.state.showSearch ? <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} /> : null}
           <section
-            className={`lo-App_Content lo-App_Content-${networkBranch} ${
-              this.state.showMobileMenu ? 'lo-App_Content-mobile-menu-open' : ''
+            className={`lo-AppMainRouter_Content lo-AppMainRouter_Content-${networkBranch} ${
+              this.state.showMobileMenu ? 'lo-AppMainRouter_Content-mobile-menu-open' : ''
             }`}
           >
             <Route
