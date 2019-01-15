@@ -1,0 +1,36 @@
+$icon-company-color-1-poa: #DED6EC;
+$icon-company-color-2-poa: #5C34A2;
+
+$icon-company-color-1-sokol: #DED6EC;
+$icon-company-color-2-sokol: #6ac9b9;
+
+$icon-company-color-1-xdai: #FFF2D9;
+$icon-company-color-2-xdai: #FEC042;
+
+.sw-IconCompany_Path1 {
+    &#{ & }-core {
+        fill: $icon-company-color-1-poa;
+    }
+
+    &#{ & }-sokol {
+        fill: $icon-company-color-1-sokol;
+    }
+
+    &#{ & }-dai {
+        fill: $icon-company-color-1-xdai;
+    }
+}
+
+.sw-IconCompany_Path2 {
+    &#{ & }-core {
+        fill: $icon-company-color-2-poa;
+    }
+
+    &#{ & }-sokol {
+        fill: $icon-company-color-2-sokol;
+    }
+
+    &#{ & }-dai {
+        fill: $icon-company-color-2-xdai;
+    }
+}

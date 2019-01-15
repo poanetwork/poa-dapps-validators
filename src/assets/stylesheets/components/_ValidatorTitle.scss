@@ -1,0 +1,25 @@
+.vl-ValidatorTitle {
+    align-content: center;
+    display: flex;
+    justify-content: flex-start;
+    line-height: 1;
+    margin: 15px 0;
+    padding: 0;
+
+    @media (min-width: $breakpoint-md) {
+        margin: 0 0 20px 0;
+    }
+}
+
+.vl-ValidatorTitle_Text {
+    color: #333;
+    font-size: 16px;
+    font-weight: 700;
+    height: 24px;
+    line-height: 24px;
+    text-align: left;
+
+    .vl-ValidatorTitle & {
+        margin-left: 12px;
+    }
+}

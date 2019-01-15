@@ -1,0 +1,36 @@
+$icon-notary-color-1-poa: #5C34A2;
+$icon-notary-color-2-poa: #5C34A2;
+
+$icon-notary-color-1-sokol: #6ac9b9;
+$icon-notary-color-2-sokol: #6ac9b9;
+
+$icon-notary-color-1-xdai: #FEC042;
+$icon-notary-color-2-xdai: #FEC042;
+
+.sw-IconNotary_Path1 {
+    &#{ & }-core {
+        fill: $icon-notary-color-1-poa;
+    }
+
+    &#{ & }-sokol {
+        fill: $icon-notary-color-1-sokol;
+    }
+
+    &#{ & }-dai {
+        fill: $icon-notary-color-1-xdai;
+    }
+}
+
+.sw-IconNotary_Path2 {
+    &#{ & }-core {
+        fill: $icon-notary-color-2-poa;
+    }
+
+    &#{ & }-sokol {
+        fill: $icon-notary-color-2-sokol;
+    }
+
+    &#{ & }-dai {
+        fill: $icon-notary-color-2-xdai;
+    }
+}

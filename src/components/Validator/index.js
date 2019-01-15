@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import helpers from '../../utils/helpers'
 import { PhysicalAddressValue } from '../PhysicalAddressValue'
 import { ValidatorDataPair } from '../ValidatorDataPair'
+import { ValidatorTitle } from '../ValidatorTitle'
 
 class Validator extends Component {
   constructor(props) {
@@ -16,19 +17,20 @@ class Validator extends Component {
 
   render() {
     let {
-      physicalAddresses,
       address,
+      children,
+      contactEmail,
+      createdDate,
+      expirationDate,
       firstName,
+      index,
+      isCompany,
       lastName,
       licenseId,
-      expirationDate,
-      contactEmail,
-      isCompany,
-      createdDate,
-      updatedDate,
-      index,
-      children,
-      netId
+      netId,
+      networkBranch,
+      physicalAddresses,
+      updatedDate
     } = this.props
 
     if (netId === helpers.netIdByName('dai') && !createdDate) {
@@ -57,11 +59,11 @@ class Validator extends Component {
         </div>
         <div className="vl-Validator_Body">
           <div className={`vl-Validator_Column`}>
-            <h3
-              className={`vl-Validator_Title ${isCompany ? 'vl-Validator_Title-company' : 'vl-Validator_Title-notary'}`}
-            >
-              {titleFirstColumn}
-            </h3>
+            <ValidatorTitle
+              networkBranch={networkBranch}
+              text={titleFirstColumn}
+              type={isCompany ? 'company' : 'notary'}
+            />
             <div className="vl-Validator_InfoList">
               <ValidatorDataPair data={['Full Name', fullName]} />
               {isCompany ? null : (
@@ -71,9 +73,11 @@ class Validator extends Component {
             </div>
           </div>
           <div className={`vl-Validator_Column`}>
-            <h3 className={`vl-Validator_Title ${isCompany ? '' : 'vl-Validator_Title-notary-license'}`}>
-              {titleSecondColumn}
-            </h3>
+            <ValidatorTitle
+              networkBranch={networkBranch}
+              text={titleSecondColumn}
+              type={isCompany ? '' : 'notaryLicense'}
+            />
             <div className="vl-Validator_InfoList">
               {isCompany ? null : <ValidatorDataPair data={['License ID', licenseId]} />}
               {isCompany ? null : <ValidatorDataPair data={['License Expiration', expirationDate]} />}

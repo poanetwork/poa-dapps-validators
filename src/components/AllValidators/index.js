@@ -146,6 +146,7 @@ export default class AllValidators extends Component {
     return this.props.web3Config.keysManager
   }
   render() {
+    const { networkBranch } = this.props
     const filtered = this.state.validators.filter((validator, index) => {
       return Object.values(validator).some(val =>
         String(val)
@@ -153,7 +154,9 @@ export default class AllValidators extends Component {
           .includes(this.props.searchTerm)
       )
     })
+
     let validators = []
+
     for (let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, child => {
         return React.cloneElement(child, { miningkey: validator.address })
@@ -174,6 +177,7 @@ export default class AllValidators extends Component {
           metadataContract={this.props.web3Config.metadataContract}
           methodToCall={this.props.methodToCall}
           netId={this.state.netId}
+          networkBranch={networkBranch}
           physicalAddresses={validator.physicalAddresses}
           postal_code={validator.postal_code}
           updatedDate={validator.updatedDate}

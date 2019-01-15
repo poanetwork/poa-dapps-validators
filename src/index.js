@@ -191,9 +191,11 @@ class AppMainRouter extends Component {
   }
   onPendingChangesRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
+
     return this.state.loading || this.state.error ? null : (
       <AllValidators
         methodToCall="getAllPendingChanges"
+        networkBranch={networkBranch}
         onLoadingChange={this.onChildLoadingChange}
         ref="AllValidatorsRef"
         searchTerm={this.state.searchTerm}
@@ -206,8 +208,11 @@ class AppMainRouter extends Component {
     )
   }
   onAllValidatorsRender() {
+    const networkBranch = this.getValidatorsNetworkBranch()
+
     return this.state.loading || this.state.error ? null : (
       <AllValidators
+        networkBranch={networkBranch}
         methodToCall="getAllValidatorsData"
         onLoadingChange={this.onChildLoadingChange}
         searchTerm={this.state.searchTerm}
