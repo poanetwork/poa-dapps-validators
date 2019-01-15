@@ -6,7 +6,7 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import getWeb3, { setWeb3 } from './utils/getWeb3'
+import getWeb3 from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
@@ -22,29 +22,10 @@ import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
 import { messages } from './utils/messages'
 
-import 'react-select/dist/react-select.css'
-
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators'
 const setMetadataPath = `${baseRootPath}/set`
 const pendingChangesPath = `${baseRootPath}/pending-changes`
-const navigationData = [
-  {
-    icon: 'link-icon-all',
-    title: 'All',
-    url: baseRootPath
-  },
-  {
-    icon: 'link-icon-set-metadata',
-    title: 'Set Metadata',
-    url: setMetadataPath
-  },
-  {
-    icon: 'link-icon-pending-changes',
-    title: 'Pending Changes',
-    url: pendingChangesPath
-  }
-]
 
 class AppMainRouter extends Component {
   constructor(props) {
@@ -58,9 +39,7 @@ class AppMainRouter extends Component {
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this)
     this.onFinalize = this.onFinalize.bind(this)
     this.onSearch = this.onSearch.bind(this)
-    this.onNetworkChange = this.onNetworkChange.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
-    this.getNetIdClass = this.getNetIdClass.bind(this)
 
     this.state = {
       showSearch: history.location.pathname !== setMetadataPath,
@@ -75,7 +54,6 @@ class AppMainRouter extends Component {
       injectedWeb3: true,
       netId: '',
       error: false,
-      title: navigationData[0].title,
       showMobileMenu: false
     }
     getWeb3()
@@ -199,7 +177,7 @@ class AppMainRouter extends Component {
         onLoadingChange={this.onChildLoadingChange}
         ref="AllValidatorsRef"
         searchTerm={this.state.searchTerm}
-        viewTitle={navigationData[2]['title']}
+        viewTitle={constants.navigationData[2].title}
         web3Config={this.state}
       >
         <ButtonFinalize networkBranch={networkBranch} onClick={this.onFinalize} />
@@ -216,31 +194,13 @@ class AppMainRouter extends Component {
         methodToCall="getAllValidatorsData"
         onLoadingChange={this.onChildLoadingChange}
         searchTerm={this.state.searchTerm}
-        viewTitle={navigationData[0]['title']}
+        viewTitle={constants.navigationData[0].title}
         web3Config={this.state}
       />
     )
   }
-  getNetIdClass() {
-    const { netId } = this.state
-    if (netId in constants.NETWORKS) {
-      return constants.NETWORKS[netId].TESTNET ? 'sokol' : ''
-    }
-    return ''
-  }
   onSearch(term) {
     this.setState({ searchTerm: term.target.value.toLowerCase() })
-  }
-  async onNetworkChange(e) {
-    this.setState({ loading: true })
-
-    const netId = e.value
-    const web3 = setWeb3(netId)
-
-    networkAddresses({ netId }).then(async config => {
-      const { addresses } = config
-      await this.initContracts({ web3, netId, addresses })
-    })
   }
   getValidatorsNetworkBranch = () => {
     return this.state.netId ? getNetworkBranch(this.state.netId) : null
@@ -249,7 +209,7 @@ class AppMainRouter extends Component {
     if (!this.state.votingKey) {
       return null // prevent rendering if the keys are not loaded yet
     }
-    return <App web3Config={this.state} viewTitle={navigationData[1]['title']} />
+    return <App web3Config={this.state} />
   }
   onChildLoadingChange = (isLoading = true) => {
     if (!isLoading) {
@@ -271,7 +231,6 @@ class AppMainRouter extends Component {
           <Header
             baseRootPath={baseRootPath}
             networkBranch={networkBranch}
-            onChange={this.onNetworkChange}
             onMenuToggle={this.toggleMobileMenu}
             showMobileMenu={this.state.showMobileMenu}
           />

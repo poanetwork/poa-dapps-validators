@@ -345,7 +345,7 @@ class App extends Component {
     return (
       <div className="vld-App">
         {loader}
-        <MainTitle text={this.props.viewTitle} />
+        <MainTitle text={constants.navigationData[1].title} />
         {content}
       </div>
     )
