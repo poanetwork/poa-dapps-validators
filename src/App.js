@@ -93,12 +93,10 @@ class App extends Component {
     })
   }
   async setIsValidVotingKey() {
-    //TODO: UNDO THIS
-    this.isValidVotingKey = true
-    // this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
-    // if (!this.isValidVotingKey) {
-    //   helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-    // }
+    this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
+    if (!this.isValidVotingKey) {
+      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+    }
   }
   getKeysManager() {
     return this.props.web3Config.keysManager
@@ -180,23 +178,19 @@ class App extends Component {
     }
   }
   async onClick() {
-    //TODO: UNDO THIS
-    this.setState({ loading: false })
-    const isFormValid = true
-    // this.setState({ loading: true })
-    // const isFormValid = this.checkValidation()
+    this.setState({ loading: true })
+    const isFormValid = this.checkValidation()
     if (isFormValid) {
-      //TODO: UNDO THIS
-      const votingKey = '0x1234567890'
-      // const votingKey = this.getVotingKey()
-      // const isValid = await this.getKeysManager().isVotingActive(votingKey)
-      // if (isValid) {
-      //   await this.sendTxToContract()
-      // } else {
-      //   this.setState({ loading: false })
-      //   helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-      //   return
-      // }
+      const votingKey = this.getVotingKey()
+      const isValid = await this.getKeysManager().isVotingActive(votingKey)
+
+      if (isValid) {
+        await this.sendTxToContract()
+      } else {
+        this.setState({ loading: false })
+        helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
+        return
+      }
     }
   }
   async sendTxToContract() {
@@ -266,9 +260,7 @@ class App extends Component {
       id: 'address'
     }
 
-    //TODO: UNDO THIS
-    // let loader = this.state.loading ? <Loading /> : ''
-    let loader = null
+    let loader = this.state.loading ? <Loading /> : ''
 
     return (
       <div className="vld-App">

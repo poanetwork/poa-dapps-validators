@@ -207,10 +207,7 @@ class AppMainRouter extends Component {
   }
   onSetRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
-
-    return <App networkBranch={networkBranch} web3Config={this.state} />
-    //TODO: UNDO THIS
-    // return !this.state.votingKey ? null : <App web3Config={this.state} networkBranch={networkBranch} />
+    return !this.state.votingKey ? null : <App web3Config={this.state} networkBranch={networkBranch} />
   }
   onChildLoadingChange = (isLoading = true) => {
     if (!isLoading) {
@@ -228,8 +225,7 @@ class AppMainRouter extends Component {
             this.state.showMobileMenu ? 'lo-AppMainRouter-menu-open' : ''
           }`}
         >
-          {/* TODO: UNDO THIS */}
-          {/* {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null} */}
+          {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null}
           <Header
             baseRootPath={baseRootPath}
             networkBranch={networkBranch}
