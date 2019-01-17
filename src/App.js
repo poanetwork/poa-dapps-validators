@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import emailValidator from 'email-validator'
 import helpers from './utils/helpers'
 import moment from 'moment'
@@ -94,6 +95,7 @@ class App extends Component {
   async setIsValidVotingKey() {
     this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
     if (!this.isValidVotingKey) {
+      this.setState({ loading: false })
       helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
     }
   }
@@ -213,11 +215,13 @@ class App extends Component {
       })
       .catch(error => {
         let errDescription
+
         if (error.message.includes(constants.userDeniedTransactionPattern))
           errDescription = `Error: ${constants.userDeniedTransactionPattern}`
         else errDescription = error.message
         this.setState({ loading: false })
-        var msg = `
+
+        let msg = `
           Something went wrong!<br/><br/>
           ${errDescription}
         `
@@ -238,30 +242,31 @@ class App extends Component {
   }
 
   render() {
-    if (!this.isValidVotingKey) {
-      return null
-    }
-
     const netId = Number(this.props.web3Config.netId)
     const { isCompany } = this.state.form
     const { networkBranch } = this.props
     const hideNote = netId !== helpers.netIdByName(constants.branches.CORE)
     const isDaiNetwork = netId === helpers.netIdByName(constants.branches.DAI)
+    const inputProps = {
+      id: 'address',
+      onChange: this.onChangeAutoComplete,
+      value: this.state.form.fullAddress
+    }
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="vld-App_FormAutocompleteItem">
         <strong>{formattedSuggestion.mainText}</strong> <small>{formattedSuggestion.secondaryText}</small>
       </div>
     )
 
-    const inputProps = {
-      id: 'address',
-      onChange: this.onChangeAutoComplete,
-      value: this.state.form.fullAddress
+    if (this.state.loading) {
+      return ReactDOM.createPortal(
+        <Loading networkBranch={networkBranch} />,
+        document.getElementById('loadingContainer')
+      )
     }
 
-    return (
+    return this.isValidVotingKey ? (
       <div className="vld-App">
-        {this.state.loading ? <Loading /> : null}
         <MainTitle text={constants.navigationData[1].title} />
         {isDaiNetwork ? (
           <div className="vld-App_RadioButtons">
@@ -351,6 +356,11 @@ class App extends Component {
           onClick={this.onClick}
         />
         {hideNote ? null : <CreateKeysAddressNote networkBranch={networkBranch} />}
+      </div>
+    ) : (
+      <div className="vld-App">
+        <MainTitle text={constants.navigationData[1].title} />
+        <p>Invalid voting key</p>
       </div>
     )
   }

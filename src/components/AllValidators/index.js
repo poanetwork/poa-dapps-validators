@@ -1,6 +1,8 @@
 /* eslint-disable no-unexpected-multiline */
 import React, { Component } from 'react'
+import ReactDOM from 'react-dom'
 import Validator from '../Validator'
+import { Loading } from '../Loading'
 import { MainTitle } from '../MainTitle'
 
 export default class AllValidators extends Component {
@@ -21,7 +23,6 @@ export default class AllValidators extends Component {
     const { netId } = web3Config
 
     this.setState({ loading: true, netId: netId })
-    this.props.onLoadingChange(this.state.loading)
   }
   async getValidatorsData() {
     const netId = this.props.web3Config.netId
@@ -40,7 +41,6 @@ export default class AllValidators extends Component {
           reload: false,
           netId
         })
-        this.props.onLoadingChange(this.state.loading)
       })
   }
   async augmentValidatorsWithPhysicalAddress(validators) {
@@ -154,7 +154,6 @@ export default class AllValidators extends Component {
           .includes(this.props.searchTerm)
       )
     })
-
     let validators = []
 
     for (let [index, validator] of filtered.entries()) {
@@ -191,10 +190,13 @@ export default class AllValidators extends Component {
     const validatorsCount = isValidatorsPage
       ? `Total number of validators: <strong>${this.state.validators.length}</strong>`
       : ''
-    return (
+
+    return this.state.loading ? (
+      ReactDOM.createPortal(<Loading networkBranch={networkBranch} />, document.getElementById('loadingContainer'))
+    ) : (
       <div className="vl-AllValidators">
         <MainTitle text={this.props.viewTitle} extraText={validatorsCount} />
-        {validators}
+        {validators.length ? validators : <p>No content to display.</p>}
       </div>
     )
   }

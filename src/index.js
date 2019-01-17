@@ -15,7 +15,6 @@ import { ButtonConfirm } from './components/ButtonConfirm'
 import { ButtonFinalize } from './components/ButtonFinalize'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { Loading } from './components/Loading'
 import { Router, Route, Redirect } from 'react-router-dom'
 import { SearchBar } from './components/SearchBar'
 import { constants } from './utils/constants'
@@ -49,7 +48,6 @@ class AppMainRouter extends Component {
       votingKey: null,
       miningKey: null,
       loading: true,
-      childLoading: true,
       searchTerm: '',
       injectedWeb3: true,
       netId: '',
@@ -174,7 +172,6 @@ class AppMainRouter extends Component {
       <AllValidators
         methodToCall="getAllPendingChanges"
         networkBranch={networkBranch}
-        onLoadingChange={this.onChildLoadingChange}
         ref="AllValidatorsRef"
         searchTerm={this.state.searchTerm}
         viewTitle={constants.navigationData[2].title}
@@ -192,7 +189,6 @@ class AppMainRouter extends Component {
       <AllValidators
         networkBranch={networkBranch}
         methodToCall="getAllValidatorsData"
-        onLoadingChange={this.onChildLoadingChange}
         searchTerm={this.state.searchTerm}
         viewTitle={constants.navigationData[0].title}
         web3Config={this.state}
@@ -207,12 +203,10 @@ class AppMainRouter extends Component {
   }
   onSetRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
-    return !this.state.votingKey ? null : <App web3Config={this.state} networkBranch={networkBranch} />
-  }
-  onChildLoadingChange = (isLoading = true) => {
-    if (!isLoading) {
-      this.setState({ childLoading: false })
-    }
+
+    return this.state.loading || !this.state.votingKey ? null : (
+      <App web3Config={this.state} networkBranch={networkBranch} />
+    )
   }
 
   render() {
@@ -225,7 +219,6 @@ class AppMainRouter extends Component {
             this.state.showMobileMenu ? 'lo-AppMainRouter-menu-open' : ''
           }`}
         >
-          {this.state.loading || this.state.childLoading ? <Loading networkBranch={networkBranch} /> : null}
           <Header
             baseRootPath={baseRootPath}
             networkBranch={networkBranch}
