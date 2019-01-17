@@ -196,7 +196,7 @@ class AppMainRouter extends Component {
     )
   }
   onSearch(term) {
-    this.setState({ searchTerm: term.target.value.toLowerCase() })
+    this.setState({ searchTerm: term.target.value })
   }
   getValidatorsNetworkBranch() {
     return this.state.netId ? getNetworkBranch(this.state.netId) : null

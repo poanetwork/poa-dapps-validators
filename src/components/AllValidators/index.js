@@ -148,18 +148,20 @@ export default class AllValidators extends Component {
   render() {
     const { networkBranch } = this.props
     const filtered = this.state.validators.filter((validator, index) => {
-      return Object.values(validator).some(val =>
-        String(val)
-          .toLowerCase()
-          .includes(this.props.searchTerm)
-      )
+      return Object.values(validator)
+        .join(' ')
+        .replace(/ +(?= )/g, '')
+        .toLowerCase()
+        .includes(this.props.searchTerm.toLowerCase())
     })
+
     let validators = []
 
     for (let [index, validator] of filtered.entries()) {
       let childrenWithProps = React.Children.map(this.props.children, child => {
         return React.cloneElement(child, { miningkey: validator.address })
       })
+
       validators.push(
         <Validator
           address={validator.address}
