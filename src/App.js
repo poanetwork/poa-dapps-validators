@@ -12,6 +12,7 @@ import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
 import { geocodeByAddress } from 'react-places-autocomplete'
 import { messages } from './utils/messages'
+
 import './assets/stylesheets/index.css'
 
 class App extends Component {
@@ -41,14 +42,12 @@ class App extends Component {
         lastName: '',
         licenseId: '',
         contactEmail: '',
-        isCompany: Number(this.props.web3Config.netId) === helpers.netIdByName('dai')
+        isCompany: Number(this.props.web3Config.netId) === helpers.netIdByName(constants.branches.DAI)
       },
       hasData: false
     }
-
     this.defaultValues = null
     this.setMetadata.call(this)
-
     this.isValidVotingKey = false
     this.setIsValidVotingKey.call(this)
   }
@@ -246,8 +245,8 @@ class App extends Component {
     const netId = Number(this.props.web3Config.netId)
     const { isCompany } = this.state.form
     const { networkBranch } = this.props
-    const hideNote = netId !== helpers.netIdByName('core')
-    const isDaiNetwork = netId === helpers.netIdByName('dai')
+    const hideNote = netId !== helpers.netIdByName(constants.branches.CORE)
+    const isDaiNetwork = netId === helpers.netIdByName(constants.branches.DAI)
     const AutocompleteItem = ({ formattedSuggestion }) => (
       <div className="vld-App_FormAutocompleteItem">
         <strong>{formattedSuggestion.mainText}</strong> <small>{formattedSuggestion.secondaryText}</small>
@@ -255,16 +254,14 @@ class App extends Component {
     )
 
     const inputProps = {
-      value: this.state.form.fullAddress,
+      id: 'address',
       onChange: this.onChangeAutoComplete,
-      id: 'address'
+      value: this.state.form.fullAddress
     }
-
-    let loader = this.state.loading ? <Loading /> : ''
 
     return (
       <div className="vld-App">
-        {loader}
+        {this.state.loading ? <Loading /> : null}
         <MainTitle text={constants.navigationData[1].title} />
         {isDaiNetwork ? (
           <div className="vld-App_RadioButtons">

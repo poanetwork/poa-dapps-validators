@@ -6,11 +6,12 @@ const REGISTER_ADDRESS_EVENT_NAME = 'LogAddressRegistered'
 export default class ProofOfPhysicalAddress {
   async init({ web3, netId, addresses }) {
     const { PROOF_OF_PHYSICAL_ADDRESS } = addresses
-
     const branch = constants.NETWORKS[netId].BRANCH
-    if (branch !== 'core') {
+
+    if (branch !== constants.branches.CORE) {
       throw new Error(`ProofOfPhysicalAddress contract not deployed on network "${branch}"`)
     }
+
     const proofOfPhysicalAddressAbi = await helpers.getABI(branch, 'ProofOfPhysicalAddress')
     this.instance = new web3.eth.Contract(proofOfPhysicalAddressAbi, PROOF_OF_PHYSICAL_ADDRESS)
 

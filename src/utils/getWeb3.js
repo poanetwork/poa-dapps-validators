@@ -49,16 +49,15 @@ let getWeb3 = () => {
         defaultAccount = accounts[0] || null
       } else {
         // Fallback to localhost if no web3 injection.
-
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        if (window.location.host.indexOf('sokol') !== -1) {
-          netId = helpers.netIdByName('sokol')
-        } else if (window.location.host.indexOf('dai') !== -1) {
-          netId = helpers.netIdByName('dai')
+        if (window.location.host.indexOf(constants.branches.SOKOL) !== -1) {
+          netId = helpers.netIdByName(constants.branches.SOKOL)
+        } else if (window.location.host.indexOf(constants.branches.DAI) !== -1) {
+          netId = helpers.netIdByName(constants.branches.DAI)
         } else {
-          netId = helpers.netIdByName('core')
+          netId = helpers.netIdByName(constants.branches.CORE)
         }
 
         const network = constants.NETWORKS[netId]

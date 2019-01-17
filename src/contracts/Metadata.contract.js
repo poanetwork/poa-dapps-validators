@@ -69,7 +69,7 @@ export default class Metadata {
       this.web3.utils.fromAscii(zipcode),
       expirationDate
     ]
-    if (this.netId === helpersGlobal.netIdByName('dai')) {
+    if (this.netId === helpersGlobal.netIdByName(constants.branches.DAI)) {
       input.push(this.web3.utils.fromAscii(contactEmail))
       input.push(isCompany)
     }

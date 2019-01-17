@@ -10,6 +10,11 @@ constants.ABIsSources = {
 }
 constants.userDeniedTransactionPattern = 'User denied transaction'
 constants.rootPath = '/poa-dapps-validators'
+constants.branches = {
+  DAI: 'dai',
+  CORE: 'core',
+  SOKOL: 'sokol'
+}
 
 constants.navigationData = [
   {
@@ -33,19 +38,19 @@ constants.NETWORKS = {
   '77': {
     NAME: 'Sokol',
     RPC: 'https://sokol.poa.network',
-    BRANCH: 'sokol',
+    BRANCH: constants.branches.SOKOL,
     TESTNET: true
   },
   '99': {
     NAME: 'Core',
     RPC: 'https://core.poa.network',
-    BRANCH: 'core',
+    BRANCH: constants.branches.CORE,
     TESTNET: false
   },
   '100': {
     NAME: 'Dai',
     RPC: 'https://dai.poa.network',
-    BRANCH: 'dai',
+    BRANCH: constants.branches.DAI,
     TESTNET: false
   }
 }
