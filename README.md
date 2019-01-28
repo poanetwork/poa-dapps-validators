@@ -12,9 +12,9 @@ Validators DApp is built for POA Network based blockchains. It gives an opportun
 
 * Google Chrome v 59.0.3071.115+
 
-## MetaMask plugin setup
+## MetaMask/Nifty Wallet extensions setup
 
-* Connect to POA Network in MetaMask plugin (See [Connect to POA Network via MetaMask](https://github.com/poanetwork/wiki/wiki/POA-Network-on-MetaMask))
+* Connect to POA Network in MetaMask extension (See [POA Network on MetaMask](https://github.com/poanetwork/wiki/wiki/POA-Network-on-MetaMask)) or in Nifty Wallet extension (See [POA Network on Nifty Wallet](https://github.com/poanetwork/wiki/wiki/POA-Network-on-Nifty-Wallet))
 
 Validators DApp is based on [POA Network Governance contracts](https://github.com/poanetwork/poa-network-consensus-contracts)
 
