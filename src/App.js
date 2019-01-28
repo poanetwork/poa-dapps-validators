@@ -268,26 +268,24 @@ class App extends Component {
     return this.isValidVotingKey ? (
       <div className="vld-App">
         <MainTitle text={constants.navigationData[1].title} />
-        {isDaiNetwork ? (
-          <div className="vld-App_RadioButtons">
-            <FormRadioButton
-              checked={isCompany}
-              id="isCompany"
-              name="isCompanyRadio"
-              networkBranch={networkBranch}
-              onChange={this.onChangeFormField}
-              text="I'm a company"
-            />
-            <FormRadioButton
-              checked={!isCompany}
-              id="isNotary"
-              name="isCompanyRadio"
-              networkBranch={networkBranch}
-              onChange={this.onChangeFormField}
-              text="I'm a notary"
-            />
-          </div>
-        ) : null}
+        <div className={`vld-App_RadioButtons ${isDaiNetwork ? '' : 'hidden'}`}>
+          <FormRadioButton
+            checked={isCompany}
+            id="isCompany"
+            name="isCompanyRadio"
+            networkBranch={networkBranch}
+            onChange={this.onChangeFormField}
+            text="I'm a company"
+          />
+          <FormRadioButton
+            checked={!isCompany}
+            id="isNotary"
+            name="isCompanyRadio"
+            networkBranch={networkBranch}
+            onChange={this.onChangeFormField}
+            text="I'm a notary"
+          />
+        </div>
         <form className="vld-App_Form">
           <FormInput
             id="firstName"
@@ -295,60 +293,58 @@ class App extends Component {
             title={isCompany ? 'Full name' : 'First name'}
             value={this.state.form.firstName}
           />
-          {isCompany ? (
-            <FormInput
-              id="contactEmail"
-              onChange={this.onChangeFormField}
-              title="Contact E-mail"
-              type="email"
-              value={this.state.form.contactEmail}
-            />
-          ) : null}
-          {isCompany ? null : (
-            <FormInput
-              id="lastName"
-              onChange={this.onChangeFormField}
-              title="Last name"
-              value={this.state.form.lastName}
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="licenseId"
-              onChange={this.onChangeFormField}
-              title="License id"
-              value={this.state.form.licenseId}
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="expirationDate"
-              onChange={this.onChangeFormField}
-              title="License expiration"
-              type="date"
-              value={this.state.form.expirationDate}
-            />
-          )}
-          {isCompany ? null : (
-            <FormAutocomplete
-              autocompleteItem={AutocompleteItem}
-              id="address"
-              inputProps={inputProps}
-              onSelect={this.onSelect}
-              title="Address"
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput id="us_state" onChange={this.onChangeFormField} title="State" value={this.state.form.us_state} />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="postal_code"
-              onChange={this.onChangeFormField}
-              title="Zip code"
-              value={this.state.form.postal_code}
-            />
-          )}
+          <FormInput
+            extraClassName={isCompany ? '' : 'hidden'}
+            id="contactEmail"
+            onChange={this.onChangeFormField}
+            title="Contact E-mail"
+            type="email"
+            value={this.state.form.contactEmail || ''}
+          />
+          <FormInput
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="lastName"
+            onChange={this.onChangeFormField}
+            title="Last name"
+            value={this.state.form.lastName}
+          />
+          <FormInput
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="licenseId"
+            onChange={this.onChangeFormField}
+            title="License id"
+            value={this.state.form.licenseId}
+          />
+          <FormInput
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="expirationDate"
+            onChange={this.onChangeFormField}
+            title="License expiration"
+            type="date"
+            value={this.state.form.expirationDate}
+          />
+          <FormAutocomplete
+            autocompleteItem={AutocompleteItem}
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="address"
+            inputProps={inputProps}
+            onSelect={this.onSelect}
+            title="Address"
+          />
+          <FormInput
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="us_state"
+            onChange={this.onChangeFormField}
+            title="State"
+            value={this.state.form.us_state}
+          />
+          <FormInput
+            extraClassName={isCompany ? 'hidden' : ''}
+            id="postal_code"
+            onChange={this.onChangeFormField}
+            title="Zip code"
+            value={this.state.form.postal_code}
+          />
         </form>
         <ButtonConfirm
           networkBranch={networkBranch}
