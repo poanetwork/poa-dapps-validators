@@ -1,0 +1,26 @@
+.vl-ValidatorDataPair {
+  align-items: center;
+  color: #333;
+  display: flex;
+  font-size: 14px;
+  font-weight: 500;
+  justify-content: space-between;
+  line-height: 1.2;
+  padding: 16px 20px;
+
+  .vl-Validator_InfoList &:nth-child(odd) {
+    background-color: #f7f7f7;
+  }
+}
+
+.vl-ValidatorDataPair_Info {
+  color: #333;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 0 15px 0 0;
+
+  &:last-child {
+    margin: 0;
+  }
+}

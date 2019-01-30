@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "react-app",
+    "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "dependencies",
+    "prettier"
+  ],
+  "rules": {
+    "no-control-regex": 0,
+    "dependencies/no-cycles": "error",
+    "dependencies/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "web3"
+        ]
+      }
+    ]
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
+      }
+    }
+  }
+}

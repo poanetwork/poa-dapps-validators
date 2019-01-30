@@ -1,0 +1,28 @@
+.vld-App {
+    @include content-layout-width();
+}
+
+.vld-App_Form {
+    display: grid;
+    grid-row-gap: 30px;
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+
+    @media (min-width: $breakpoint-md) {
+        grid-column-gap: 60px;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.vld-App_RadioButtons {
+    display: grid;
+    grid-row-gap: 20px;
+    grid-template-columns: 1fr;
+    margin-bottom: 30px;
+
+    @media (min-width: $breakpoint-md) {
+        grid-column-gap: 30px;
+        grid-template-columns: 1fr 1fr;
+        width: 50%;
+    }
+}

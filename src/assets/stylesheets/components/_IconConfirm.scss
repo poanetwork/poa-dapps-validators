@@ -1,0 +1,17 @@
+.sw-IconConfirm_Path {
+    &#{ & }-core {
+        fill: #fff;
+    }
+
+    &#{ & }-sokol {
+        fill: #fff;
+    }
+
+    &#{ & }-dai {
+        fill: #fff;
+    }
+
+    [disabled] & {
+        fill: #333 !important;
+    }
+}

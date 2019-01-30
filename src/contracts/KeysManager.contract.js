@@ -1,4 +1,4 @@
-import { constants } from '../constants'
+import { constants } from '../utils/constants'
 import helpers from './helpers'
 
 export default class KeysManager {

@@ -1,9 +1,10 @@
+/* eslint-disable no-throw-literal */
 import PoaConsensus from './PoaConsensus.contract'
 import moment from 'moment'
 import helpers from './helpers'
-import helpersGlobal from '../helpers'
-import { messages } from '../messages'
-import { constants } from '../constants'
+import helpersGlobal from '../utils/helpers'
+import { messages } from '../utils/messages'
+import { constants } from '../utils/constants'
 
 var toAscii = function(hex) {
   var str = '',
@@ -68,7 +69,7 @@ export default class Metadata {
       this.web3.utils.fromAscii(zipcode),
       expirationDate
     ]
-    if (this.netId === helpersGlobal.netIdByName('dai')) {
+    if (this.netId === helpersGlobal.netIdByName(constants.branches.DAI)) {
       input.push(this.web3.utils.fromAscii(contactEmail))
       input.push(isCompany)
     }

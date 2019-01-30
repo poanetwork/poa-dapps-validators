@@ -1,7 +1,7 @@
-import { constants } from '../constants'
+import { constants } from '../utils/constants'
 import helpers from './helpers'
-import helpersGlobal from '../helpers'
-import messages from '../messages'
+import helpersGlobal from '../utils/helpers'
+import messages from '../utils/messages'
 /*const local = {
   METADATA_ADDRESS: '0xcBB2912666c7e8023B7ec78B6842702eB26336aC',
   KEYS_MANAGER_ADDRESS: '0x2b1dbc7390a65dc40f7d64d67ea11b4d627dd1bf',

@@ -1,0 +1,40 @@
+
+
+%white-block {
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid $base-border-color;
+  margin-bottom: 30px;
+  padding: $desktop-indent;
+  transition: 0.15s box-shadow;
+
+  @media screen and (max-width: $breakpoint-md) {
+    margin-bottom: $tablet-indent;
+    padding: $tablet-indent;
+  }
+}
+
+%button {
+  cursor: pointer;
+  display: inline-block;
+  transition: 0.3s opacity;
+  box-sizing: border-box;
+  border: 0;
+  outline: none;
+  padding: 0 15px;
+  text-transform: uppercase;
+  line-height: 36px;
+  font-size: 13px;
+  font-weight: bold;
+
+  &:hover {
+    opacity: 0.9;
+    text-decoration: none;
+  }
+
+  &_icon {
+    padding: 0 15px 0 33px;
+    background-repeat: no-repeat;
+    background-position: left 15px center;
+  }
+}

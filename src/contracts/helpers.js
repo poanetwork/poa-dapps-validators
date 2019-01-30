@@ -1,4 +1,4 @@
-import { constants } from '../constants'
+import { constants } from '../utils/constants'
 
 function addressesURL(branch) {
   const URL = `https://raw.githubusercontent.com/${constants.organization}/${constants.repoName}/${branch}/${

@@ -1,0 +1,97 @@
+
+.vl-Validator {
+  border-radius: 5px;
+  border: 1px solid $base-border-color;
+  margin-bottom: 20px;
+  padding: 15px;
+  text-align: left;
+
+  @media (min-width: $breakpoint-md) {
+    margin-bottom: 30px;
+    padding: 20px 30px;
+  }
+}
+
+.vl-Validator_Header {
+  border-bottom: 1px solid $base-border-color;
+  color: #333333;
+  display: block;
+  font-size: 18px;
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: normal;
+  line-height: 1.2;
+  margin: 0 0 20px;
+  padding: 0 0 15px;
+  text-align: left;
+
+  @media (min-width: $breakpoint-md) {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.vl-Validator_HeaderAddress {
+  word-break: break-all;
+  margin-bottom: 10px;
+}
+
+.vl-Validator_HeaderHint {
+  color: #777;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.vl-Validator_HeaderConfirmations {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.2;
+  padding-top: 15px;
+
+  @media (min-width: $breakpoint-md) {
+    padding-top: 0;
+  }
+}
+
+.vl-Validator_Body {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+  }
+}
+
+.vl-Validator_Column {
+  float: none;
+  width: 100%;
+  font-size: 12px;
+
+  @media (min-width: $breakpoint-md) {
+    width: 50%;
+
+    &:first-child {
+      padding-right: 10px;
+    }
+
+    &:nth-child(2) {
+      padding-left: 10px;
+    }
+  }
+}
+
+.vl-Validator_Footer {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  padding-top: 20px;
+  width: 100%;
+
+  @media (min-width: $breakpoint-md) {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

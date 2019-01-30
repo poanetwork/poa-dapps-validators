@@ -1,0 +1,51 @@
+.vl-PhysicalAddressValue {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.vl-PhysicalAddressValue_Address {
+  color: #333;
+  display: block;
+  flex-grow: 1;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: right;
+  text-transform: capitalize;
+}
+
+.vl-PhysicalAddressValue_Icon {
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50%;
+  display: block;
+  flex-shrink: 0;
+  height: $data-pair-height;
+  margin: -4px 0 -4px 10px;
+  width: $data-pair-height;
+
+  &#{ & }-unconfirmed {
+    background-color: #e5e5e5;
+    background-image: url('/images/unconfirmed.svg');
+  }
+
+  &#{ & }-confirmed {
+    background-image: url('/images/confirmed.svg');
+  }
+
+  &#{ & }-confirmed#{ & }-core {
+    background-color: $poa-purple;
+  }
+  &#{ & }-confirmed#{ & }-sokol {
+    background-color: $sokol-cyan;
+  }
+  &#{ & }-confirmed#{ & }-xdai {
+    background-color: $xdai-orange;
+  }
+}

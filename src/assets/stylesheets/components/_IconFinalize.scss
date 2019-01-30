@@ -1,0 +1,19 @@
+.sw-IconFinalize_Path {
+    fill: #fff;
+
+    &#{ & }-core {
+        fill: #fff;
+    }
+
+    &#{ & }-sokol {
+        fill: #fff;
+    }
+
+    &#{ & }-dai {
+        fill: #fff;
+    }
+
+    [disabled] & {
+        fill: #333 !important;
+    }
+}
