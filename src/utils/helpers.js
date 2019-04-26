@@ -11,6 +11,16 @@ function generateAlert(icon, title, msg) {
   })
 }
 
+function isCompanyAllowed(netId) {
+  switch (netId) {
+    case netIdByName(constants.branches.DAI):
+    case netIdByName(constants.branches.KOVAN):
+      return true
+    default:
+      return false
+  }
+}
+
 function netIdByName(netName) {
   const netNameLowerCase = netName.toLowerCase()
   for (let netId in constants.NETWORKS) {
@@ -23,6 +33,7 @@ function netIdByName(netName) {
 
 const helpers = {
   generateAlert,
+  isCompanyAllowed,
   netIdByName
 }
 

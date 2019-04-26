@@ -69,17 +69,7 @@ export default class Metadata {
       this.web3.utils.fromAscii(zipcode),
       expirationDate
     ]
-    let isCompanyAllowed
-    switch (this.netId) {
-      case helpersGlobal.netIdByName(constants.branches.DAI):
-      case helpersGlobal.netIdByName(constants.branches.KOVAN):
-        isCompanyAllowed = true
-        break
-      default:
-        isCompanyAllowed = false
-        break
-    }
-    if (isCompanyAllowed) {
+    if (helpersGlobal.isCompanyAllowed(this.netId)) {
       input.push(this.web3.utils.fromAscii(contactEmail))
       input.push(isCompany)
     }

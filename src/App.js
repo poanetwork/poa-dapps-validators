@@ -32,16 +32,6 @@ class App extends Component {
       this.setState({ form })
     }
     this.onSelect = this.onSelectAutocomplete.bind(this)
-    let isCompany
-    switch (Number(this.props.web3Config.netId)) {
-      case helpers.netIdByName(constants.branches.DAI):
-      case helpers.netIdByName(constants.branches.KOVAN):
-        isCompany = true
-        break
-      default:
-        isCompany = false
-        break
-    }
     this.state = {
       web3Config: {},
       form: {
@@ -53,7 +43,7 @@ class App extends Component {
         lastName: '',
         licenseId: '',
         contactEmail: '',
-        isCompany
+        isCompany: helpers.isCompanyAllowed(Number(this.props.web3Config.netId))
       },
       hasData: false
     }
@@ -256,16 +246,7 @@ class App extends Component {
     const { isCompany } = this.state.form
     const { networkBranch } = this.props
     const hideNote = netId !== helpers.netIdByName(constants.branches.CORE)
-    let isCompanyAllowed
-    switch (netId) {
-      case helpers.netIdByName(constants.branches.DAI):
-      case helpers.netIdByName(constants.branches.KOVAN):
-        isCompanyAllowed = true
-        break
-      default:
-        isCompanyAllowed = false
-        break
-    }
+    const isCompanyAllowed = helpers.isCompanyAllowed(netId)
     const inputProps = {
       id: 'address',
       onChange: this.onChangeAutoComplete,

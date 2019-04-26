@@ -3,7 +3,6 @@ import helpers from '../../utils/helpers'
 import { PhysicalAddressValue } from '../PhysicalAddressValue'
 import { ValidatorDataPair } from '../ValidatorDataPair'
 import { ValidatorTitle } from '../ValidatorTitle'
-import { constants } from '../../utils/constants'
 
 class Validator extends Component {
   constructor(props) {
@@ -34,18 +33,7 @@ class Validator extends Component {
       updatedDate
     } = this.props
 
-    let isCompanyAllowed
-    switch (netId) {
-      case helpers.netIdByName(constants.branches.DAI):
-      case helpers.netIdByName(constants.branches.KOVAN):
-        isCompanyAllowed = true
-        break
-      default:
-        isCompanyAllowed = false
-        break
-    }
-
-    if (isCompanyAllowed && !createdDate) {
+    if (helpers.isCompanyAllowed(netId) && !createdDate) {
       isCompany = true
     }
 
