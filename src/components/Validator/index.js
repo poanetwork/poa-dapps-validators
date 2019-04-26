@@ -34,7 +34,18 @@ class Validator extends Component {
       updatedDate
     } = this.props
 
-    if (netId === helpers.netIdByName(constants.branches.DAI) && !createdDate) {
+    let isCompanyAllowed
+    switch (netId) {
+      case helpers.netIdByName(constants.branches.DAI):
+      case helpers.netIdByName(constants.branches.KOVAN):
+        isCompanyAllowed = true
+        break
+      default:
+        isCompanyAllowed = false
+        break
+    }
+
+    if (isCompanyAllowed && !createdDate) {
       isCompany = true
     }
 

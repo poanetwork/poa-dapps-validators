@@ -54,6 +54,8 @@ let getWeb3 = () => {
 
         if (window.location.host.indexOf(constants.branches.SOKOL) !== -1) {
           netId = helpers.netIdByName(constants.branches.SOKOL)
+        } else if (window.location.host.indexOf(constants.branches.KOVAN) !== -1) {
+          netId = helpers.netIdByName(constants.branches.KOVAN)
         } else if (window.location.host.indexOf(constants.branches.DAI) !== -1) {
           netId = helpers.netIdByName(constants.branches.DAI)
         } else {
