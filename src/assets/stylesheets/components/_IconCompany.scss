@@ -7,6 +7,9 @@ $icon-company-color-2-sokol: #6ac9b9;
 $icon-company-color-1-xdai: #FFF2D9;
 $icon-company-color-2-xdai: #FEC042;
 
+$icon-company-color-1-kovan: #DED6EC;
+$icon-company-color-2-kovan: #6ac9b9;
+
 .sw-IconCompany_Path1 {
     &#{ & }-core {
         fill: $icon-company-color-1-poa;
@@ -18,6 +21,10 @@ $icon-company-color-2-xdai: #FEC042;
 
     &#{ & }-dai {
         fill: $icon-company-color-1-xdai;
+    }
+
+    &#{ & }-kovan {
+        fill: $icon-company-color-1-kovan;
     }
 }
 
@@ -32,5 +39,9 @@ $icon-company-color-2-xdai: #FEC042;
 
     &#{ & }-dai {
         fill: $icon-company-color-2-xdai;
+    }
+
+    &#{ & }-kovan {
+        fill: $icon-company-color-2-kovan;
     }
 }

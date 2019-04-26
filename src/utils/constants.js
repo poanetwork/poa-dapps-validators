@@ -13,7 +13,8 @@ constants.rootPath = '/poa-dapps-validators'
 constants.branches = {
   DAI: 'dai',
   CORE: 'core',
-  SOKOL: 'sokol'
+  SOKOL: 'sokol',
+  KOVAN: 'kovan'
 }
 
 constants.navigationData = [
@@ -35,6 +36,12 @@ constants.navigationData = [
 ]
 
 constants.NETWORKS = {
+  '42': {
+    NAME: 'Kovan',
+    RPC: 'https://kovan.infura.io',
+    BRANCH: constants.branches.KOVAN,
+    TESTNET: true
+  },
   '77': {
     NAME: 'Sokol',
     RPC: 'https://sokol.poa.network',
