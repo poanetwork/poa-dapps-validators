@@ -6,7 +6,7 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import getWeb3 from './utils/getWeb3'
+import getWeb3, { setWeb3 } from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
@@ -32,27 +32,28 @@ class AppMainRouter extends Component {
 
     history.listen(this.onRouteChange.bind(this))
 
-    this.onSetRender = this.onSetRender.bind(this)
-    this.onPendingChangesRender = this.onPendingChangesRender.bind(this)
     this.onAllValidatorsRender = this.onAllValidatorsRender.bind(this)
     this.onConfirmPendingChange = this.onConfirmPendingChange.bind(this)
     this.onFinalize = this.onFinalize.bind(this)
+    this.onNetworkChange = this.onNetworkChange.bind(this)
+    this.onPendingChangesRender = this.onPendingChangesRender.bind(this)
     this.onSearch = this.onSearch.bind(this)
+    this.onSetRender = this.onSetRender.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
 
     this.state = {
-      showSearch: history.location.pathname !== setMetadataPath,
-      keysManager: null,
-      metadataContract: null,
-      poaConsensus: null,
-      votingKey: null,
-      miningKey: null,
-      loading: true,
-      searchTerm: '',
-      injectedWeb3: true,
-      netId: '',
       error: false,
-      showMobileMenu: false
+      injectedWeb3: true,
+      keysManager: null,
+      loading: true,
+      metadataContract: null,
+      miningKey: null,
+      netId: '',
+      poaConsensus: null,
+      searchTerm: '',
+      showMobileMenu: false,
+      showSearch: history.location.pathname !== setMetadataPath,
+      votingKey: null
     }
     getWeb3()
       .then(async web3Config => {
@@ -208,6 +209,17 @@ class AppMainRouter extends Component {
       <App web3Config={this.state} networkBranch={networkBranch} />
     )
   }
+  async onNetworkChange(e) {
+    this.setState({ loading: true })
+
+    const netId = e.value
+    const web3 = setWeb3(netId)
+
+    networkAddresses({ netId }).then(async config => {
+      const { addresses } = config
+      await this.initContracts({ web3, netId, addresses })
+    })
+  }
 
   render() {
     const networkBranch = this.getValidatorsNetworkBranch()
@@ -221,7 +233,10 @@ class AppMainRouter extends Component {
         >
           <Header
             baseRootPath={baseRootPath}
+            injectedWeb3={this.state.injectedWeb3}
+            netId={this.state.netId}
             networkBranch={networkBranch}
+            onChange={this.onNetworkChange}
             onMenuToggle={this.toggleMobileMenu}
             showMobileMenu={this.state.showMobileMenu}
           />
