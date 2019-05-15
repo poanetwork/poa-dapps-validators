@@ -6,7 +6,8 @@ export const ButtonFinalize = ({
   extraClassName = '',
   networkBranch,
   onClick,
-  text = 'Finalize'
+  text = 'Finalize',
+  ...props
 }) => {
   return (
     <button
@@ -14,6 +15,7 @@ export const ButtonFinalize = ({
       disabled={disabled}
       onClick={onClick}
       type="button"
+      {...props}
     >
       <span className="sw-ButtonFinalize_Text">{text}</span> <IconFinalize networkBranch={networkBranch} />
     </button>
