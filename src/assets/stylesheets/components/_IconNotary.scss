@@ -7,6 +7,9 @@ $icon-notary-color-2-sokol: #6ac9b9;
 $icon-notary-color-1-xdai: #FEC042;
 $icon-notary-color-2-xdai: #FEC042;
 
+$icon-notary-color-1-kovan: #6ac9b9;
+$icon-notary-color-2-kovan: #6ac9b9;
+
 .sw-IconNotary_Path1 {
     &#{ & }-core {
         fill: $icon-notary-color-1-poa;
@@ -18,6 +21,10 @@ $icon-notary-color-2-xdai: #FEC042;
 
     &#{ & }-dai {
         fill: $icon-notary-color-1-xdai;
+    }
+
+    &#{ & }-kovan {
+        fill: $icon-notary-color-1-kovan;
     }
 }
 
@@ -32,5 +39,9 @@ $icon-notary-color-2-xdai: #FEC042;
 
     &#{ & }-dai {
         fill: $icon-notary-color-2-xdai;
+    }
+
+    &#{ & }-kovan {
+        fill: $icon-notary-color-2-kovan;
     }
 }

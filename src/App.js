@@ -43,7 +43,7 @@ class App extends Component {
         lastName: '',
         licenseId: '',
         contactEmail: '',
-        isCompany: Number(this.props.web3Config.netId) === helpers.netIdByName(constants.branches.DAI)
+        isCompany: helpers.isCompanyAllowed(Number(this.props.web3Config.netId))
       },
       hasData: false
     }
@@ -246,7 +246,7 @@ class App extends Component {
     const { isCompany } = this.state.form
     const { networkBranch } = this.props
     const hideNote = netId !== helpers.netIdByName(constants.branches.CORE)
-    const isDaiNetwork = netId === helpers.netIdByName(constants.branches.DAI)
+    const isCompanyAllowed = helpers.isCompanyAllowed(netId)
     const inputProps = {
       id: 'address',
       onChange: this.onChangeAutoComplete,
@@ -268,7 +268,7 @@ class App extends Component {
     return this.isValidVotingKey ? (
       <div className="vld-App">
         <MainTitle text={constants.navigationData[1].title} />
-        {isDaiNetwork ? (
+        {isCompanyAllowed ? (
           <div className="vld-App_RadioButtons">
             <FormRadioButton
               checked={isCompany}

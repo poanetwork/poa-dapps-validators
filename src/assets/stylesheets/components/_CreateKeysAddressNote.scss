@@ -39,6 +39,15 @@
             }
         }
     }
+
+    &#{ & }-kovan {
+        border-color: $kovan-cyan;
+        color: $kovan-cyan;
+
+        a {
+            color: $kovan-cyan;
+        }
+    }
 }
 
 .key-CreateKeysAddressNote_InfoIcon {
@@ -59,5 +68,9 @@
 
     &#{ & }-dai {
         background-image: url('#{ $base-images-path }/CreateKeysAddressNote/xdai.svg');
+    }
+
+    &#{ & }-kovan {
+        background-image: url('#{ $base-images-path }/CreateKeysAddressNote/kovan.svg');
     }
 }
