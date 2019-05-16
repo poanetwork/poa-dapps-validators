@@ -161,7 +161,6 @@ export default class AllValidators extends Component {
       let childrenWithProps = React.Children.map(this.props.children, child => {
         return React.cloneElement(child, { miningkey: validator.address })
       })
-
       validators.push(
         <Validator
           address={validator.address}
