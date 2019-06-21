@@ -38,24 +38,28 @@ constants.navigationData = [
 constants.NETWORKS = {
   '42': {
     NAME: 'Kovan',
+    FULLNAME: 'Kovan',
     RPC: 'https://kovan.infura.io/v3/1125fe73d87c4e5396678f4e3089b3dd',
     BRANCH: constants.branches.KOVAN,
     TESTNET: true
   },
   '77': {
     NAME: 'Sokol',
+    FULLNAME: 'Sokol',
     RPC: 'https://sokol.poa.network',
     BRANCH: constants.branches.SOKOL,
     TESTNET: true
   },
   '99': {
     NAME: 'Core',
+    FULLNAME: 'POA Core Chain',
     RPC: 'https://core.poa.network',
     BRANCH: constants.branches.CORE,
     TESTNET: false
   },
   '100': {
     NAME: 'Dai',
+    FULLNAME: 'xDai Stable Chain',
     RPC: 'https://dai.poa.network',
     BRANCH: constants.branches.DAI,
     TESTNET: false

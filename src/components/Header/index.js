@@ -4,6 +4,7 @@ import { IconMobileMenu } from '../IconMobileMenu'
 import { Logo } from '../Logo'
 import { MobileMenuLinks } from '../MobileMenuLinks'
 import { NavigationLinks } from '../NavigationLinks'
+import { NetworkSelect } from '../NetworkSelect'
 import { constants } from '../..//utils/constants'
 
 const getNetworkOptions = () => {
@@ -45,6 +46,7 @@ export const Header = ({
           <NavigationLinks networkBranch={networkBranch} />
         </div>
         {networkSelect}
+        <NetworkSelect networkBranch={networkBranch} />
         <IconMobileMenu networkBranch={networkBranch} isOpen={showMobileMenu} onClick={onMenuToggle} />
       </div>
     </header>
