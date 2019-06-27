@@ -5,7 +5,7 @@ import { Logo } from '../Logo'
 import { MobileMenuLinks } from '../MobileMenuLinks'
 import { NavigationLinks } from '../NavigationLinks'
 import { NetworkSelect } from '../NetworkSelect'
-import { constants } from '../..//utils/constants'
+import { constants } from '../../utils/constants'
 
 const getNetworkOptions = () => {
   let selectOptions = []

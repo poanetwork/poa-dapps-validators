@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import helpers from './helpers'
 import { constants } from './constants'
 
-let getWeb3 = () => {
+let getWeb3 = forcedNetId => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async function() {
@@ -29,7 +29,7 @@ let getWeb3 = () => {
       let injectedWeb3 = web3 !== null
       let defaultAccount = null
 
-      if (web3) {
+      if (web3 && !forcedNetId) {
         netId = await web3.eth.net.getId()
         console.log('netId', netId)
 
@@ -52,7 +52,9 @@ let getWeb3 = () => {
         console.log('No web3 instance injected, using Local web3.')
         console.error('Metamask not found')
 
-        if (window.location.host.indexOf(constants.branches.SOKOL) !== -1) {
+        if (forcedNetId) {
+          netId = forcedNetId
+        } else if (window.location.host.indexOf(constants.branches.SOKOL) !== -1) {
           netId = helpers.netIdByName(constants.branches.SOKOL)
         } else if (window.location.host.indexOf(constants.branches.KOVAN) !== -1) {
           netId = helpers.netIdByName(constants.branches.KOVAN)
