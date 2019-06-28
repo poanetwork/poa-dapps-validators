@@ -15,7 +15,7 @@ export const NetworkSelect = ({ networkBranch }) => {
   }
 
   const listItems = networkFullNames.map(number => (
-    <li>
+    <li key={number.toString()}>
       <a href="#" onClick={changeNetworkRPC}>
         {number}
       </a>
@@ -23,7 +23,7 @@ export const NetworkSelect = ({ networkBranch }) => {
   ))
 
   function changeNetworkRPC(e) {
-    // e.preventDefault()
+    e.preventDefault()
     let getCurrentClickedLink = e.target.innerHTML
     let getCurrentClickedLinkId = ''
     for (const _netId in constants.NETWORKS) {
@@ -32,7 +32,7 @@ export const NetworkSelect = ({ networkBranch }) => {
       }
     }
     console.log(getCurrentClickedLinkId)
-    // getWeb3(getCurrentClickedLinkId)
+    getWeb3(getCurrentClickedLinkId)
   }
 
   return (
