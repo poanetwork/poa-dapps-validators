@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import helpers from './helpers'
 import { constants } from './constants'
 
-let getWeb3 = forcedNetId => {
+const getWeb3 = forcedNetId => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async function() {
@@ -93,6 +93,4 @@ const setWeb3 = netId => {
   return new Web3(provider)
 }
 
-export default getWeb3
-
-export { setWeb3 }
+export { getWeb3, setWeb3 }

@@ -6,7 +6,7 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import getWeb3, { setWeb3 } from './utils/getWeb3'
+import { getWeb3, setWeb3 } from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
@@ -55,7 +55,11 @@ class AppMainRouter extends Component {
       showSearch: history.location.pathname !== setMetadataPath,
       votingKey: null
     }
-    getWeb3()
+    this.initChain(this.state.netId)
+  }
+
+  initChain(_netId) {
+    getWeb3(_netId)
       .then(async web3Config => {
         return networkAddresses(web3Config)
       })
@@ -78,6 +82,7 @@ class AppMainRouter extends Component {
         helpers.generateAlert('error', 'Error!', error.message)
       })
   }
+
   async initContracts({ web3, netId, addresses }) {
     const keysManager = new KeysManager()
     await keysManager.init({
@@ -102,14 +107,18 @@ class AppMainRouter extends Component {
       console.error('Error initializing ProofOfPhysicalAddress', e)
       proofOfPhysicalAddressContract = null
     }
-    this.setState({
+    const newState = {
       keysManager,
       metadataContract,
       proofOfPhysicalAddressContract,
       loading: false,
       netId
-    })
+    }
+    console.log('newState:')
+    console.log(newState)
+    this.setState(newState)
   }
+
   onRouteChange() {
     if (history.location.pathname === setMetadataPath) {
       this.setState({ showSearch: false })
@@ -121,6 +130,7 @@ class AppMainRouter extends Component {
       this.setState({ showSearch: true })
     }
   }
+
   checkForVotingKey(cb) {
     if (this.state.votingKey && !this.state.loading) {
       return cb()
@@ -128,9 +138,11 @@ class AppMainRouter extends Component {
     helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
     return ''
   }
+
   toggleMobileMenu = () => {
     this.setState(prevState => ({ showMobileMenu: !prevState.showMobileMenu }))
   }
+
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault()
     this.checkForVotingKey(async () => {
@@ -152,6 +164,7 @@ class AppMainRouter extends Component {
       }
     })
   }
+
   async onConfirmPendingChange(event) {
     await this._onBtnClick({
       event,
@@ -159,6 +172,7 @@ class AppMainRouter extends Component {
       successMsg: 'You have successfully confirmed the change!'
     })
   }
+
   async onFinalize(event) {
     await this._onBtnClick({
       event,
@@ -166,6 +180,7 @@ class AppMainRouter extends Component {
       successMsg: 'You have successfully finalized the change!'
     })
   }
+
   onPendingChangesRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
 
@@ -183,6 +198,7 @@ class AppMainRouter extends Component {
       </AllValidators>
     )
   }
+
   onAllValidatorsRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
 
@@ -196,12 +212,15 @@ class AppMainRouter extends Component {
       />
     )
   }
+
   onSearch(term) {
     this.setState({ searchTerm: term.target.value })
   }
+
   getValidatorsNetworkBranch() {
     return this.state.netId ? getNetworkBranch(this.state.netId) : null
   }
+
   onSetRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
 
@@ -209,6 +228,7 @@ class AppMainRouter extends Component {
       <App web3Config={this.state} networkBranch={networkBranch} />
     )
   }
+
   async onNetworkChange(e) {
     this.setState({ loading: true })
 

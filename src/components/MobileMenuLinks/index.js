@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavigationLinks } from '../NavigationLinks'
-import { NetworkSelect } from '../NetworkSelect'
+import NetworkSelect from '../NetworkSelect'
 
 export const MobileMenuLinks = ({ onClick, networkBranch }) => {
   return (
