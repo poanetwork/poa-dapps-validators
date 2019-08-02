@@ -40,6 +40,7 @@ class AppMainRouter extends Component {
     this.onSearch = this.onSearch.bind(this)
     this.onSetRender = this.onSetRender.bind(this)
     this.toggleMobileMenu = this.toggleMobileMenu.bind(this)
+    this.onAccountChange = this.onAccountChange.bind(this)
 
     this.state = {
       error: false,
@@ -55,11 +56,11 @@ class AppMainRouter extends Component {
       showSearch: history.location.pathname !== setMetadataPath,
       votingKey: null
     }
-    this.initChain(this.state.netId)
+    this.initChain(window.localStorage.netId)
   }
 
   initChain(_netId) {
-    getWeb3(_netId)
+    getWeb3(_netId, this.onAccountChange)
       .then(async web3Config => {
         return networkAddresses(web3Config)
       })
@@ -75,6 +76,7 @@ class AppMainRouter extends Component {
           miningKey: await this.state.keysManager.miningKeyByVoting(web3Config.defaultAccount),
           injectedWeb3: web3Config.injectedWeb3
         })
+        this.onRouteChange()
       })
       .catch(error => {
         console.error(error.message)
@@ -119,12 +121,23 @@ class AppMainRouter extends Component {
     this.setState(newState)
   }
 
+  onAccountChange(account) {
+    this.state.keysManager.miningKeyByVoting(account).then(miningKey => {
+      this.setState({
+        votingKey: account,
+        miningKey: miningKey
+      })
+    })
+  }
+
   onRouteChange() {
     if (history.location.pathname === setMetadataPath) {
       this.setState({ showSearch: false })
 
       if (this.state.injectedWeb3 === false) {
         helpers.generateAlert('warning', 'Warning!', 'Metamask was not found')
+      } else {
+        this.checkForVotingKey(() => {})
       }
     } else {
       this.setState({ showSearch: true })

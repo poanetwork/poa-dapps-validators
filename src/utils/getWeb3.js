@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import helpers from './helpers'
 import { constants } from './constants'
 
-const getWeb3 = forcedNetId => {
+const getWeb3 = (forcedNetId, onAccountChange) => {
   return new Promise(function(resolve, reject) {
     // Wait for loading completion to avoid race conditions with web3 injection timing.
     window.addEventListener('load', async function() {
@@ -29,30 +29,58 @@ const getWeb3 = forcedNetId => {
       let injectedWeb3 = web3 !== null
       let defaultAccount = null
 
-      if (web3 && !forcedNetId) {
-        netId = await web3.eth.net.getId()
-        console.log('netId', netId)
+      if (web3) {
+        const accounts = await web3.eth.getAccounts()
+        defaultAccount = accounts[0] || null
 
-        if (!(netId in constants.NETWORKS)) {
-          netIdName = 'ERROR'
-          errorMsg = `You aren't connected to POA Network.
-              Please, switch to POA Network and refresh the page.
-              Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>Wiki</a> for more info.`
-          console.log('This is an unknown network.')
-        } else {
-          netIdName = constants.NETWORKS[netId].NAME
-          console.log(`This is ${netIdName}`)
+        if (!defaultAccount) {
+          console.error('Unlock your wallet')
         }
 
-        const accounts = await web3.eth.getAccounts()
+        let currentNetwork = (await web3.eth.net.getId()).toString()
+        let currentAccount = defaultAccount ? defaultAccount.toLowerCase() : ''
+        web3.currentProvider.publicConfigStore.on('update', function(obj) {
+          const id = obj.networkVersion
+          const account = obj.selectedAddress
+          if (!document.hidden && id !== 'loading' && id !== currentNetwork) {
+            currentNetwork = id
+            if (id in constants.NETWORKS) {
+              window.localStorage.netId = id
+            }
+          }
+          if (account && account !== currentAccount) {
+            currentAccount = account
+            onAccountChange(account)
+          }
+        })
+      }
 
-        defaultAccount = accounts[0] || null
-      } else {
-        // Fallback to localhost if no web3 injection.
-        console.log('No web3 instance injected, using Local web3.')
-        console.error('Metamask not found')
+      if (!web3 && !(forcedNetId in constants.NETWORKS)) {
+        forcedNetId = ''
+      }
 
-        if (forcedNetId) {
+      if (web3) {
+        const web3NetId = await web3.eth.net.getId()
+        if (web3NetId === forcedNetId || (!forcedNetId && web3NetId in constants.NETWORKS)) {
+          netId = web3NetId
+
+          if (!(netId in constants.NETWORKS)) {
+            netIdName = 'ERROR'
+            errorMsg = `You aren't connected to POA Network.
+                Please, switch to POA Network and refresh the page.
+                Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>Wiki</a> for more info.`
+            console.log('This is an unknown network.')
+          } else {
+            netIdName = constants.NETWORKS[netId].NAME
+            console.log(`This is ${netIdName}`)
+          }
+        } else {
+          web3 = null
+        }
+      }
+
+      if (!web3) {
+        if (forcedNetId && forcedNetId in constants.NETWORKS) {
           netId = forcedNetId
         } else if (window.location.host.indexOf(constants.branches.SOKOL) !== -1) {
           netId = helpers.netIdByName(constants.branches.SOKOL)
@@ -89,6 +117,7 @@ const getWeb3 = forcedNetId => {
 }
 
 const setWeb3 = netId => {
+  window.localStorage.netId = netId
   const provider = new Web3.providers.HttpProvider(constants.NETWORKS[netId].RPC)
   return new Web3(provider)
 }
