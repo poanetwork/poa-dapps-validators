@@ -26,6 +26,8 @@ class App extends Component {
     this.getKeysManager = this.getKeysManager.bind(this)
     this.getMetadataContract = this.getMetadataContract.bind(this)
     this.getVotingKey = this.getVotingKey.bind(this)
+    this.setMetadata = this.setMetadata.bind(this)
+    this.setIsValidVotingKey = this.setIsValidVotingKey.bind(this)
     this.onChangeAutoComplete = address => {
       const form = this.state.form
       form.fullAddress = address
@@ -45,12 +47,20 @@ class App extends Component {
         contactEmail: '',
         isCompany: helpers.isCompanyAllowed(Number(this.props.web3Config.netId))
       },
-      hasData: false
+      hasData: false,
+      loading: true
     }
     this.defaultValues = null
-    this.setMetadata.call(this)
     this.isValidVotingKey = false
-    this.setIsValidVotingKey.call(this)
+  }
+  componentDidMount() {
+    this.setData.call(this)
+  }
+  async setData() {
+    if (this.props.web3Config.networkMatch) {
+      await Promise.all([this.setMetadata(), this.setIsValidVotingKey()])
+    }
+    this.setState({ loading: false })
   }
   async setMetadata() {
     const currentData = await this.getMetadataContract().getValidatorData(this.getMiningKey())
@@ -265,102 +275,116 @@ class App extends Component {
       )
     }
 
-    return this.isValidVotingKey ? (
+    let error
+
+    if (!this.props.web3Config.networkMatch) {
+      error = 'Networks do not match'
+    } else if (!this.isValidVotingKey) {
+      error = 'Invalid voting key'
+    }
+
+    return (
       <div className="vld-App">
         <MainTitle text={constants.navigationData[1].title} />
-        {isCompanyAllowed ? (
-          <div className="vld-App_RadioButtons">
-            <FormRadioButton
-              checked={isCompany}
-              id="isCompany"
-              name="isCompanyRadio"
+        {error ? (
+          <p>{error}</p>
+        ) : (
+          <div>
+            {isCompanyAllowed ? (
+              <div className="vld-App_RadioButtons">
+                <FormRadioButton
+                  checked={isCompany}
+                  id="isCompany"
+                  name="isCompanyRadio"
+                  networkBranch={networkBranch}
+                  onChange={this.onChangeFormField}
+                  text="I'm a company"
+                />
+                <FormRadioButton
+                  checked={!isCompany}
+                  id="isNotary"
+                  name="isCompanyRadio"
+                  networkBranch={networkBranch}
+                  onChange={this.onChangeFormField}
+                  text="I'm a notary"
+                />
+              </div>
+            ) : null}
+            <form className="vld-App_Form">
+              <FormInput
+                id="firstName"
+                onChange={this.onChangeFormField}
+                title={isCompany ? 'Full name' : 'First name'}
+                value={this.state.form.firstName}
+              />
+              {isCompany ? (
+                <FormInput
+                  id="contactEmail"
+                  onChange={this.onChangeFormField}
+                  title="Contact E-mail"
+                  type="email"
+                  value={this.state.form.contactEmail}
+                />
+              ) : null}
+              {isCompany ? null : (
+                <FormInput
+                  id="lastName"
+                  onChange={this.onChangeFormField}
+                  title="Last name"
+                  value={this.state.form.lastName}
+                />
+              )}
+              {isCompany ? null : (
+                <FormInput
+                  id="licenseId"
+                  onChange={this.onChangeFormField}
+                  title="License id"
+                  value={this.state.form.licenseId}
+                />
+              )}
+              {isCompany ? null : (
+                <FormInput
+                  id="expirationDate"
+                  onChange={this.onChangeFormField}
+                  title="License expiration"
+                  type="date"
+                  value={this.state.form.expirationDate}
+                />
+              )}
+              {isCompany ? null : (
+                <FormAutocomplete
+                  autocompleteItem={AutocompleteItem}
+                  id="address"
+                  inputProps={inputProps}
+                  onSelect={this.onSelect}
+                  title="Address"
+                />
+              )}
+              {isCompany ? null : (
+                <FormInput
+                  id="us_state"
+                  onChange={this.onChangeFormField}
+                  title="State"
+                  value={this.state.form.us_state}
+                />
+              )}
+              {isCompany ? null : (
+                <FormInput
+                  id="postal_code"
+                  onChange={this.onChangeFormField}
+                  title="Zip code"
+                  value={this.state.form.postal_code}
+                />
+              )}
+            </form>
+            <ButtonConfirm
               networkBranch={networkBranch}
-              onChange={this.onChangeFormField}
-              text="I'm a company"
+              text={` ${this.state.hasData ? 'Update' : 'Set'} Metadata`}
+              onClick={this.onClick}
             />
-            <FormRadioButton
-              checked={!isCompany}
-              id="isNotary"
-              name="isCompanyRadio"
-              networkBranch={networkBranch}
-              onChange={this.onChangeFormField}
-              text="I'm a notary"
-            />
+            {hideNote ? null : <CreateKeysAddressNote networkBranch={networkBranch} />}
           </div>
-        ) : null}
-        <form className="vld-App_Form">
-          <FormInput
-            id="firstName"
-            onChange={this.onChangeFormField}
-            title={isCompany ? 'Full name' : 'First name'}
-            value={this.state.form.firstName}
-          />
-          {isCompany ? (
-            <FormInput
-              id="contactEmail"
-              onChange={this.onChangeFormField}
-              title="Contact E-mail"
-              type="email"
-              value={this.state.form.contactEmail}
-            />
-          ) : null}
-          {isCompany ? null : (
-            <FormInput
-              id="lastName"
-              onChange={this.onChangeFormField}
-              title="Last name"
-              value={this.state.form.lastName}
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="licenseId"
-              onChange={this.onChangeFormField}
-              title="License id"
-              value={this.state.form.licenseId}
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="expirationDate"
-              onChange={this.onChangeFormField}
-              title="License expiration"
-              type="date"
-              value={this.state.form.expirationDate}
-            />
-          )}
-          {isCompany ? null : (
-            <FormAutocomplete
-              autocompleteItem={AutocompleteItem}
-              id="address"
-              inputProps={inputProps}
-              onSelect={this.onSelect}
-              title="Address"
-            />
-          )}
-          {isCompany ? null : (
-            <FormInput id="us_state" onChange={this.onChangeFormField} title="State" value={this.state.form.us_state} />
-          )}
-          {isCompany ? null : (
-            <FormInput
-              id="postal_code"
-              onChange={this.onChangeFormField}
-              title="Zip code"
-              value={this.state.form.postal_code}
-            />
-          )}
-        </form>
-        <ButtonConfirm
-          networkBranch={networkBranch}
-          text={` ${this.state.hasData ? 'Update' : 'Set'} Metadata`}
-          onClick={this.onClick}
-        />
-        {hideNote ? null : <CreateKeysAddressNote networkBranch={networkBranch} />}
-      </div>
-    ) : (
-      <div className="vld-App">
-        <MainTitle text={constants.navigationData[1].title} />
-        <p>Invalid voting key</p>
+        )}
       </div>
     )
   }

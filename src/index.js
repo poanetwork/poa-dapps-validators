@@ -6,7 +6,7 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import { getWeb3, setWeb3 } from './utils/getWeb3'
+import getWeb3 from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
@@ -44,7 +44,8 @@ class AppMainRouter extends Component {
 
     this.state = {
       error: false,
-      injectedWeb3: true,
+      injectedWeb3: false,
+      networkMatch: false,
       keysManager: null,
       loading: true,
       metadataContract: null,
@@ -56,11 +57,12 @@ class AppMainRouter extends Component {
       showSearch: history.location.pathname !== setMetadataPath,
       votingKey: null
     }
-    this.initChain(window.localStorage.netId)
+    window.addEventListener('load', () => this.initChain())
   }
 
-  initChain(_netId) {
-    getWeb3(_netId, this.onAccountChange)
+  initChain() {
+    const netId = window.localStorage.netId
+    getWeb3(netId, this.onAccountChange)
       .then(async web3Config => {
         return networkAddresses(web3Config)
       })
@@ -74,8 +76,10 @@ class AppMainRouter extends Component {
         this.setState({
           votingKey: web3Config.defaultAccount,
           miningKey: await this.state.keysManager.miningKeyByVoting(web3Config.defaultAccount),
-          injectedWeb3: web3Config.injectedWeb3
+          injectedWeb3: web3Config.injectedWeb3,
+          networkMatch: web3Config.networkMatch
         })
+        this.setState({ loading: false })
         this.onRouteChange()
       })
       .catch(error => {
@@ -113,7 +117,6 @@ class AppMainRouter extends Component {
       keysManager,
       metadataContract,
       proofOfPhysicalAddressContract,
-      loading: false,
       netId
     }
     console.log('newState:')
@@ -145,11 +148,14 @@ class AppMainRouter extends Component {
   }
 
   checkForVotingKey(cb) {
-    if (this.state.votingKey && !this.state.loading) {
-      return cb()
+    if (!this.state.votingKey || this.state.loading) {
+      helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
+      return
+    } else if (!this.state.networkMatch) {
+      helpers.generateAlert('warning', 'Warning!', messages.networkMatchError)
+      return
     }
-    helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
-    return ''
+    return cb()
   }
 
   toggleMobileMenu = () => {
@@ -242,16 +248,10 @@ class AppMainRouter extends Component {
     )
   }
 
-  async onNetworkChange(e) {
+  onNetworkChange(e) {
     this.setState({ loading: true })
-
-    const netId = e.value
-    const web3 = setWeb3(netId)
-
-    networkAddresses({ netId }).then(async config => {
-      const { addresses } = config
-      await this.initContracts({ web3, netId, addresses })
-    })
+    window.localStorage.netId = e.value
+    this.initChain()
   }
 
   render() {
