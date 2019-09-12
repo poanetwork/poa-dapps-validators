@@ -16,7 +16,9 @@ export const Header = ({
 }) => {
   return (
     <header className={`sw-Header sw-Header-${networkBranch} ${showMobileMenu ? 'sw-Header-menu-open' : ''}`}>
-      {showMobileMenu ? <MobileMenuLinks networkBranch={networkBranch} onClick={onMenuToggle} /> : null}
+      {showMobileMenu ? (
+        <MobileMenuLinks networkBranch={networkBranch} onClick={onMenuToggle} onNetworkChange={onChange} />
+      ) : null}
       <div className="sw-Header_Content">
         <Logo networkBranch={networkBranch} href={baseRootPath} />
         <div className="sw-Header_Links">
