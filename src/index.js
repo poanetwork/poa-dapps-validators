@@ -17,6 +17,7 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Router, Route, Redirect } from 'react-router-dom'
 import { SearchBar } from './components/SearchBar'
+import { Loading } from './components/Loading'
 import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
 import { messages } from './utils/messages'
@@ -48,6 +49,7 @@ class AppMainRouter extends Component {
       networkMatch: false,
       keysManager: null,
       loading: true,
+      loadingNetworkBranch: null,
       metadataContract: null,
       miningKey: null,
       netId: '',
@@ -79,12 +81,12 @@ class AppMainRouter extends Component {
           injectedWeb3: web3Config.injectedWeb3,
           networkMatch: web3Config.networkMatch
         })
-        this.setState({ loading: false })
+        this.setState({ loading: false, loadingNetworkBranch: null })
         this.onRouteChange()
       })
       .catch(error => {
         console.error(error.message)
-        this.setState({ loading: false, error: true })
+        this.setState({ loading: false, error: true, loadingNetworkBranch: null })
         helpers.generateAlert('error', 'Error!', error.message)
       })
   }
@@ -138,7 +140,7 @@ class AppMainRouter extends Component {
       this.setState({ showSearch: false })
 
       if (this.state.injectedWeb3 === false) {
-        helpers.generateAlert('warning', 'Warning!', 'Metamask was not found')
+        helpers.generateAlert('warning', 'Warning!', messages.noMetamaskFound)
       } else {
         this.checkForVotingKey(() => {})
       }
@@ -150,9 +152,6 @@ class AppMainRouter extends Component {
   checkForVotingKey(cb) {
     if (!this.state.votingKey || this.state.loading) {
       helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
-      return
-    } else if (!this.state.networkMatch) {
-      helpers.generateAlert('warning', 'Warning!', messages.networkMatchError)
       return
     }
     return cb()
@@ -243,19 +242,21 @@ class AppMainRouter extends Component {
   onSetRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
 
-    return this.state.loading || !this.state.votingKey ? null : (
+    return (!this.state.loading && this.state.votingKey) || !this.state.injectedWeb3 ? (
       <App web3Config={this.state} networkBranch={networkBranch} />
-    )
+    ) : null
   }
 
   onNetworkChange(e) {
-    this.setState({ loading: true })
+    this.setState({ loading: true, loadingNetworkBranch: getNetworkBranch(e.value) })
     window.localStorage.netId = e.value
     this.initChain()
   }
 
   render() {
-    const networkBranch = this.getValidatorsNetworkBranch()
+    const networkBranch = this.state.loadingNetworkBranch
+      ? this.state.loadingNetworkBranch
+      : this.getValidatorsNetworkBranch()
 
     return networkBranch ? (
       <Router history={history}>
@@ -274,6 +275,12 @@ class AppMainRouter extends Component {
             showMobileMenu={this.state.showMobileMenu}
           />
           {this.state.showSearch ? <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} /> : null}
+          {this.state.loading
+            ? ReactDOM.createPortal(
+                <Loading networkBranch={networkBranch} />,
+                document.getElementById('loadingContainer')
+              )
+            : null}
           <section
             className={`lo-AppMainRouter_Content lo-AppMainRouter_Content-${networkBranch} ${
               this.state.showMobileMenu ? 'lo-AppMainRouter_Content-mobile-menu-open' : ''

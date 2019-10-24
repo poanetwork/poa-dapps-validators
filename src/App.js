@@ -12,6 +12,7 @@ import { Loading } from './components/Loading'
 import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
 import { geocodeByAddress } from 'react-places-autocomplete'
+import { getNetworkFullName } from './utils/utils'
 import { messages } from './utils/messages'
 
 import './assets/stylesheets/index.css'
@@ -135,15 +136,19 @@ class App extends Component {
       }
     } else {
       const keys = Object.keys(this.state.form)
+      let emptyFieldsExist = false
       keys.forEach(key => {
         if (!this.state.form[key]) {
           if (key !== 'contactEmail' && key !== 'isCompany') {
-            this.setState({ loading: false })
-            helpers.generateAlert('warning', 'Warning!', `${key} cannot be empty`)
-            return false
+            emptyFieldsExist = true
           }
         }
       })
+      if (emptyFieldsExist) {
+        this.setState({ loading: false })
+        helpers.generateAlert('warning', 'Warning!', `Please fill in all the fields - some of them are empty`)
+        return false
+      }
       const isAfter = moment(this.state.form.expirationDate).isAfter(moment())
       if (!isAfter) {
         this.setState({ loading: false })
@@ -194,14 +199,20 @@ class App extends Component {
     if (isFormValid) {
       const votingKey = this.getVotingKey()
       const isValid = await this.getKeysManager().isVotingActive(votingKey)
-
-      if (isValid) {
-        await this.sendTxToContract()
-      } else {
+      if (!isValid) {
         this.setState({ loading: false })
         helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
         return
       }
+
+      if (!this.props.web3Config.networkMatch) {
+        this.setState({ loading: false })
+        const netId = Number(this.props.web3Config.netId)
+        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(getNetworkFullName(netId)))
+        return
+      }
+
+      await this.sendTxToContract()
     }
   }
   async sendTxToContract() {
@@ -277,10 +288,12 @@ class App extends Component {
 
     let error
 
-    if (!this.props.web3Config.networkMatch) {
-      error = 'Networks do not match'
+    if (!this.props.web3Config.injectedWeb3) {
+      error = messages.noMetamaskFound
+    } else if (!this.props.web3Config.networkMatch) {
+      error = messages.networkMatchError(getNetworkFullName(netId))
     } else if (!this.isValidVotingKey) {
-      error = 'Invalid voting key'
+      error = messages.invalidaVotingKey
     }
 
     return (
