@@ -121,8 +121,6 @@ class AppMainRouter extends Component {
       proofOfPhysicalAddressContract,
       netId
     }
-    console.log('newState:')
-    console.log(newState)
     this.setState(newState)
   }
 
