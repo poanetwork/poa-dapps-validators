@@ -197,18 +197,18 @@ class App extends Component {
     this.setState({ loading: true })
     const isFormValid = this.checkValidation()
     if (isFormValid) {
+      if (!this.props.web3Config.networkMatch) {
+        this.setState({ loading: false })
+        const netId = Number(this.props.web3Config.netId)
+        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(getNetworkFullName(netId)))
+        return
+      }
+
       const votingKey = this.getVotingKey()
       const isValid = await this.getKeysManager().isVotingActive(votingKey)
       if (!isValid) {
         this.setState({ loading: false })
         helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-        return
-      }
-
-      if (!this.props.web3Config.networkMatch) {
-        this.setState({ loading: false })
-        const netId = Number(this.props.web3Config.netId)
-        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(getNetworkFullName(netId)))
         return
       }
 
