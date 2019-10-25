@@ -1,13 +1,17 @@
+import { getNetworkFullName } from './utils'
+
 let messages = {}
 messages.wrongRepo = function(repo) {
   return `There is no such file in configured repo ${repo}`
 }
 messages.invalidaVotingKey =
-  'The key is not a valid voting Key or you are connected to the wrong chain! Please make sure you have loaded the correct voting key in Metamask / Nifty Wallet.'
-messages.noMetamaskAccount = `Your MetaMask is locked.
-Please choose your voting key in MetaMask and reload the page.
-Check POA Network <a href='https://github.com/poanetwork/wiki' target='blank'>wiki</a> for more info.`
+  'The current key is not a valid Voting Key! Please make sure you have loaded the correct Voting Key in Metamask / Nifty Wallet.'
+messages.noMetamaskAccount = 'Your MetaMask is locked.'
+messages.noMetamaskFound = 'Metamask is not found.'
 
-module.exports = {
-  messages
+messages.networkMatchError = function(netId) {
+  const networkName = getNetworkFullName(Number(netId))
+  return `Networks in DApp and MetaMask do not match. Switch MetaMask to ${networkName} or change the network in DApp.`
 }
+
+export default messages
