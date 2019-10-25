@@ -20,7 +20,7 @@ import { SearchBar } from './components/SearchBar'
 import { Loading } from './components/Loading'
 import { constants } from './utils/constants'
 import { getNetworkBranch } from './utils/utils'
-import { messages } from './utils/messages'
+import messages from './utils/messages'
 
 const history = createBrowserHistory()
 const baseRootPath = '/poa-dapps-validators'
@@ -162,7 +162,13 @@ class AppMainRouter extends Component {
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault()
     this.checkForVotingKey(async () => {
+      if (!this.state.networkMatch) {
+        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(this.state.netId))
+        return
+      }
+
       this.setState({ loading: true })
+
       const miningKey = event.currentTarget.getAttribute('miningkey')
       try {
         let result = await this.state.metadataContract[methodToCall]({

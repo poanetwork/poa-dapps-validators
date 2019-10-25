@@ -1,3 +1,5 @@
+import { getNetworkFullName } from './utils'
+
 let messages = {}
 messages.wrongRepo = function(repo) {
   return `There is no such file in configured repo ${repo}`
@@ -7,10 +9,9 @@ messages.invalidaVotingKey =
 messages.noMetamaskAccount = 'Your MetaMask is locked.'
 messages.noMetamaskFound = 'Metamask is not found.'
 
-messages.networkMatchError = function(networkName) {
-  return `Networks in DApp and MetaMask do not match. Switch MetaMask to ${networkName} or change the network in DApp`
+messages.networkMatchError = function(netId) {
+  const networkName = getNetworkFullName(Number(netId))
+  return `Networks in DApp and MetaMask do not match. Switch MetaMask to ${networkName} or change the network in DApp.`
 }
 
-module.exports = {
-  messages
-}
+export default messages

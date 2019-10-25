@@ -12,8 +12,7 @@ import { Loading } from './components/Loading'
 import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
 import { geocodeByAddress } from 'react-places-autocomplete'
-import { getNetworkFullName } from './utils/utils'
-import { messages } from './utils/messages'
+import messages from './utils/messages'
 
 import './assets/stylesheets/index.css'
 
@@ -199,8 +198,7 @@ class App extends Component {
     if (isFormValid) {
       if (!this.props.web3Config.networkMatch) {
         this.setState({ loading: false })
-        const netId = Number(this.props.web3Config.netId)
-        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(getNetworkFullName(netId)))
+        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(this.props.web3Config.netId))
         return
       }
 
@@ -291,7 +289,7 @@ class App extends Component {
     if (!this.props.web3Config.injectedWeb3) {
       error = messages.noMetamaskFound
     } else if (!this.props.web3Config.networkMatch) {
-      error = messages.networkMatchError(getNetworkFullName(netId))
+      error = messages.networkMatchError(netId)
     } else if (!this.isValidVotingKey) {
       error = messages.invalidaVotingKey
     }
