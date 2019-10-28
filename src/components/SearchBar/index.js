@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const SearchBar = ({ extraClassName = '', networkBranch = false, onSearch }) => {
+export const SearchBar = ({ extraClassName = '', networkBranch = false, searchTerm = '', onSearch }) => {
   return (
     <div className={`sw-SearchBar sw-SearchBar-${networkBranch} ${extraClassName}`}>
       <div className="sw-SearchBar_Content">
@@ -9,6 +9,7 @@ export const SearchBar = ({ extraClassName = '', networkBranch = false, onSearch
           onChange={onSearch}
           placeholder="Search..."
           type="search"
+          value={searchTerm}
         />
       </div>
     </div>

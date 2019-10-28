@@ -2,7 +2,7 @@ import Web3 from 'web3'
 import helpers from './helpers'
 import { constants } from './constants'
 
-const defaultNetId = helpers.netIdByName(constants.branches.CORE)
+const defaultNetId = helpers.netIdByBranch(constants.branches.CORE)
 
 export default async function getWeb3(netId = defaultNetId, onAccountChange) {
   let web3 = null
@@ -17,6 +17,7 @@ export default async function getWeb3(netId = defaultNetId, onAccountChange) {
     } catch (e) {
       throw Error('You have denied access to your accounts')
     }
+    window.ethereum.autoRefreshOnNetworkChange = true
   } else if (window.web3) {
     web3 = new Web3(window.web3.currentProvider)
     console.log('Injected web3 detected.')
@@ -37,11 +38,11 @@ export default async function getWeb3(netId = defaultNetId, onAccountChange) {
     }
 
     let currentAccount = defaultAccount ? defaultAccount.toLowerCase() : ''
-    web3.currentProvider.publicConfigStore.on('update', function(obj) {
+    web3.currentProvider.publicConfigStore.on('update', async function(obj) {
       const account = obj.selectedAddress
       if (account && account !== currentAccount) {
         currentAccount = account
-        onAccountChange(account)
+        await onAccountChange(account)
       }
     })
 

@@ -75,9 +75,8 @@ class AppMainRouter extends Component {
           netId: web3Config.netId,
           addresses
         })
+        await this.onAccountChange(web3Config.defaultAccount)
         this.setState({
-          votingKey: web3Config.defaultAccount,
-          miningKey: await this.state.keysManager.miningKeyByVoting(web3Config.defaultAccount),
           injectedWeb3: web3Config.injectedWeb3,
           networkMatch: web3Config.networkMatch
         })
@@ -124,13 +123,13 @@ class AppMainRouter extends Component {
     this.setState(newState)
   }
 
-  onAccountChange(account) {
-    this.state.keysManager.miningKeyByVoting(account).then(miningKey => {
-      this.setState({
-        votingKey: account,
-        miningKey: miningKey
-      })
+  async onAccountChange(votingKey) {
+    const miningKey = await this.state.keysManager.miningKeyByVoting(votingKey)
+    this.setState({
+      votingKey,
+      miningKey
     })
+    console.log(`Accounts set:\nvotingKey = ${votingKey}\nminingKey = ${miningKey}`)
   }
 
   onRouteChange() {
@@ -252,7 +251,7 @@ class AppMainRouter extends Component {
   }
 
   onNetworkChange(e) {
-    this.setState({ loading: true, loadingNetworkBranch: getNetworkBranch(e.value) })
+    this.setState({ loading: true, loadingNetworkBranch: getNetworkBranch(e.value), searchTerm: '' })
     window.localStorage.netId = e.value
     this.initChain()
   }
@@ -278,7 +277,9 @@ class AppMainRouter extends Component {
             onMenuToggle={this.toggleMobileMenu}
             showMobileMenu={this.state.showMobileMenu}
           />
-          {this.state.showSearch ? <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} /> : null}
+          {this.state.showSearch ? (
+            <SearchBar networkBranch={networkBranch} onSearch={this.onSearch} searchTerm={this.state.searchTerm} />
+          ) : null}
           {this.state.loading
             ? ReactDOM.createPortal(
                 <Loading networkBranch={networkBranch} />,

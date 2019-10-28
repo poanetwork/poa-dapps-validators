@@ -12,6 +12,7 @@ import { Loading } from './components/Loading'
 import { MainTitle } from './components/MainTitle'
 import { constants } from './utils/constants'
 import { geocodeByAddress } from 'react-places-autocomplete'
+import ReactHtmlParser from 'react-html-parser'
 import messages from './utils/messages'
 
 import './assets/stylesheets/index.css'
@@ -264,7 +265,7 @@ class App extends Component {
     const netId = Number(this.props.web3Config.netId)
     const { isCompany } = this.state.form
     const { networkBranch } = this.props
-    const hideNote = netId !== helpers.netIdByName(constants.branches.CORE)
+    const hideNote = netId !== helpers.netIdByBranch(constants.branches.CORE)
     const isCompanyAllowed = helpers.isCompanyAllowed(netId)
     const inputProps = {
       id: 'address',
@@ -298,7 +299,7 @@ class App extends Component {
       <div className="vld-App">
         <MainTitle text={constants.navigationData[1].title} />
         {error ? (
-          <p>{error}</p>
+          <p>{ReactHtmlParser(error)}</p>
         ) : (
           <div>
             {isCompanyAllowed ? (

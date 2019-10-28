@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { constants } from '../../utils/constants'
-import helpers from '../../utils/helpers'
 
 export default class NetworkSelect extends Component {
   changeNetworkRPC(e) {
@@ -9,7 +8,7 @@ export default class NetworkSelect extends Component {
     let getCurrentClickedLinkId = ''
     for (const _netId in constants.NETWORKS) {
       if (constants.NETWORKS[_netId].FULLNAME === getCurrentClickedLink) {
-        getCurrentClickedLinkId = helpers.netIdByName(constants.NETWORKS[_netId].NAME)
+        getCurrentClickedLinkId = _netId
       }
     }
     this.props.onChange({ value: getCurrentClickedLinkId })
@@ -45,9 +44,7 @@ export default class NetworkSelect extends Component {
       }
       return (
         <li key={name.toString()} className={className}>
-          <a href="#" onClick={e => this.changeNetworkRPC(e)}>
-            {name}
-          </a>
+          <button onClick={e => this.changeNetworkRPC(e)}>{name}</button>
         </li>
       )
     })
