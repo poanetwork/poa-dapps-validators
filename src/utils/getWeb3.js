@@ -29,16 +29,16 @@ export default async function getWeb3(netId, onAccountChange) {
       netId = await web3.eth.net.getId()
       if (!(netId in constants.NETWORKS)) {
         // If plugin's netId is unsupported, try to use
-        // the previously choosen netId
+        // the previously chosen netId
         netId = window.localStorage.netId
       }
     } else {
       // MetaMask (or another plugin) is not injected,
-      // so try to use the previously choosen netId
+      // so try to use the previously chosen netId
       netId = window.localStorage.netId
     }
     if (!(netId in constants.NETWORKS)) {
-      // If plugin's netId and/or previously choosen netId are not supported,
+      // If plugin's netId and/or previously chosen netId are not supported,
       // fallback to default netId
       netId = defaultNetId
     }
