@@ -252,6 +252,7 @@ class AppMainRouter extends Component {
 
   onNetworkChange(e) {
     this.setState({ loading: true, loadingNetworkBranch: getNetworkBranch(e.value), searchTerm: '' })
+    window.localStorage.netId = e.value
     window.sessionStorage.netId = e.value
     this.initChain()
   }
