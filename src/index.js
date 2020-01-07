@@ -64,7 +64,7 @@ class AppMainRouter extends Component {
   }
 
   initChain() {
-    const netId = window.localStorage.netId
+    const netId = window.sessionStorage.netId
     getWeb3(netId, this.onAccountChange)
       .then(async web3Config => {
         return networkAddresses(web3Config)
@@ -264,6 +264,7 @@ class AppMainRouter extends Component {
   onNetworkChange(e) {
     this.setState({ loading: true, loadingNetworkBranch: getNetworkBranch(e.value), searchTerm: '' })
     window.localStorage.netId = e.value
+    window.sessionStorage.netId = e.value
     this.initChain()
   }
 
