@@ -125,13 +125,22 @@ class AppMainRouter extends Component {
   }
 
   async onAccountChange(votingKey) {
-    const [isValidVotingKey, miningKey] = await Promise.all([
-      this.state.keysManager.isVotingActive(votingKey),
-      this.state.keysManager.miningKeyByVoting(votingKey)
-    ])
+    if (this.state.votingKey && votingKey && this.state.votingKey.toLowerCase() === votingKey.toLowerCase()) {
+      return
+    }
+    this.setState({ votingKey })
+    let isValidVotingKey = false
+    let miningKey = null
+    if (votingKey) {
+      const results = await Promise.all([
+        this.state.keysManager.isVotingActive(votingKey),
+        this.state.keysManager.miningKeyByVoting(votingKey)
+      ])
+      isValidVotingKey = results[0]
+      miningKey = results[1]
+    }
     this.setState({
       isValidVotingKey,
-      votingKey,
       miningKey
     })
     console.log(`Accounts set:\nvotingKey = ${votingKey}\nminingKey = ${miningKey}`)

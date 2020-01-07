@@ -10,15 +10,14 @@ export async function enableWallet(onAccountChange) {
     try {
       await window.ethereum.enable()
     } catch (e) {
+      await onAccountChange(null)
       throw Error(messages.userDeniedAccessToAccount)
     }
 
     const web3 = new Web3(window.ethereum)
     const accounts = await web3.eth.getAccounts()
 
-    if (accounts[0]) {
-      await onAccountChange(accounts[0])
-    }
+    await onAccountChange(accounts[0])
   }
 }
 
