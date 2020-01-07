@@ -28,7 +28,6 @@ class App extends Component {
     this.getMetadataContract = this.getMetadataContract.bind(this)
     this.getVotingKey = this.getVotingKey.bind(this)
     this.setMetadata = this.setMetadata.bind(this)
-    this.setIsValidVotingKey = this.setIsValidVotingKey.bind(this)
     this.onChangeAutoComplete = address => {
       const form = this.state.form
       form.fullAddress = address
@@ -52,14 +51,13 @@ class App extends Component {
       loading: true
     }
     this.defaultValues = null
-    this.isValidVotingKey = false
   }
   componentDidMount() {
     this.setData.call(this)
   }
   async setData() {
     if (this.props.web3Config.networkMatch) {
-      await Promise.all([this.setMetadata(), this.setIsValidVotingKey()])
+      await this.setMetadata()
     }
     this.setState({ loading: false })
   }
@@ -102,13 +100,6 @@ class App extends Component {
       },
       hasData
     })
-  }
-  async setIsValidVotingKey() {
-    this.isValidVotingKey = await this.getKeysManager().isVotingActive(this.getVotingKey())
-    if (!this.isValidVotingKey) {
-      this.setState({ loading: false })
-      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
-    }
   }
   getKeysManager() {
     return this.props.web3Config.keysManager
@@ -203,9 +194,7 @@ class App extends Component {
         return
       }
 
-      const votingKey = this.getVotingKey()
-      const isValid = await this.getKeysManager().isVotingActive(votingKey)
-      if (!isValid) {
+      if (!this.props.web3Config.isValidVotingKey) {
         this.setState({ loading: false })
         helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
         return
@@ -289,9 +278,11 @@ class App extends Component {
 
     if (!this.props.web3Config.injectedWeb3) {
       error = messages.noMetamaskFound
+    } else if (!this.props.web3Config.votingKey) {
+      error = messages.noMetamaskAccount
     } else if (!this.props.web3Config.networkMatch) {
       error = messages.networkMatchError(netId)
-    } else if (!this.isValidVotingKey) {
+    } else if (!this.props.web3Config.isValidVotingKey) {
       error = messages.invalidaVotingKey
     }
 

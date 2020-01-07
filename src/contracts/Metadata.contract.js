@@ -98,7 +98,6 @@ export default class Metadata {
 
   async getValidatorData(miningKey) {
     if (!miningKey) {
-      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
       return {}
     }
 
@@ -154,7 +153,6 @@ export default class Metadata {
 
   async getPendingChange(miningKey) {
     if (!miningKey) {
-      helpersGlobal.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
       return {}
     }
 

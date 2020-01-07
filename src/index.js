@@ -6,7 +6,7 @@ import ProofOfPhysicalAddress from './contracts/ProofOfPhysicalAddress.contract'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
-import getWeb3 from './utils/getWeb3'
+import getWeb3, { enableWallet } from './utils/getWeb3'
 import helpers from './utils/helpers'
 import networkAddresses from './contracts/addresses'
 import registerServiceWorker from './utils/registerServiceWorker'
@@ -57,7 +57,8 @@ class AppMainRouter extends Component {
       searchTerm: '',
       showMobileMenu: false,
       showSearch: history.location.pathname !== setMetadataPath,
-      votingKey: null
+      votingKey: null,
+      isValidVotingKey: false
     }
     window.addEventListener('load', () => this.initChain())
   }
@@ -124,11 +125,21 @@ class AppMainRouter extends Component {
   }
 
   async onAccountChange(votingKey) {
-    const miningKey = await this.state.keysManager.miningKeyByVoting(votingKey)
-    this.setState({
-      votingKey,
+    let miningKey = null
+    if (this.state.votingKey && votingKey && this.state.votingKey.toLowerCase() === votingKey.toLowerCase()) {
+      return
+    }
+    this.setState({ votingKey })
+    if (votingKey) {
+      miningKey = await this.state.keysManager.miningKeyByVoting(votingKey)
+    }
+    const isValidVotingKey =
+      miningKey !== '0x0000000000000000000000000000000000000000' &&
+      miningKey !== '0x00' &&
+      miningKey !== '0x0' &&
+      miningKey !== '0x' &&
       miningKey
-    })
+    this.setState({ isValidVotingKey, miningKey })
     console.log(`Accounts set:\nvotingKey = ${votingKey}\nminingKey = ${miningKey}`)
   }
 
@@ -146,9 +157,23 @@ class AppMainRouter extends Component {
     }
   }
 
-  checkForVotingKey(cb) {
+  async checkForVotingKey(cb) {
+    try {
+      await enableWallet(this.onAccountChange)
+    } catch (error) {
+      helpers.generateAlert('error', 'Error!', error.message)
+      return
+    }
     if (!this.state.votingKey || this.state.loading) {
       helpers.generateAlert('warning', 'Warning!', messages.noMetamaskAccount)
+      return
+    }
+    if (!this.state.networkMatch) {
+      helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(this.state.netId))
+      return
+    }
+    if (!this.state.isValidVotingKey) {
+      helpers.generateAlert('warning', 'Warning!', messages.invalidaVotingKey)
       return
     }
     return cb()
@@ -161,11 +186,6 @@ class AppMainRouter extends Component {
   async _onBtnClick({ event, methodToCall, successMsg }) {
     event.preventDefault()
     this.checkForVotingKey(async () => {
-      if (!this.state.networkMatch) {
-        helpers.generateAlert('warning', 'Warning!', messages.networkMatchError(this.state.netId))
-        return
-      }
-
       this.setState({ loading: true })
 
       const miningKey = event.currentTarget.getAttribute('miningkey')
@@ -244,10 +264,7 @@ class AppMainRouter extends Component {
 
   onSetRender() {
     const networkBranch = this.getValidatorsNetworkBranch()
-
-    return (!this.state.loading && this.state.votingKey) || !this.state.injectedWeb3 ? (
-      <App web3Config={this.state} networkBranch={networkBranch} />
-    ) : null
+    return !this.state.loading ? <App web3Config={this.state} networkBranch={networkBranch} /> : null
   }
 
   onNetworkChange(e) {
