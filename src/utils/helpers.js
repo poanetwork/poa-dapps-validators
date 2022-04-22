@@ -13,7 +13,6 @@ function generateAlert(icon, title, msg) {
 
 function isCompanyAllowed(netId) {
   switch (netId) {
-    case netIdByBranch(constants.branches.DAI):
     case netIdByBranch(constants.branches.KOVAN):
       return true
     default:
