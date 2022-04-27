@@ -11,7 +11,6 @@ constants.ABIsSources = {
 constants.userDeniedTransactionPattern = 'User denied transaction'
 constants.rootPath = '/poa-dapps-validators'
 constants.branches = {
-  DAI: 'dai',
   CORE: 'core',
   SOKOL: 'sokol',
   KOVAN: 'kovan'
@@ -56,13 +55,6 @@ constants.NETWORKS = {
     RPC: 'https://core.poa.network',
     BRANCH: constants.branches.CORE,
     SORTORDER: 1
-  },
-  '100': {
-    NAME: 'xDai',
-    FULLNAME: 'xDai Stable Chain',
-    RPC: 'https://dai.poa.network',
-    BRANCH: constants.branches.DAI,
-    SORTORDER: 2
   }
 }
 

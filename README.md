@@ -5,7 +5,6 @@ Validators DApp is built for POA Network based blockchains. It gives an opportun
 ## Base supported networks
 
 - Core POA network (RPC endpoint: `https://core.poa.network`)
-- xDai chain (RPC endpoint: `https://dai.poa.network`)
 - Sokol testnet (RPC endpoint: `https://sokol.poa.network`)
 - Kovan testnet (RPC endpoint: `https://kovan.infura.io/`)
 

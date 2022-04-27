@@ -16,4 +16,10 @@ messages.networkMatchError = function(netId) {
   return `Networks in DApp and MetaMask (Nifty Wallet) do not match. Switch MetaMask / Nifty Wallet to <b>${networkName}</b> or change the network in DApp.`
 }
 
+messages.poaGnoMerging =
+  'POA is joining the Gnosis Chain ecosystem, and token holders can now swap POA for STAKE and then STAKE for GNO on the Gnosis Chain! More info and instructions <a href="https://www.poa.network/" target="_blank">here</a>.'
+
+messages.poaGnoMerged =
+  'POA Network merged with the Gnosis Chain.<br /><a href="https://www.poa.network/" target="_blank">More information</a> about the merger.'
+
 export default messages

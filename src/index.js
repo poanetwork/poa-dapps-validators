@@ -83,6 +83,15 @@ class AppMainRouter extends Component {
         })
         this.setState({ loading: false, loadingNetworkBranch: null })
         this.onRouteChange()
+        if (web3Config.netId === 99) {
+          // if it's POA Core network
+          const currentTimestamp = Math.floor(Date.now() / 1000)
+          helpers.generateAlert(
+            'warning',
+            'Attention',
+            currentTimestamp < 1651698000 ? messages.poaGnoMerging : messages.poaGnoMerged
+          )
+        }
       })
       .catch(error => {
         console.error(error.message)
